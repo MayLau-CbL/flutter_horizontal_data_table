@@ -32,9 +32,6 @@ class HorizontalDataTable extends StatefulWidget {
 
   ///Row Divider
 
-  ///This is only active when using fixed header row. The separator is showed under the 1st row(Header Row)
-  final Widget headerRowSeparatorWidget;
-
   ///This is apply to all remaining data row of the list view
   final Widget rowSeparatorWidget;
 
@@ -52,7 +49,6 @@ class HorizontalDataTable extends StatefulWidget {
       this.itemCount = 0,
       this.leftSideChildren,
       this.rightSideChildren,
-      this.headerRowSeparatorWidget,
       this.rowSeparatorWidget = const Divider(
         color: Colors.transparent,
         height: 0.0,
