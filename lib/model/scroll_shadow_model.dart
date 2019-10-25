@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-class ScrollShadowModel extends ChangeNotifier{
+class ScrollShadowModel extends ChangeNotifier {
   double _verticalOffset = 0.0;
   double _horizontalOffset = 0.0;
 
@@ -17,5 +17,4 @@ class ScrollShadowModel extends ChangeNotifier{
     _horizontalOffset = value;
     notifyListeners();
   }
-
 }
