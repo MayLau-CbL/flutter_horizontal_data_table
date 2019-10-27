@@ -20,7 +20,10 @@ HorizontalDataTable(
         color: Colors.transparent,
         height: 0.0,
         thickness: 0.0,
-      )
+      ),
+      this.elevation = 5.0}
+     )
+      
 ```
 
 1. Left side column(leftHandSideColumnWidth) and right side maximum scrollable area width(rightHandSideColumnWidth) are required to input.
@@ -29,6 +32,7 @@ HorizontalDataTable(
     a. Directly add list of child widget (leftSideChildren and rightSideChildren)
     b. (Recommended) Using index builder to assign each row's widget. itemCount is required to count the number of row.
 4. rowSeparatorWidget is to add Divider of each Row. Default is turned off.
+5. elevation is the shadow between the header row and the left column when scroll start. Default set to 5.0. If want to disable the shadow, please set to 0.0.
 
 ## Example
 
