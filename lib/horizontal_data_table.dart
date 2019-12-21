@@ -115,7 +115,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ScrollShadowModel>(
-        builder: (context) => _scrollShadowModel,
+        create: (context) => _scrollShadowModel,
         child: SafeArea(child: _getParallelListView()));
   }
 
@@ -246,10 +246,12 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
 
   double _getElevation(double offset) {
     if (offset != null) {
-      return offset > widget.elevation ? widget.elevation : offset;
-    } else {
-      return 0.0;
+      double elevation = offset > widget.elevation ? widget.elevation : offset;
+      if (elevation >= 0) {
+        return elevation;
+      }
     }
+    return 0.0;
   }
 }
 
