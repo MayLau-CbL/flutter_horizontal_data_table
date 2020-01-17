@@ -129,6 +129,8 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
           ),
           builder: (context, scrollShadowModel, child) {
             return Material(
+              //force table background to be transaparent to adopt the color behide this table
+              color: Colors.transparent,
               child: child,
               elevation: _getElevation(scrollShadowModel.horizontalOffset),
             );
