@@ -1,3 +1,6 @@
+## [1.0.2] - 20200117
+* fixed left hand side column cannot adapt color from background
+
 ## [1.0.1+1] - 20200111
 * upgraded dependence
 
