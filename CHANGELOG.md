@@ -1,3 +1,7 @@
+##[1.0.4] - 20200119
+* Fix: left hand side column show incorrect color
+* Doc: updated example of doing sorting
+
 ##[1.0.3] - 20200119
 * Improve: use Selector instead of Consumer 
 
@@ -15,5 +19,4 @@
 * upgraded dependence
 
 ## [1.0.0] - 20191025
-
 * Init version

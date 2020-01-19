@@ -21,7 +21,10 @@ HorizontalDataTable(
         height: 0.0,
         thickness: 0.0,
       ),
-      this.elevation = 5.0}
+      this.elevation = 5.0,
+      this.leftHandSideColBackgroundColor = Colors.transparent,
+      this.rightHandSideColBackgroundColor = Colors.transparent,
+      }
      )
       
 ```
@@ -33,7 +36,8 @@ HorizontalDataTable(
     b. (Recommended) Using index builder to assign each row's widget. itemCount is required to count the number of row.
 4. rowSeparatorWidget is to add Divider of each Row. Default is turned off.
 5. elevation is the shadow between the header row and the left column when scroll start. Default set to 5.0. If want to disable the shadow, please set to 0.0.
-
+6. added leftHandSideColBackgroundColor and rightHandSideColBackgroundColor for setting the default background of the back of table. Default is set to white following the Material widget.
+ 
 ## Example
 
 ![](horizontal_table.gif)
@@ -67,6 +71,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  static const int sortName = 0;
+  static const int sortStatus = 1;
+  bool isAscending = true;
+  int sortType = sortName;
+
+  @override
+  void initState() {
+    user.initData(100);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,12 +101,14 @@ class _MyHomePageState extends State<MyHomePage> {
         headerWidgets: _getTitleWidget(),
         leftSideItemBuilder: _generateFirstColumnRow,
         rightSideItemBuilder: _generateRightHandSideColumnRow,
-        itemCount: 100,
+        itemCount: user.userInfo.length,
         rowSeparatorWidget: const Divider(
           color: Colors.black54,
           height: 1.0,
           thickness: 0.0,
         ),
+        leftHandSideColBackgroundColor: Color(0xFF2A2A2A),
+        rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
       ),
       height: MediaQuery.of(context).size.height,
     );
@@ -99,8 +116,30 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Widget> _getTitleWidget() {
     return [
-      _getTitleItemWidget('Name', 100),
-      _getTitleItemWidget('Status', 100),
+      FlatButton(
+        padding: EdgeInsets.all(0),
+        child: _getTitleItemWidget('Name'+(sortType==sortName?(isAscending?'↓':'↑'):''), 100),
+        onPressed: () {
+          sortType = sortName;
+          isAscending = !isAscending;
+          user.sortName(isAscending);
+          setState(() {
+
+          });
+        },
+      ),
+      FlatButton(
+        padding: EdgeInsets.all(0),
+        child: _getTitleItemWidget('Status'+(sortType==sortStatus?(isAscending?'↓':'↑'):''), 100),
+        onPressed: () {
+          sortType = sortStatus;
+          isAscending = !isAscending;
+          user.sortStatus(isAscending);
+          setState(() {
+
+          });
+        },
+      ),
       _getTitleItemWidget('Phone', 200),
       _getTitleItemWidget('Register', 100),
       _getTitleItemWidget('Termination', 200),
@@ -119,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _generateFirstColumnRow(BuildContext context, int index) {
     return Container(
-      child: Text('User_$index'),
+      child: Text(user.userInfo[index].name),
       width: 100,
       height: 52,
       padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
@@ -133,9 +172,12 @@ class _MyHomePageState extends State<MyHomePage> {
         Container(
           child: Row(
             children: <Widget>[
-              Icon(Icons.notifications_active,
-                  color: index % 3 == 0 ? Colors.red : Colors.green),
-              Text(index % 3 == 0 ? 'Disabled' : 'Active')
+              Icon(
+                  user.userInfo[index].status
+                      ? Icons.notifications_off
+                      : Icons.notifications_active,
+                  color: user.userInfo[index].status ? Colors.red : Colors.green),
+              Text(user.userInfo[index].status ? 'Disabled' : 'Active')
             ],
           ),
           width: 100,
@@ -144,21 +186,21 @@ class _MyHomePageState extends State<MyHomePage> {
           alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text('+001 9999 9999'),
+          child: Text(user.userInfo[index].phone),
           width: 200,
           height: 52,
           padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
           alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text('2019-01-01'),
+          child: Text(user.userInfo[index].registerDate),
           width: 100,
           height: 52,
           padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
           alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text('N/A'),
+          child: Text(user.userInfo[index].terminationDate),
           width: 200,
           height: 52,
           padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
@@ -169,8 +211,65 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-```
+User user = User();
 
+class User {
+  List<UserInfo> _userInfo = List<UserInfo>();
+
+  void initData(int size) {
+    for (int i = 0; i < size; i++) {
+      _userInfo.add(UserInfo(
+          "User_$i", i % 3 == 0, '+001 9999 9999', '2019-01-01', 'N/A'));
+    }
+  }
+
+  List<UserInfo> get userInfo => _userInfo;
+
+  set userInfo(List<UserInfo> value) {
+    _userInfo = value;
+  }
+
+  ///
+  /// Single sort, sort Name's id
+  void sortName(bool isAscending) {
+    _userInfo.sort((a, b) {
+      int aId = int.tryParse(a.name.replaceFirst('User_', ''));
+      int bId = int.tryParse(b.name.replaceFirst('User_', ''));
+      return (aId-bId) * (isAscending ? 1 : -1);
+    });
+  }
+
+  ///
+  /// sort with Status and Name as the 2nd Sort
+  void sortStatus(bool isAscending) {
+    _userInfo.sort((a, b) {
+      if (a.status == b.status) {
+        int aId = int.tryParse(a.name.replaceFirst('User_', ''));
+        int bId = int.tryParse(b.name.replaceFirst('User_', ''));
+        return (aId-bId);
+      } else if (a.status) {
+        return isAscending ? 1 : -1;
+      } else {
+        return isAscending ? -1 : 1;
+      }
+    });
+  }
+}
+
+class UserInfo {
+  String name;
+  bool status;
+  String phone;
+  String registerDate;
+  String terminationDate;
+
+  UserInfo(this.name, this.status, this.phone, this.registerDate,
+      this.terminationDate);
+}
+
+
+```
+ 
 ## License
 
 MIT

@@ -39,22 +39,28 @@ class HorizontalDataTable extends StatefulWidget {
   ///If don't want to show the shadow, please set it to 0.0
   final double elevation;
 
-  const HorizontalDataTable(
-      {@required this.leftHandSideColumnWidth,
-      @required this.rightHandSideColumnWidth,
-      this.isFixedHeader = false,
-      this.headerWidgets,
-      this.leftSideItemBuilder,
-      this.rightSideItemBuilder,
-      this.itemCount = 0,
-      this.leftSideChildren,
-      this.rightSideChildren,
-      this.rowSeparatorWidget = const Divider(
-        color: Colors.transparent,
-        height: 0.0,
-        thickness: 0.0,
-      ),
-      this.elevation = 5.0})
+  final Color leftHandSideColBackgroundColor;
+  final Color rightHandSideColBackgroundColor;
+
+  const HorizontalDataTable({
+    @required this.leftHandSideColumnWidth,
+    @required this.rightHandSideColumnWidth,
+    this.isFixedHeader = false,
+    this.headerWidgets,
+    this.leftSideItemBuilder,
+    this.rightSideItemBuilder,
+    this.itemCount = 0,
+    this.leftSideChildren,
+    this.rightSideChildren,
+    this.rowSeparatorWidget = const Divider(
+      color: Colors.transparent,
+      height: 0.0,
+      thickness: 0.0,
+    ),
+    this.elevation = 5.0,
+    this.leftHandSideColBackgroundColor = Colors.white,
+    this.rightHandSideColBackgroundColor = Colors.white,
+  })
       : assert(
             (leftSideChildren == null && leftSideItemBuilder != null) ||
                 (leftSideChildren == null),
@@ -133,7 +139,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
           builder: (context, horizontalOffset, child) {
             return Material(
               //force table background to be transaparent to adopt the color behide this table
-              color: Colors.transparent,
+              color: widget.leftHandSideColBackgroundColor,
               child: child,
               elevation: _getElevation(horizontalOffset),
             );
@@ -143,6 +149,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
           child: SingleChildScrollView(
             controller: _rightHorizontalScrollController,
             child: Container(
+              color: widget.rightHandSideColBackgroundColor,
               child: _getRightSideHeaderScrollColumn(),
               width: widget.rightHandSideColumnWidth,
             ),
