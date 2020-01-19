@@ -122,17 +122,20 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
   Widget _getParallelListView() {
     return Row(
       children: <Widget>[
-        Consumer<ScrollShadowModel>(
+        Selector<ScrollShadowModel, double>(
+          selector: (context, scrollShadowModel) {
+            return scrollShadowModel?.horizontalOffset ?? 0;
+          },
           child: Container(
             width: widget.leftHandSideColumnWidth,
             child: _getLeftSideFixedHeaderScrollColumn(),
           ),
-          builder: (context, scrollShadowModel, child) {
+          builder: (context, horizontalOffset, child) {
             return Material(
               //force table background to be transaparent to adopt the color behide this table
               color: Colors.transparent,
               child: child,
-              elevation: _getElevation(scrollShadowModel.horizontalOffset),
+              elevation: _getElevation(horizontalOffset),
             );
           },
         ),
@@ -154,12 +157,15 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
     if (widget.isFixedHeader) {
       return Column(
         children: <Widget>[
-          Consumer<ScrollShadowModel>(
+          Selector<ScrollShadowModel, double>(
+            selector: (context, scrollShadowModel) {
+              return scrollShadowModel?.verticalOffset ?? 0;
+            },
             child: widget.headerWidgets[0],
-            builder: (context, scrollShadowModel, child) {
+            builder: (context, verticalOffset, child) {
               return Material(
                 child: child,
-                elevation: _getElevation(scrollShadowModel.verticalOffset),
+                elevation: _getElevation(verticalOffset),
               );
             },
           ),
@@ -179,11 +185,13 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
     if (widget.isFixedHeader) {
       List<Widget> widgetList = List<Widget>();
       //headers
-      widgetList.add(Consumer<ScrollShadowModel>(
-          builder: (context, scrollShadowModel, child) {
+      widgetList.add(Selector<ScrollShadowModel, double>(
+          selector: (context, scrollShadowModel) {
+            return scrollShadowModel?.verticalOffset ?? 0;
+          },
+          builder: (context, verticalOffset, child) {
             return Material(
-                child: child,
-                elevation: _getElevation(scrollShadowModel.verticalOffset));
+                child: child, elevation: _getElevation(verticalOffset));
           },
           child: Row(children: widget.headerWidgets.sublist(1))));
       widgetList.add(

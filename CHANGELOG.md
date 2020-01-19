@@ -1,3 +1,6 @@
+##[1.0.3] - 20200119
+* Improve: use Selector instead of Consumer 
+
 ## [1.0.2] - 20200117
 * fixed left hand side column cannot adapt color from background
 
