@@ -22,8 +22,8 @@ HorizontalDataTable(
         thickness: 0.0,
       ),
       this.elevation = 5.0,
-      this.leftHandSideColBackgroundColor = Colors.transparent,
-      this.rightHandSideColBackgroundColor = Colors.transparent,
+      this.leftHandSideColBackgroundColor = Colors.white,
+      this.rightHandSideColBackgroundColor = Colors.white,
       }
      )
       

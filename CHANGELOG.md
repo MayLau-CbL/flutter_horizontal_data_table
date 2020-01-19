@@ -1,3 +1,6 @@
+##[1.0.4+1] - 20200119
+* Fix: README.md background color default color as white
+
 ##[1.0.4] - 20200119
 * Fix: left hand side column show incorrect color
 * Doc: updated example of doing sorting
