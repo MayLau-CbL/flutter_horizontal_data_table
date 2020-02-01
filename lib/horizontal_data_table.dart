@@ -122,30 +122,22 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ScrollShadowModel>(
         create: (context) => _scrollShadowModel,
-        child: SafeArea(child: _getParallelListView()));
+        child: SafeArea(child: LayoutBuilder(
+          builder: (context, boxConstraint) {
+            return _getParallelListView(
+                boxConstraint.maxWidth, boxConstraint.maxHeight);
+          },
+        )));
   }
 
-  Widget _getParallelListView() {
-    return Row(
+  Widget _getParallelListView(double width, double height) {
+    return Stack(
       children: <Widget>[
-        Selector<ScrollShadowModel, double>(
-          selector: (context, scrollShadowModel) {
-            return scrollShadowModel?.horizontalOffset ?? 0;
-          },
-          child: Container(
-            width: widget.leftHandSideColumnWidth,
-            child: _getLeftSideFixedHeaderScrollColumn(),
-          ),
-          builder: (context, horizontalOffset, child) {
-            return Material(
-              //force table background to be transaparent to adopt the color behide this table
-              color: widget.leftHandSideColBackgroundColor,
-              child: child,
-              elevation: _getElevation(horizontalOffset),
-            );
-          },
-        ),
-        Expanded(
+        Positioned(
+          top: 0,
+          left: widget.leftHandSideColumnWidth,
+          height: height,
+          width: width - widget.leftHandSideColumnWidth,
           child: SingleChildScrollView(
             controller: _rightHorizontalScrollController,
             child: Container(
@@ -155,7 +147,30 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
             ),
             scrollDirection: Axis.horizontal,
           ),
-        )
+        ),
+        Positioned(
+          top: 0,
+          left: 0,
+          height: height,
+          width: widget.leftHandSideColumnWidth,
+          child: Selector<ScrollShadowModel, double>(
+            selector: (context, scrollShadowModel) {
+              return scrollShadowModel?.horizontalOffset ?? 0;
+            },
+            child: Container(
+              width: widget.leftHandSideColumnWidth,
+              child: _getLeftSideFixedHeaderScrollColumn(),
+            ),
+            builder: (context, horizontalOffset, child) {
+              return Material(
+                //force table background to be transaparent to adopt the color behide this table
+                color: widget.leftHandSideColBackgroundColor,
+                child: child,
+                elevation: _getElevation(horizontalOffset),
+              );
+            },
+          ),
+        ),
       ],
     );
   }
