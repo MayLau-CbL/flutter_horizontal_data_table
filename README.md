@@ -22,6 +22,7 @@ HorizontalDataTable(
         thickness: 0.0,
       ),
       this.elevation = 5.0,
+      this.elevationColor = Colors.black54,
       this.leftHandSideColBackgroundColor = Colors.white,
       this.rightHandSideColBackgroundColor = Colors.white,
       }
@@ -36,7 +37,8 @@ HorizontalDataTable(
     b. (Recommended) Using index builder to assign each row's widget. itemCount is required to count the number of row.
 4. rowSeparatorWidget is to add Divider of each Row. Default is turned off.
 5. elevation is the shadow between the header row and the left column when scroll start. Default set to 5.0. If want to disable the shadow, please set to 0.0.
-6. added leftHandSideColBackgroundColor and rightHandSideColBackgroundColor for setting the default background of the back of table. Default is set to white following the Material widget.
+6. elevationColor is for changing shadow color. This should be useful when using dark table background.
+7. added leftHandSideColBackgroundColor and rightHandSideColBackgroundColor for setting the default background of the back of table. Default is set to white following the Material widget.
  
 ## Example
 

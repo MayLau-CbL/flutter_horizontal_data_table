@@ -38,6 +38,7 @@ class HorizontalDataTable extends StatefulWidget {
   ///Elevation for the shadow of header row and first column after scroll
   ///If don't want to show the shadow, please set it to 0.0
   final double elevation;
+  final Color elevationColor;
 
   final Color leftHandSideColBackgroundColor;
   final Color rightHandSideColBackgroundColor;
@@ -57,7 +58,8 @@ class HorizontalDataTable extends StatefulWidget {
       height: 0.0,
       thickness: 0.0,
     ),
-    this.elevation = 5.0,
+    this.elevation = 3.0,
+    this.elevationColor = Colors.black54,
     this.leftHandSideColBackgroundColor = Colors.white,
     this.rightHandSideColBackgroundColor = Colors.white,
   })
@@ -72,7 +74,8 @@ class HorizontalDataTable extends StatefulWidget {
         assert((isFixedHeader && headerWidgets != null) || !isFixedHeader,
             'If use fixed top row header, isFixedHeader==true, headerWidgets must not be null'),
         assert(itemCount >= 0, 'itemCount must >= 0'),
-        assert(elevation >= 0.0, 'elevation must >= 0.0');
+        assert(elevation >= 0.0, 'elevation must >= 0.0'),
+        assert(elevationColor != null, 'elevationColor must not be null');
 
   @override
   State<StatefulWidget> createState() {
@@ -162,11 +165,37 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
               child: _getLeftSideFixedHeaderScrollColumn(),
             ),
             builder: (context, horizontalOffset, child) {
-              return Material(
-                //force table background to be transaparent to adopt the color behide this table
-                color: widget.leftHandSideColBackgroundColor,
-                child: child,
-                elevation: _getElevation(horizontalOffset),
+              return Stack(
+                children: <Widget>[
+                  Positioned.fill(
+                    child: Container(
+                      //force table background to be transaparent to adopt the color behide this table
+//                      color: widget.leftHandSideColBackgroundColor,
+//                      child: child,
+//                      elevation: _getElevation(horizontalOffset),
+                        decoration: BoxDecoration(
+                          color: widget.rightHandSideColBackgroundColor,
+                          boxShadow: [
+                            BoxShadow(
+                              color: widget.elevationColor.withAlpha((10 *
+                                  (_getElevation(horizontalOffset) /
+                                      widget.elevation))
+                                  .toInt()),
+                              blurRadius: 0.0,
+                              // has the effect of softening the shadow
+                              spreadRadius: 0.0,
+                              // has the effect of extending the shadow
+                              offset: Offset(
+                                _getElevation(horizontalOffset),
+                                // horizontal, move right 10
+                                0.0, // vertical, move down 10
+                              ),
+                            )
+                          ],
+                        )),
+                  ),
+                  child
+                ],
               );
             },
           ),
@@ -185,9 +214,36 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
             },
             child: widget.headerWidgets[0],
             builder: (context, verticalOffset, child) {
-              return Material(
-                child: child,
-                elevation: _getElevation(verticalOffset),
+              return Stack(
+                children: <Widget>[
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: widget.leftHandSideColBackgroundColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: widget.elevationColor.withAlpha((10 *
+                                (_getElevation(verticalOffset) /
+                                    widget.elevation))
+                                .toInt()),
+                            blurRadius: 0.0,
+                            // has the effect of softening the shadow
+                            spreadRadius: 0.0,
+                            // has the effect of extending the shadow
+                            offset: Offset(
+                              0.0, // horizontal, move right 10
+                              _getElevation(
+                                  verticalOffset), // vertical, move down 10
+                            ),
+                          )
+                        ],
+                      ),
+//                    child: child,
+//                elevation: _getElevation(verticalOffset),
+                    ),
+                  ),
+                  child
+                ],
               );
             },
           ),
@@ -212,8 +268,28 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
             return scrollShadowModel?.verticalOffset ?? 0;
           },
           builder: (context, verticalOffset, child) {
-            return Material(
-                child: child, elevation: _getElevation(verticalOffset));
+            return Container(
+              decoration: BoxDecoration(
+                color: widget.rightHandSideColBackgroundColor,
+                boxShadow: [
+                  BoxShadow(
+                    color: widget.elevationColor.withAlpha((10 *
+                        (_getElevation(verticalOffset) / widget.elevation))
+                        .toInt()),
+                    blurRadius: 0.0,
+                    // has the effect of softening the shadow
+                    spreadRadius: 0.0,
+                    // has the effect of extending the shadow
+                    offset: Offset(
+                      0.0, // horizontal, move right 10
+                      _getElevation(verticalOffset), // vertical, move down 10
+                    ),
+                  )
+                ],
+              ),
+              child: child,
+//                elevation: _getElevation(verticalOffset)
+            );
           },
           child: Row(children: widget.headerWidgets.sublist(1))));
       widgetList.add(
