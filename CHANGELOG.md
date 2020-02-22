@@ -1,3 +1,7 @@
+## [1.0.5+1] - 20200222
+* Improve: Added example project
+* upgraded dependence
+
 ## [1.0.5] - 20200202
 * Feat: Added new elevationColor allowing change of shadow color
 * Improve: Use boxShadow avoid flutter Material shadow issue 
