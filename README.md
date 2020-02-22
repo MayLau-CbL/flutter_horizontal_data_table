@@ -1,4 +1,5 @@
 # horizontal_data_table
+[![pub package](https://img.shields.io/pub/v/horizontal_data_table.svg)](https://pub.dev/packages/horizontal_data_table)
 
 [![pub package](https://img.shields.io/pub/v/horizontal_data_table.svg)](https://pub.dev/packages/horizontal_data_table)
 
