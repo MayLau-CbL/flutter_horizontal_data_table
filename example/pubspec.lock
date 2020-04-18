@@ -7,7 +7,7 @@ packages:
       name: collection
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.14.11"
+    version: "1.14.12"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -26,7 +26,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.5"
+    version: "1.0.5+1"
   meta:
     dependency: transitive
     description:
@@ -47,7 +47,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.4"
+    version: "4.0.5"
   sky_engine:
     dependency: transitive
     description: flutter

@@ -1,3 +1,6 @@
+## [1.0.5+2] - 20200418
+* upgraded dependence
+
 ## [1.0.5+1] - 20200222
 * Improve: Added example project
 * upgraded dependence
