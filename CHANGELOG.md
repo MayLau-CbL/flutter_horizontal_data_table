@@ -1,3 +1,6 @@
+## [1.0.5+4] - 20200621
+* upgraded dependence
+
 ## [1.0.5+3] - 20200517
 * upgraded dependence
 
