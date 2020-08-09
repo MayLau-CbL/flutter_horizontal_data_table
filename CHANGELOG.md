@@ -1,3 +1,6 @@
+## [1.0.6] - 20200809
+* fixed itemBuilder and Children checking incorrect
+
 ## [1.0.5+5] - 20200712
 * upgraded dependence
 
