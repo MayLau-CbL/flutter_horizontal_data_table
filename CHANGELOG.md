@@ -1,3 +1,6 @@
+## [1.0.8] - 20201113
+* Fix: elevation == 0 caused infinite
+
 ## [1.0.6+3] - 20200925
 * upgraded dependence
 

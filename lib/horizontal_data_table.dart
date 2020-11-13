@@ -176,10 +176,9 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
                       color: widget.rightHandSideColBackgroundColor,
                       boxShadow: [
                         BoxShadow(
-                          color: widget.elevationColor.withAlpha((10 *
-                                  (_getElevation(horizontalOffset) /
-                                      widget.elevation))
-                              .toInt()),
+                          color: widget.elevationColor.withAlpha(
+                              _getShadowAlpha(_getElevation(horizontalOffset),
+                                  widget.elevation)),
                           blurRadius: 0.0,
                           // has the effect of softening the shadow
                           spreadRadius: 0.0,
@@ -221,10 +220,9 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
                         color: widget.leftHandSideColBackgroundColor,
                         boxShadow: [
                           BoxShadow(
-                            color: widget.elevationColor.withAlpha((10 *
-                                    (_getElevation(verticalOffset) /
-                                        widget.elevation))
-                                .toInt()),
+                            color: widget.elevationColor.withAlpha(
+                                _getShadowAlpha(_getElevation(verticalOffset),
+                                    widget.elevation)),
                             blurRadius: 0.0,
                             // has the effect of softening the shadow
                             spreadRadius: 0.0,
@@ -272,9 +270,8 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
                 color: widget.rightHandSideColBackgroundColor,
                 boxShadow: [
                   BoxShadow(
-                    color: widget.elevationColor.withAlpha((10 *
-                            (_getElevation(verticalOffset) / widget.elevation))
-                        .toInt()),
+                    color: widget.elevationColor.withAlpha(_getShadowAlpha(
+                        _getElevation(verticalOffset), widget.elevation)),
                     blurRadius: 0.0,
                     // has the effect of softening the shadow
                     spreadRadius: 0.0,
@@ -359,6 +356,13 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
       }
     }
     return 0.0;
+  }
+
+  int _getShadowAlpha(double calculatedElevation, double widgetElevation) {
+    if (widgetElevation > 0) {
+      return 10 * calculatedElevation ~/ widgetElevation;
+    }
+    return 0;
   }
 }
 
