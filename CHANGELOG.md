@@ -1,3 +1,7 @@
+## [1.0.9] - 20201225
+* Fix: flutter warning
+* Update: upgraded dependence
+
 ## [1.0.8] - 20201113
 * Fix: elevation == 0 caused infinite
 
