@@ -258,7 +258,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
 
   Widget _getRightSideHeaderScrollColumn() {
     if (widget.isFixedHeader) {
-      List<Widget> widgetList = List<Widget>();
+      List<Widget> widgetList = [];
       //headers
       widgetList.add(Selector<ScrollShadowModel, double>(
           selector: (context, scrollShadowModel) {
@@ -367,8 +367,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
 }
 
 class _SyncScrollControllerManager {
-  List<ScrollController> _registeredScrollControllers =
-      new List<ScrollController>();
+  List<ScrollController> _registeredScrollControllers = [];
 
   ScrollController _scrollingController;
   bool _scrollingActive = false;

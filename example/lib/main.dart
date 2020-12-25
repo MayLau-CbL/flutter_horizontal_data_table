@@ -65,10 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
         leftHandSideColBackgroundColor: Color(0xFFFFFFFF),
         rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
       ),
-      height: MediaQuery
-          .of(context)
-          .size
-          .height,
+      height: MediaQuery.of(context).size.height,
     );
   }
 
@@ -83,22 +80,20 @@ class _MyHomePageState extends State<MyHomePage> {
           sortType = sortName;
           isAscending = !isAscending;
           user.sortName(isAscending);
-          setState(() {
-
-          });
+          setState(() {});
         },
       ),
       FlatButton(
         padding: EdgeInsets.all(0),
-        child: _getTitleItemWidget('Status' +
-            (sortType == sortStatus ? (isAscending ? '↓' : '↑') : ''), 100),
+        child: _getTitleItemWidget(
+            'Status' +
+                (sortType == sortStatus ? (isAscending ? '↓' : '↑') : ''),
+            100),
         onPressed: () {
           sortType = sortStatus;
           isAscending = !isAscending;
           user.sortStatus(isAscending);
-          setState(() {
-
-          });
+          setState(() {});
         },
       ),
       _getTitleItemWidget('Phone', 200),
@@ -137,8 +132,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   user.userInfo[index].status
                       ? Icons.notifications_off
                       : Icons.notifications_active,
-                  color: user.userInfo[index].status ? Colors.red : Colors
-                      .green),
+                  color:
+                      user.userInfo[index].status ? Colors.red : Colors.green),
               Text(user.userInfo[index].status ? 'Disabled' : 'Active')
             ],
           ),
@@ -176,25 +171,19 @@ class _MyHomePageState extends State<MyHomePage> {
 User user = User();
 
 class User {
-  List<UserInfo> _userInfo = List<UserInfo>();
+  List<UserInfo> userInfo = [];
 
   void initData(int size) {
     for (int i = 0; i < size; i++) {
-      _userInfo.add(UserInfo(
+      userInfo.add(UserInfo(
           "User_$i", i % 3 == 0, '+001 9999 9999', '2019-01-01', 'N/A'));
     }
-  }
-
-  List<UserInfo> get userInfo => _userInfo;
-
-  set userInfo(List<UserInfo> value) {
-    _userInfo = value;
   }
 
   ///
   /// Single sort, sort Name's id
   void sortName(bool isAscending) {
-    _userInfo.sort((a, b) {
+    userInfo.sort((a, b) {
       int aId = int.tryParse(a.name.replaceFirst('User_', ''));
       int bId = int.tryParse(b.name.replaceFirst('User_', ''));
       return (aId - bId) * (isAscending ? 1 : -1);
@@ -204,7 +193,7 @@ class User {
   ///
   /// sort with Status and Name as the 2nd Sort
   void sortStatus(bool isAscending) {
-    _userInfo.sort((a, b) {
+    userInfo.sort((a, b) {
       if (a.status == b.status) {
         int aId = int.tryParse(a.name.replaceFirst('User_', ''));
         int bId = int.tryParse(b.name.replaceFirst('User_', ''));
