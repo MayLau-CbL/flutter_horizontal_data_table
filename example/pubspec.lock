@@ -33,7 +33,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.9"
+    version: "2.0.0"
   meta:
     dependency: transitive
     description:
@@ -55,6 +55,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.3.2+3"
+  pull_to_refresh:
+    dependency: "direct main"
+    description:
+      name: pull_to_refresh
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.6.3"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -76,4 +83,4 @@ packages:
     version: "2.1.0-nullsafety.3"
 sdks:
   dart: ">=2.10.0-110 <=2.11.0-213.1.beta"
-  flutter: ">=1.16.0"
+  flutter: ">=1.16.0 <2.0.0"
