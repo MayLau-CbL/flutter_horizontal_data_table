@@ -26,6 +26,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  HDTRefreshController _hdtRefreshController = HDTRefreshController();
+
   static const int sortName = 0;
   static const int sortStatus = 1;
   bool isAscending = true;
@@ -64,6 +66,14 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         leftHandSideColBackgroundColor: Color(0xFFFFFFFF),
         rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
+        enablePullToRefresh: true,
+        refreshIndicator: const WaterDropHeader(),
+        onRefresh: () async {
+          //Do sth
+          await Future.delayed(const Duration(milliseconds: 500));
+          _hdtRefreshController.refreshCompleted();
+        },
+        htdRefreshController: _hdtRefreshController,
       ),
       height: MediaQuery.of(context).size.height,
     );
