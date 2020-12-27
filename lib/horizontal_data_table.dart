@@ -1,3 +1,7 @@
+///Exxport File
+export 'package:horizontal_data_table/refresh/hdt_refresh_controller.dart';
+
+///Main File
 import 'package:flutter/material.dart';
 import 'package:horizontal_data_table/model/scroll_shadow_model.dart';
 import 'package:horizontal_data_table/refresh/non_bounce_back_scroll_physics.dart';
@@ -547,9 +551,9 @@ class _SyncScrollControllerManager {
                           _scrollingController, controller);
                       break;
                   }
+                } else {
+                  controller.jumpTo(_scrollingController.offset);
                 }
-              } else {
-                controller.jumpTo(_scrollingController.offset);
               }
             }
           },
