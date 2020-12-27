@@ -1,4 +1,4 @@
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:horizontal_data_table/refresh/pull_to_refresh/src/smart_refresher.dart';
 
 class HDTRefreshController {
   RefreshController _refreshController;

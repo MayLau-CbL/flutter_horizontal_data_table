@@ -1,13 +1,25 @@
 ///Exxport File
+
+///Wrapper Controller
 export 'package:horizontal_data_table/refresh/hdt_refresh_controller.dart';
+
+///Available Refresh Header
+export 'package:horizontal_data_table/refresh/pull_to_refresh/src/indicator/classic_indicator.dart';
+export 'package:horizontal_data_table/refresh/pull_to_refresh/src/indicator/waterdrop_header.dart';
+export 'package:horizontal_data_table/refresh/pull_to_refresh/src/indicator/custom_indicator.dart';
+export 'package:horizontal_data_table/refresh/pull_to_refresh/src/indicator/link_indicator.dart';
+export 'package:horizontal_data_table/refresh/pull_to_refresh/src/indicator/material_indicator.dart';
+export 'package:horizontal_data_table/refresh/pull_to_refresh/src/indicator/material_indicator.dart';
+export 'package:horizontal_data_table/refresh/pull_to_refresh/src/indicator/bezier_indicator.dart';
 
 ///Main File
 import 'package:flutter/material.dart';
 import 'package:horizontal_data_table/model/scroll_shadow_model.dart';
 import 'package:horizontal_data_table/refresh/non_bounce_back_scroll_physics.dart';
 import 'package:horizontal_data_table/refresh/hdt_refresh_controller.dart';
+import 'package:horizontal_data_table/refresh/pull_to_refresh/src/smart_refresher.dart';
+
 import 'package:provider/provider.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 ///
 /// For sorting issue, will based on the header fixed widget for flexible handling, suggest using [FlatButton] to control the data sorting
@@ -146,8 +158,12 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
     if (widget.enablePullToRefresh) {
       _refreshController = RefreshController(initialRefresh: false);
       widget.htdRefreshController.setRefreshController(_refreshController);
+      _syncScroller = _SyncScrollControllerManager(
+          _refreshController, widget.refreshIndicatorHeight);
+    } else {
+      _syncScroller = _SyncScrollControllerManager(_refreshController);
     }
-    _syncScroller = _SyncScrollControllerManager(_refreshController);
+
     _syncScroller
         .registerScrollController(_leftHandSideListViewScrollController);
     _syncScroller
@@ -565,6 +581,9 @@ class _SyncScrollControllerManager {
 
   void _syncLeftListViewScrollVontroller(
       ScrollController _scrollingController, ScrollController controller) {
+    // debugPrint(
+    //     'offset: ${_scrollingController.offset}; cached $_cacheScrollOffset');
+    // debugPrint('status: ${_refreshController.headerStatus}');
     switch (_refreshController.headerStatus) {
       case RefreshStatus.canRefresh:
         {
