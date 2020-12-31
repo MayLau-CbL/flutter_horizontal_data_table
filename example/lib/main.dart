@@ -68,6 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
         rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
         enablePullToRefresh: true,
         refreshIndicator: const WaterDropHeader(),
+        refreshIndicatorHeight: 60,
         onRefresh: () async {
           //Do sth
           await Future.delayed(const Duration(milliseconds: 500));
