@@ -1,3 +1,6 @@
+## [2.0.0] - 20201231
+* Feature: pull refresh
+
 ## [1.0.9] - 20201225
 * Fix: flutter warning
 * Update: upgraded dependence

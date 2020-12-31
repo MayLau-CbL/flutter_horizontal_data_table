@@ -26,6 +26,11 @@ HorizontalDataTable(
       this.elevationColor = Colors.black54,
       this.leftHandSideColBackgroundColor = Colors.white,
       this.rightHandSideColBackgroundColor = Colors.white,
+      this.enablePullToRefresh = true,
+      this.refreshIndicatorHeight: 60,
+      this.refreshIndicator: const WaterDropHeader(),
+      this.onRefresh: (){},
+      this.htdRefreshController: _hdtRefreshController,
       }
      )
       
@@ -40,7 +45,54 @@ HorizontalDataTable(
 5. elevation is the shadow between the header row and the left column when scroll start. Default set to 5.0. If want to disable the shadow, please set to 0.0.
 6. elevationColor is for changing shadow color. This should be useful when using dark table background.
 7. added leftHandSideColBackgroundColor and rightHandSideColBackgroundColor for setting the default background of the back of table. Default is set to white following the Material widget.
+8. enablePullToRefresh is to define whether enable the pull-to-refresh function. Default is setting to false. Detail you may reference to the Pull to Refresh section.
  
+## Pull to Refresh
+
+The pull to refresh action is impletemented based on the 'pull-to-refresh' package code. Currently only part of the function is available. 
+
+```
+HorizontalDataTable(
+      {
+        ...
+      this.enablePullToRefresh = true,
+      this.refreshIndicator: const WaterDropHeader(),
+      this.onRefresh: _onRefresh,
+      this.htdRefreshController: _hdtRefreshController,
+      }
+     )
+      
+```
+1. refreshIndicator is the header widget when pull to refresh. 
+    Available refreshIndicator:
+      1. ClassicHeader
+      2. WaterDropHeader
+      3. CustomHeader
+      4. LinkHeader
+      5. MaterialClassicHeader
+      6. BezierHeader
+
+    Since refreshIndicator is a Widget type field, you may customize yourself on the header, but you must set the height of the header. The detail usage you may reference to the [pull-to-refresh](https://pub.dev/packages/pull_to_refresh) package.
+2. refreshIndicatorHeight is the height of the refreshIndicator. Default is set to 60.
+3. onRefresh is the callback from the refresh action.     
+4. htdRefreshController is the wrapper controller for returning the refresh result. 
+    This is the example on how to use onRefresh and htdRefreshController.
+    ```
+    void _onRefresh() async {
+      //do some network call and get the response
+      
+      if(isError){
+        //call this when it is an error case
+        _hdtRefreshController.refreshFailed();
+      }else{
+        //call this when it is a success case
+        _hdtRefreshController.refreshCompleted();
+      }      
+    },
+    ```
+
+All of this 4 params are required when enablePullToRefresh is set to true. 
+
 ## Example
 
 ![](horizontal_table.gif)
@@ -74,6 +126,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  HDTRefreshController _hdtRefreshController = HDTRefreshController();
+
   static const int sortName = 0;
   static const int sortStatus = 1;
   bool isAscending = true;
@@ -110,8 +164,17 @@ class _MyHomePageState extends State<MyHomePage> {
           height: 1.0,
           thickness: 0.0,
         ),
-        leftHandSideColBackgroundColor: Color(0xFF2A2A2A),
+        leftHandSideColBackgroundColor: Color(0xFFFFFFFF),
         rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
+        enablePullToRefresh: true,
+        refreshIndicator: const WaterDropHeader(),
+        refreshIndicatorHeight: 60,
+        onRefresh: () async {
+          //Do sth
+          await Future.delayed(const Duration(milliseconds: 500));
+          _hdtRefreshController.refreshCompleted();
+        },
+        htdRefreshController: _hdtRefreshController,
       ),
       height: MediaQuery.of(context).size.height,
     );
@@ -121,26 +184,27 @@ class _MyHomePageState extends State<MyHomePage> {
     return [
       FlatButton(
         padding: EdgeInsets.all(0),
-        child: _getTitleItemWidget('Name'+(sortType==sortName?(isAscending?'↓':'↑'):''), 100),
+        child: _getTitleItemWidget(
+            'Name' + (sortType == sortName ? (isAscending ? '↓' : '↑') : ''),
+            100),
         onPressed: () {
           sortType = sortName;
           isAscending = !isAscending;
           user.sortName(isAscending);
-          setState(() {
-
-          });
+          setState(() {});
         },
       ),
       FlatButton(
         padding: EdgeInsets.all(0),
-        child: _getTitleItemWidget('Status'+(sortType==sortStatus?(isAscending?'↓':'↑'):''), 100),
+        child: _getTitleItemWidget(
+            'Status' +
+                (sortType == sortStatus ? (isAscending ? '↓' : '↑') : ''),
+            100),
         onPressed: () {
           sortType = sortStatus;
           isAscending = !isAscending;
           user.sortStatus(isAscending);
-          setState(() {
-
-          });
+          setState(() {});
         },
       ),
       _getTitleItemWidget('Phone', 200),
@@ -179,7 +243,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   user.userInfo[index].status
                       ? Icons.notifications_off
                       : Icons.notifications_active,
-                  color: user.userInfo[index].status ? Colors.red : Colors.green),
+                  color:
+                      user.userInfo[index].status ? Colors.red : Colors.green),
               Text(user.userInfo[index].status ? 'Disabled' : 'Active')
             ],
           ),
@@ -217,39 +282,33 @@ class _MyHomePageState extends State<MyHomePage> {
 User user = User();
 
 class User {
-  List<UserInfo> _userInfo = List<UserInfo>();
+  List<UserInfo> userInfo = [];
 
   void initData(int size) {
     for (int i = 0; i < size; i++) {
-      _userInfo.add(UserInfo(
+      userInfo.add(UserInfo(
           "User_$i", i % 3 == 0, '+001 9999 9999', '2019-01-01', 'N/A'));
     }
-  }
-
-  List<UserInfo> get userInfo => _userInfo;
-
-  set userInfo(List<UserInfo> value) {
-    _userInfo = value;
   }
 
   ///
   /// Single sort, sort Name's id
   void sortName(bool isAscending) {
-    _userInfo.sort((a, b) {
+    userInfo.sort((a, b) {
       int aId = int.tryParse(a.name.replaceFirst('User_', ''));
       int bId = int.tryParse(b.name.replaceFirst('User_', ''));
-      return (aId-bId) * (isAscending ? 1 : -1);
+      return (aId - bId) * (isAscending ? 1 : -1);
     });
   }
 
   ///
   /// sort with Status and Name as the 2nd Sort
   void sortStatus(bool isAscending) {
-    _userInfo.sort((a, b) {
+    userInfo.sort((a, b) {
       if (a.status == b.status) {
         int aId = int.tryParse(a.name.replaceFirst('User_', ''));
         int bId = int.tryParse(b.name.replaceFirst('User_', ''));
-        return (aId-bId);
+        return (aId - bId);
       } else if (a.status) {
         return isAscending ? 1 : -1;
       } else {
@@ -269,7 +328,6 @@ class UserInfo {
   UserInfo(this.name, this.status, this.phone, this.registerDate,
       this.terminationDate);
 }
-
 
 ```
  
