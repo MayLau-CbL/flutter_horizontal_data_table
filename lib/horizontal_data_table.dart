@@ -9,7 +9,6 @@ export 'package:horizontal_data_table/refresh/pull_to_refresh/src/indicator/wate
 export 'package:horizontal_data_table/refresh/pull_to_refresh/src/indicator/custom_indicator.dart';
 export 'package:horizontal_data_table/refresh/pull_to_refresh/src/indicator/link_indicator.dart';
 export 'package:horizontal_data_table/refresh/pull_to_refresh/src/indicator/material_indicator.dart';
-export 'package:horizontal_data_table/refresh/pull_to_refresh/src/indicator/material_indicator.dart';
 export 'package:horizontal_data_table/refresh/pull_to_refresh/src/indicator/bezier_indicator.dart';
 
 ///Main File
