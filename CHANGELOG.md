@@ -1,4 +1,4 @@
-## [2.0.0] - 20200116
+## [2.0.1] - 20200116
 * Fix: null check for htdRefreshController in dispose
 * Update: upgraded dependence
 
