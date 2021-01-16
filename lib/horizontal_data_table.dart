@@ -188,7 +188,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
     _leftHandSideListViewScrollController.dispose();
     _rightHandSideListViewScrollController.dispose();
     _rightHorizontalScrollController.dispose();
-    widget.htdRefreshController.setRefreshController(null);
+    widget.htdRefreshController?.setRefreshController(null);
     super.dispose();
   }
 
