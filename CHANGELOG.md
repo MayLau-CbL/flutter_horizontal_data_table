@@ -1,3 +1,7 @@
+## [2.0.0] - 20200116
+* Fix: null check for htdRefreshController in dispose
+* Update: upgraded dependence
+
 ## [2.0.0] - 20201231
 * Feature: pull refresh
 
