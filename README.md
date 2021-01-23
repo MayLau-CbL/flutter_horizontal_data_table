@@ -1,5 +1,7 @@
 # horizontal_data_table
 [![pub package](https://img.shields.io/pub/v/horizontal_data_table.svg)](https://pub.dev/packages/horizontal_data_table)
+![](https://img.shields.io/github/issues/MayLau-CbL/flutter_horizontal_data_table)
+![](https://img.shields.io/github/stars/MayLau-CbL/flutter_horizontal_data_table?style=social)
 
 A Flutter Widget that create a horizontal table with fixed column on left hand side.
 
@@ -26,6 +28,8 @@ HorizontalDataTable(
       this.elevationColor = Colors.black54,
       this.leftHandSideColBackgroundColor = Colors.white,
       this.rightHandSideColBackgroundColor = Colors.white,
+      this.horizontalScrollController,
+      this.verticalScrollController,
       this.enablePullToRefresh = true,
       this.refreshIndicatorHeight: 60,
       this.refreshIndicator: const WaterDropHeader(),
@@ -45,7 +49,8 @@ HorizontalDataTable(
 5. elevation is the shadow between the header row and the left column when scroll start. Default set to 5.0. If want to disable the shadow, please set to 0.0.
 6. elevationColor is for changing shadow color. This should be useful when using dark table background.
 7. added leftHandSideColBackgroundColor and rightHandSideColBackgroundColor for setting the default background of the back of table. Default is set to white following the Material widget.
-8. enablePullToRefresh is to define whether enable the pull-to-refresh function. Default is setting to false. Detail you may reference to the Pull to Refresh section.
+8. added horizontalScrollController and verticalScrollController allow maunally jump to certain offset position. Please aware that if you have enabled the pull to refresh function, the jump to action may conflict with the pull to refresh action.
+9. enablePullToRefresh is to define whether enable the pull-to-refresh function. Default is setting to false. Detail you may reference to the Pull to Refresh section.
  
 ## Pull to Refresh
 
@@ -330,7 +335,15 @@ class UserInfo {
 }
 
 ```
- 
+
+## Issues Report and Feature Request
+
+Thank you for your reporting and suggestion making this package more complete!
+
+Since many developers get in touch with this package in different places (pub.dev, GitHub, and others website recommandation), I have received your voice regarding to feature request, issue report and question via different channels. 
+
+To avoid missing of the messages, I have created the issue templates on GitHub which allow our conversations with ease, especially some discussions are complex when they need to talk with the sample code.
+
 ## License
 
 MIT
