@@ -20,6 +20,9 @@ import 'package:horizontal_data_table/refresh/pull_to_refresh/src/smart_refreshe
 
 import 'package:provider/provider.dart';
 
+const String leftScrollControllerLabel = 'Left';
+const String rightScrollControllerLabel = 'Right';
+
 ///
 /// For sorting issue, will based on the header fixed widget for flexible handling, suggest using [FlatButton] to control the data sorting
 ///
@@ -61,6 +64,12 @@ class HorizontalDataTable extends StatefulWidget {
   final Color leftHandSideColBackgroundColor;
   final Color rightHandSideColBackgroundColor;
 
+  ///Vertical scroll controller, expose for allowing maunally jump to specific offset position. Please aware this may conflict with the pull to refresh action.
+  final ScrollController verticalScrollController;
+
+  ///Horizontal scroll controller, expose for allowing maunally jump to specific offset position.
+  final ScrollController horizontalScrollController;
+
   ///Flag to indicate whether enable the pull_to_refresh function
   ///Default is false
   final bool enablePullToRefresh;
@@ -99,6 +108,8 @@ class HorizontalDataTable extends StatefulWidget {
     this.elevationColor = Colors.black54,
     this.leftHandSideColBackgroundColor = Colors.white,
     this.rightHandSideColBackgroundColor = Colors.white,
+    this.horizontalScrollController,
+    this.verticalScrollController,
     this.enablePullToRefresh = false,
     this.refreshIndicatorHeight = 60.0,
     this.htdRefreshController,
@@ -140,11 +151,9 @@ class HorizontalDataTable extends StatefulWidget {
 }
 
 class _HorizontalDataTableState extends State<HorizontalDataTable> {
-  ScrollController _leftHandSideListViewScrollController =
-      ScrollController(debugLabel: 'Left');
-  ScrollController _rightHandSideListViewScrollController =
-      ScrollController(debugLabel: 'Right');
-  ScrollController _rightHorizontalScrollController = ScrollController();
+  ScrollController _leftHandSideListViewScrollController = ScrollController();
+  ScrollController _rightHandSideListViewScrollController;
+  ScrollController _rightHorizontalScrollController;
 
   ScrollShadowModel _scrollShadowModel = ScrollShadowModel();
 
@@ -154,6 +163,11 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
   @override
   void initState() {
     super.initState();
+    _rightHandSideListViewScrollController =
+        widget.verticalScrollController ?? ScrollController();
+    _rightHorizontalScrollController =
+        widget.horizontalScrollController ?? ScrollController();
+
     if (widget.enablePullToRefresh) {
       _refreshController = RefreshController(initialRefresh: false);
       widget.htdRefreshController.setRefreshController(_refreshController);
@@ -310,8 +324,6 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
                           )
                         ],
                       ),
-//                    child: child,
-//                elevation: _getElevation(verticalOffset),
                     ),
                   ),
                   child
@@ -321,13 +333,19 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
           ),
           widget.rowSeparatorWidget,
           Expanded(
-              child: _getScrollColumn(_getLeftHandSideListView(),
-                  this._leftHandSideListViewScrollController)),
+              child: _getScrollColumn(
+            _getLeftHandSideListView(),
+            this._leftHandSideListViewScrollController,
+            leftScrollControllerLabel,
+          )),
         ],
       );
     } else {
-      return _getScrollColumn(_getLeftHandSideListView(),
-          this._leftHandSideListViewScrollController);
+      return _getScrollColumn(
+        _getLeftHandSideListView(),
+        this._leftHandSideListViewScrollController,
+        leftScrollControllerLabel,
+      );
     }
   }
 
@@ -359,7 +377,6 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
                 ],
               ),
               child: child,
-//                elevation: _getElevation(verticalOffset)
             );
           },
           child: Row(children: widget.headerWidgets.sublist(1))));
@@ -368,23 +385,30 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
       );
       //ListView
       widgetList.add(Expanded(
-        child: _getScrollColumn(_getRightHandSideListView(),
-            this._rightHandSideListViewScrollController),
+        child: _getScrollColumn(
+          _getRightHandSideListView(),
+          this._rightHandSideListViewScrollController,
+          rightScrollControllerLabel,
+        ),
       ));
       return Column(
         children: widgetList,
       );
     } else {
-      return _getScrollColumn(_getRightHandSideListView(),
-          this._rightHandSideListViewScrollController);
+      return _getScrollColumn(
+        _getRightHandSideListView(),
+        this._rightHandSideListViewScrollController,
+        rightScrollControllerLabel,
+      );
     }
   }
 
-  Widget _getScrollColumn(Widget child, ScrollController scrollController) {
+  Widget _getScrollColumn(
+      Widget child, ScrollController scrollController, String label) {
     return NotificationListener<ScrollNotification>(
       child: child,
       onNotification: (ScrollNotification scrollInfo) {
-        _syncScroller.processNotification(scrollInfo, scrollController);
+        _syncScroller.processNotification(scrollInfo, scrollController, label);
         return false;
       },
     );
@@ -536,7 +560,7 @@ class _SyncScrollControllerManager {
   }
 
   void processNotification(
-      ScrollNotification notification, ScrollController sender) {
+      ScrollNotification notification, ScrollController sender, String label) {
     if (notification is ScrollStartNotification && !_scrollingActive) {
       _scrollingController = sender;
       _scrollingActive = true;
@@ -556,13 +580,13 @@ class _SyncScrollControllerManager {
             if (!identical(_scrollingController, controller)) {
               if (controller.hasClients) {
                 if (_refreshController != null) {
-                  switch (controller.debugLabel) {
-                    case 'Left':
-                      _syncLeftListViewScrollVontroller(
+                  switch (label) {
+                    case leftScrollControllerLabel:
+                      _syncRightListViewScrollVontroller(
                           _scrollingController, controller);
                       break;
-                    case 'Right':
-                      _syncRightListViewScrollVontroller(
+                    case rightScrollControllerLabel:
+                      _syncLeftListViewScrollVontroller(
                           _scrollingController, controller);
                       break;
                   }
@@ -580,9 +604,6 @@ class _SyncScrollControllerManager {
 
   void _syncLeftListViewScrollVontroller(
       ScrollController _scrollingController, ScrollController controller) {
-    // debugPrint(
-    //     'offset: ${_scrollingController.offset}; cached $_cacheScrollOffset');
-    // debugPrint('status: ${_refreshController.headerStatus}');
     switch (_refreshController.headerStatus) {
       case RefreshStatus.canRefresh:
         {
