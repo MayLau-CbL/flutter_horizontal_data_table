@@ -1,7 +1,7 @@
 # horizontal_data_table
 [![pub package](https://img.shields.io/pub/v/horizontal_data_table.svg)](https://pub.dev/packages/horizontal_data_table)
-![](https://img.shields.io/github/issues/MayLau-CbL/flutter_horizontal_data_table)
-![](https://img.shields.io/github/stars/MayLau-CbL/flutter_horizontal_data_table?style=social)
+[![issues](https://img.shields.io/github/issues/MayLau-CbL/flutter_horizontal_data_table)](https://github.com/MayLau-CbL/flutter_horizontal_data_table/issues)
+[![GitHub Page](https://img.shields.io/github/stars/MayLau-CbL/flutter_horizontal_data_table?style=social)](https://github.com/MayLau-CbL/flutter_horizontal_data_table)
 
 A Flutter Widget that create a horizontal table with fixed column on left hand side.
 

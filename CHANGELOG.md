@@ -1,3 +1,6 @@
+## [2.1.0+1] - 20210123
+* Update: README.md
+
 ## [2.1.0] - 20210123
 * Update: README.md for scroll controller and issue templates
 * Add: exposed scroll controller
