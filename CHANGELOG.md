@@ -1,4 +1,11 @@
-## [2.0.1] - 20200116
+## [2.1.0] - 20210123
+* Update: RAEDME.md for scroll controller and issue templates
+* Add: exposed scroll controller
+* Add: getter for refresh controller
+* Remove: deprecated method
+* Update: upgraded dependence
+
+## [2.0.1] - 20210116
 * Fix: null check for htdRefreshController in dispose
 * Update: upgraded dependence
 
