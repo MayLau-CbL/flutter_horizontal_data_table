@@ -1,5 +1,5 @@
 ## [2.1.0] - 20210123
-* Update: RAEDME.md for scroll controller and issue templates
+* Update: README.md for scroll controller and issue templates
 * Add: exposed scroll controller
 * Add: getter for refresh controller
 * Remove: deprecated method
