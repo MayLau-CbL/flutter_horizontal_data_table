@@ -3,6 +3,8 @@ import 'package:horizontal_data_table/refresh/pull_to_refresh/src/smart_refreshe
 class HDTRefreshController {
   RefreshController _refreshController;
 
+  RefreshController get refreshController => _refreshController;
+
   void setRefreshController(RefreshController refreshController) {
     _refreshController = refreshController;
   }
