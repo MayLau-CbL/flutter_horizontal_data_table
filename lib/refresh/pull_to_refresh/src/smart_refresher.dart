@@ -1000,7 +1000,7 @@ class RefreshConfiguration extends InheritedWidget {
             RefreshConfiguration.of(context).shouldFooterFollowWhenNotFull;
 
   static RefreshConfiguration of(BuildContext context) {
-    return context.inheritFromWidgetOfExactType(RefreshConfiguration);
+    return context.dependOnInheritedWidgetOfExactType(aspect:RefreshConfiguration);
   }
 
   @override
