@@ -1,3 +1,6 @@
+## [2.1.1+1] - 20210207
+* Update: dart format
+
 ## [2.1.1] - 20210207
 * Fix: removed deprecated method in smartrefresh
 
