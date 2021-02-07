@@ -1,3 +1,6 @@
+## [2.1.1] - 20210207
+* Fix: removed deprecated method in smartrefresh
+
 ## [2.1.0+1] - 20210123
 * Update: README.md
 
