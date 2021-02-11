@@ -1,3 +1,6 @@
+## [2.2.0] - 20210211
+* Add: new tableHeight param
+
 ## [2.1.1+1] - 20210207
 * Update: dart format
 

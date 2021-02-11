@@ -12,6 +12,7 @@ This shows Widget's full customizations:
 HorizontalDataTable(
       {@required this.leftHandSideColumnWidth,
       @required this.rightHandSideColumnWidth,
+      this.tableHeight,
       this.isFixedHeader = false,
       this.headerWidgets,
       this.leftSideItemBuilder,
@@ -41,16 +42,17 @@ HorizontalDataTable(
 ```
 
 1. Left side column(leftHandSideColumnWidth) and right side maximum scrollable area width(rightHandSideColumnWidth) are required to input.
-2. isFixedHeader is to define whether use fixed top row header. If true, headerWidgets is required. Default is false.
-3. This widget allow set children in two ways, 
+2. tableHeight is for manually set the table widget's height. The table widget height is using the smaller value of tableHeight and available height. Default is set to null, which is equal to using available height.
+3. isFixedHeader is to define whether use fixed top row header. If true, headerWidgets is required. Default is false.
+4. This widget allow set children in two ways, 
     a. Directly add list of child widget (leftSideChildren and rightSideChildren)
     b. (Recommended) Using index builder to assign each row's widget. itemCount is required to count the number of row.
-4. rowSeparatorWidget is to add Divider of each Row. Default is turned off.
-5. elevation is the shadow between the header row and the left column when scroll start. Default set to 5.0. If want to disable the shadow, please set to 0.0.
-6. elevationColor is for changing shadow color. This should be useful when using dark table background.
-7. added leftHandSideColBackgroundColor and rightHandSideColBackgroundColor for setting the default background of the back of table. Default is set to white following the Material widget.
-8. added horizontalScrollController and verticalScrollController allow maunally jump to certain offset position. Please aware that if you have enabled the pull to refresh function, the jump to action may conflict with the pull to refresh action.
-9. enablePullToRefresh is to define whether enable the pull-to-refresh function. Default is setting to false. Detail you may reference to the Pull to Refresh section.
+5. rowSeparatorWidget is to add Divider of each Row. Default is turned off.
+6. elevation is the shadow between the header row and the left column when scroll start. Default set to 5.0. If want to disable the shadow, please set to 0.0.
+7. elevationColor is for changing shadow color. This should be useful when using dark table background.
+8. added leftHandSideColBackgroundColor and rightHandSideColBackgroundColor for setting the default background of the back of table. Default is set to white following the Material widget.
+9. added horizontalScrollController and verticalScrollController allow maunally jump to certain offset position. Please aware that if you have enabled the pull to refresh function, the jump to action may conflict with the pull to refresh action.
+10. enablePullToRefresh is to define whether enable the pull-to-refresh function. Default is setting to false. Detail you may reference to the Pull to Refresh section.
  
 ## Pull to Refresh
 
