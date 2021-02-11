@@ -31,6 +31,10 @@ class HorizontalDataTable extends StatefulWidget {
   final double leftHandSideColumnWidth;
   final double rightHandSideColumnWidth;
 
+  ///tableHeight is the whole table widget height, including header and table body. This is for those want a shrinkWrap widget to input the calculated table height. If the tableHeight is smaller than the widget available height, the tableHeight is used instead. If the tableHeight is larger than the available height, available height is used.
+  ///Default set to null, use up all available space. tableHeight must > 0.
+  final double tableHeight;
+
   ///if headerWidgets==true,
   ///HorizontalDataTable.headerWidgets[0] as the left hand side header
   ///
@@ -92,6 +96,7 @@ class HorizontalDataTable extends StatefulWidget {
   const HorizontalDataTable({
     @required this.leftHandSideColumnWidth,
     @required this.rightHandSideColumnWidth,
+    this.tableHeight,
     this.isFixedHeader = false,
     this.headerWidgets,
     this.leftSideItemBuilder,
@@ -125,6 +130,8 @@ class HorizontalDataTable extends StatefulWidget {
             'Either using itemBuilder or children to assign right side widgets'),
         assert((isFixedHeader && headerWidgets != null) || !isFixedHeader,
             'If use fixed top row header, isFixedHeader==true, headerWidgets must not be null'),
+        assert(tableHeight == null || tableHeight > 0.0,
+            'tableHeight can only be null or > 0.0'),
         assert(itemCount >= 0, 'itemCount must >= 0'),
         assert(elevation >= 0.0, 'elevation must >= 0.0'),
         assert(elevationColor != null, 'elevationColor must not be null'),
@@ -213,8 +220,19 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
       child: SafeArea(
         child: LayoutBuilder(
           builder: (context, boxConstraint) {
-            return _getParallelListView(
-                boxConstraint.maxWidth, boxConstraint.maxHeight);
+            if (widget.tableHeight != null) {
+              return _getParallelListView(
+                boxConstraint.maxWidth,
+                boxConstraint.maxHeight > widget.tableHeight
+                    ? widget.tableHeight
+                    : boxConstraint.maxHeight,
+              );
+            } else {
+              return _getParallelListView(
+                boxConstraint.maxWidth,
+                boxConstraint.maxHeight,
+              );
+            }
           },
         ),
       ),
