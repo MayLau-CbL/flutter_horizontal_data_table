@@ -20,11 +20,12 @@ import 'package:horizontal_data_table/refresh/pull_to_refresh/src/smart_refreshe
 
 import 'package:provider/provider.dart';
 
-const String leftScrollControllerLabel = 'Left';
-const String rightScrollControllerLabel = 'Right';
+import 'delegate/base_layout_view_delegate.dart';
+import 'delegate/list_view_layout_delegate.dart';
+import 'scroll/sync_scroll_controller_manager.dart';
 
 ///
-/// For sorting issue, will based on the header fixed widget for flexible handling, suggest using [FlatButton] to control the data sorting
+/// For sorting issue, will based on the header fixed widget for flexible handling, suggest using [Button] to control the data sorting
 ///
 ///
 class HorizontalDataTable extends StatefulWidget {
@@ -164,7 +165,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
 
   ScrollShadowModel _scrollShadowModel = ScrollShadowModel();
 
-  _SyncScrollControllerManager _syncScroller;
+  SyncScrollControllerManager _syncScroller;
   RefreshController _refreshController;
 
   @override
@@ -178,10 +179,10 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
     if (widget.enablePullToRefresh) {
       _refreshController = RefreshController(initialRefresh: false);
       widget.htdRefreshController.setRefreshController(_refreshController);
-      _syncScroller = _SyncScrollControllerManager(
+      _syncScroller = SyncScrollControllerManager(
           _refreshController, widget.refreshIndicatorHeight);
     } else {
-      _syncScroller = _SyncScrollControllerManager(_refreshController);
+      _syncScroller = SyncScrollControllerManager(_refreshController);
     }
 
     _syncScroller
@@ -240,185 +241,131 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
   }
 
   Widget _getParallelListView(double width, double height) {
-    return Stack(
-      children: <Widget>[
-        Positioned(
-          top: 0,
-          left: widget.leftHandSideColumnWidth,
-          height: height,
-          width: width - widget.leftHandSideColumnWidth,
+    return CustomMultiChildLayout(
+      delegate: TableBaseLayoutDelegate(
+          height, width, widget.leftHandSideColumnWidth, widget.elevation),
+      children: [
+        LayoutId(
+          id: BaseLayoutView.LeftListView,
+          child: Container(
+            color: widget.leftHandSideColBackgroundColor,
+            child: _getFixedHeaderScrollColumn(
+              height: height,
+              listViewWidth: widget.leftHandSideColumnWidth,
+              header: widget.headerWidgets[0],
+              listView: _getScrollColumn(
+                _getLeftHandSideListView(),
+                this._leftHandSideListViewScrollController,
+                leftScrollControllerLabel,
+              ),
+            ),
+          ),
+        ),
+        LayoutId(
+          id: BaseLayoutView.RightListView,
           child: SingleChildScrollView(
             controller: _rightHorizontalScrollController,
             child: Container(
               color: widget.rightHandSideColBackgroundColor,
-              child: _getRightSideHeaderScrollColumn(),
+              child: _getFixedHeaderScrollColumn(
+                height: height,
+                listViewWidth: widget.rightHandSideColumnWidth,
+                header: Row(children: widget.headerWidgets.sublist(1)),
+                listView: _getScrollColumn(
+                  _getRightHandSideListView(),
+                  this._rightHandSideListViewScrollController,
+                  rightScrollControllerLabel,
+                ),
+              ),
               width: widget.rightHandSideColumnWidth,
             ),
             scrollDirection: Axis.horizontal,
           ),
         ),
-        Positioned(
-          top: 0,
-          left: 0,
-          height: height,
-          width: widget.leftHandSideColumnWidth,
+        LayoutId(
+          id: BaseLayoutView.MiddleShadow,
           child: Selector<ScrollShadowModel, double>(
-            selector: (context, scrollShadowModel) {
-              return scrollShadowModel?.horizontalOffset ?? 0;
-            },
-            child: Container(
-              width: widget.leftHandSideColumnWidth,
-              child: _getLeftSideFixedHeaderScrollColumn(),
-            ),
-            builder: (context, horizontalOffset, child) {
-              return Stack(
-                children: <Widget>[
-                  Positioned.fill(
-                    child: Container(
-                        //force table background to be transaparent to adopt the color behide this table
-//                      color: widget.leftHandSideColBackgroundColor,
-//                      child: child,
-//                      elevation: _getElevation(horizontalOffset),
-                        decoration: BoxDecoration(
-                      color: widget.rightHandSideColBackgroundColor,
-                      boxShadow: [
-                        BoxShadow(
-                          color: widget.elevationColor.withAlpha(
-                              _getShadowAlpha(_getElevation(horizontalOffset),
-                                  widget.elevation)),
-                          blurRadius: 0.0,
-                          // has the effect of softening the shadow
-                          spreadRadius: 0.0,
-                          // has the effect of extending the shadow
-                          offset: Offset(
-                            _getElevation(horizontalOffset),
-                            // horizontal, move right 10
-                            0.0, // vertical, move down 10
-                          ),
-                        )
-                      ],
-                    )),
-                  ),
-                  child
-                ],
-              );
-            },
-          ),
+              selector: (context, scrollShadowModel) {
+            return scrollShadowModel?.horizontalOffset ?? 0;
+          }, builder: (context, horizontalOffset, child) {
+            return Container(
+              width: _getElevation(horizontalOffset),
+              height: height,
+              color: widget.elevationColor.withAlpha(
+                _getShadowAlpha(
+                    _getElevation(horizontalOffset), widget.elevation),
+              ),
+              // color: Colors.purpleAccent,
+            );
+          }),
         ),
       ],
     );
   }
 
-  Widget _getLeftSideFixedHeaderScrollColumn() {
-    if (widget.isFixedHeader) {
-      return Column(
-        children: <Widget>[
-          Selector<ScrollShadowModel, double>(
-            selector: (context, scrollShadowModel) {
-              return scrollShadowModel?.verticalOffset ?? 0;
-            },
-            child: widget.headerWidgets[0],
-            builder: (context, verticalOffset, child) {
-              return Stack(
-                children: <Widget>[
-                  Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: widget.leftHandSideColBackgroundColor,
-                        boxShadow: [
-                          BoxShadow(
-                            color: widget.elevationColor.withAlpha(
-                                _getShadowAlpha(_getElevation(verticalOffset),
-                                    widget.elevation)),
-                            blurRadius: 0.0,
-                            // has the effect of softening the shadow
-                            spreadRadius: 0.0,
-                            // has the effect of extending the shadow
-                            offset: Offset(
-                              0.0, // horizontal, move right 10
-                              _getElevation(
-                                  verticalOffset), // vertical, move down 10
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  child
-                ],
-              );
-            },
-          ),
-          widget.rowSeparatorWidget,
-          Expanded(
-              child: _getScrollColumn(
-            _getLeftHandSideListView(),
-            this._leftHandSideListViewScrollController,
-            leftScrollControllerLabel,
-          )),
-        ],
-      );
-    } else {
-      return _getScrollColumn(
-        _getLeftHandSideListView(),
-        this._leftHandSideListViewScrollController,
-        leftScrollControllerLabel,
-      );
-    }
-  }
+  Widget _getFixedHeaderScrollColumn(
+      {double height, double listViewWidth, Widget header, Widget listView}) {
+    return CustomMultiChildLayout(
+      delegate: ListViewLayoutDelegate(
+        height,
+        listViewWidth,
+        widget.elevation,
+      ),
 
-  Widget _getRightSideHeaderScrollColumn() {
-    if (widget.isFixedHeader) {
-      List<Widget> widgetList = [];
-      //headers
-      widgetList.add(Selector<ScrollShadowModel, double>(
-          selector: (context, scrollShadowModel) {
-            return scrollShadowModel?.verticalOffset ?? 0;
-          },
-          builder: (context, verticalOffset, child) {
-            return Container(
-              decoration: BoxDecoration(
-                color: widget.rightHandSideColBackgroundColor,
-                boxShadow: [
-                  BoxShadow(
-                    color: widget.elevationColor.withAlpha(_getShadowAlpha(
-                        _getElevation(verticalOffset), widget.elevation)),
-                    blurRadius: 0.0,
-                    // has the effect of softening the shadow
-                    spreadRadius: 0.0,
-                    // has the effect of extending the shadow
-                    offset: Offset(
-                      0.0, // horizontal, move right 10
-                      _getElevation(verticalOffset), // vertical, move down 10
-                    ),
-                  )
-                ],
+      ///not used if(xxx) for dart version below 2.3.0
+      ///will update later
+      children: widget.isFixedHeader
+          ? [
+              LayoutId(
+                id: ListViewLayout.Header,
+                child: header,
               ),
-              child: child,
-            );
-          },
-          child: Row(children: widget.headerWidgets.sublist(1))));
-      widgetList.add(
-        widget.rowSeparatorWidget,
-      );
-      //ListView
-      widgetList.add(Expanded(
-        child: _getScrollColumn(
-          _getRightHandSideListView(),
-          this._rightHandSideListViewScrollController,
-          rightScrollControllerLabel,
-        ),
-      ));
-      return Column(
-        children: widgetList,
-      );
-    } else {
-      return _getScrollColumn(
-        _getRightHandSideListView(),
-        this._rightHandSideListViewScrollController,
-        rightScrollControllerLabel,
-      );
-    }
+              LayoutId(
+                id: ListViewLayout.Divider,
+                child: widget.rowSeparatorWidget,
+              ),
+              LayoutId(
+                id: ListViewLayout.ListView,
+                child: listView,
+              ),
+              LayoutId(
+                id: ListViewLayout.Shadow,
+                child: Selector<ScrollShadowModel, double>(
+                  selector: (context, scrollShadowModel) {
+                    return scrollShadowModel?.verticalOffset ?? 0;
+                  },
+                  builder: (context, verticalOffset, child) {
+                    return Container(
+                      color: widget.elevationColor.withAlpha(_getShadowAlpha(
+                          _getElevation(verticalOffset), widget.elevation)),
+                      height: _getElevation(widget.elevation),
+                    );
+                  },
+                ),
+              ),
+            ]
+          : [
+              LayoutId(
+                id: ListViewLayout.ListView,
+                child: listView,
+              ),
+              LayoutId(
+                id: ListViewLayout.Shadow,
+                child: Selector<ScrollShadowModel, double>(
+                  selector: (context, scrollShadowModel) {
+                    return scrollShadowModel?.verticalOffset ?? 0;
+                  },
+                  builder: (context, verticalOffset, child) {
+                    return Container(
+                      color: widget.elevationColor.withAlpha(_getShadowAlpha(
+                          _getElevation(verticalOffset), widget.elevation)),
+                      height: _getElevation(widget.elevation),
+                    );
+                  },
+                ),
+              ),
+            ],
+    );
   }
 
   Widget _getScrollColumn(
@@ -477,9 +424,12 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
         },
       );
     } else {
-      return ListView(
+      return ListView.builder(
         controller: scrollController,
-        children: children,
+        itemCount: children.length,
+        itemBuilder: (context, index) {
+          return children[index];
+        },
       );
     }
   }
@@ -487,31 +437,17 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
   Widget _getPullToRefreshRightListView(ScrollController scrollController,
       IndexedWidgetBuilder indexedWidgetBuilder, int itemCount,
       [List<Widget> children]) {
-    if (indexedWidgetBuilder != null) {
-      return SmartRefresher(
-        controller: _refreshController,
-        onRefresh: widget.onRefresh,
-        header: widget.refreshIndicator,
-        child: ListView.separated(
-          controller: scrollController,
-          itemBuilder: indexedWidgetBuilder,
-          itemCount: itemCount,
-          separatorBuilder: (context, index) {
-            return widget.rowSeparatorWidget;
-          },
-        ),
-      );
-    } else {
-      return SmartRefresher(
-        controller: _refreshController,
-        onRefresh: widget.onRefresh,
-        header: widget.refreshIndicator,
-        child: ListView(
-          controller: scrollController,
-          children: children,
-        ),
-      );
-    }
+    return SmartRefresher(
+      controller: _refreshController,
+      onRefresh: widget.onRefresh,
+      header: widget.refreshIndicator,
+      child: _getListView(
+        scrollController,
+        indexedWidgetBuilder,
+        itemCount,
+        children,
+      ),
+    );
   }
 
   Widget _getPullToRefreshLeftListView(ScrollController scrollController,
@@ -551,113 +487,5 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
       return 10 * calculatedElevation ~/ widgetElevation;
     }
     return 0;
-  }
-}
-
-class _SyncScrollControllerManager {
-  _SyncScrollControllerManager(RefreshController refreshController,
-      [double refreshIndicatorHeight = 0.0]) {
-    _refreshController = refreshController;
-    _refreshIndicatorHeight = refreshIndicatorHeight;
-  }
-  List<ScrollController> _registeredScrollControllers = [];
-  ScrollController _scrollingController;
-  bool _scrollingActive = false;
-
-  ///Refresh related
-  RefreshController _refreshController;
-  double _refreshIndicatorHeight = 0.0;
-  double _cacheScrollOffset = 0.0;
-
-  void registerScrollController(ScrollController controller) {
-    _registeredScrollControllers.add(controller);
-  }
-
-  void unregisterScrollController(ScrollController controller) {
-    _registeredScrollControllers.remove(controller);
-  }
-
-  void processNotification(
-      ScrollNotification notification, ScrollController sender, String label) {
-    if (notification is ScrollStartNotification && !_scrollingActive) {
-      _scrollingController = sender;
-      _scrollingActive = true;
-      return;
-    }
-
-    if (identical(sender, _scrollingController) && _scrollingActive) {
-      if (notification is ScrollEndNotification) {
-        _scrollingController = null;
-        _scrollingActive = false;
-        return;
-      }
-
-      if (notification is ScrollUpdateNotification) {
-        _registeredScrollControllers.forEach(
-          (controller) {
-            if (!identical(_scrollingController, controller)) {
-              if (controller.hasClients) {
-                if (_refreshController != null) {
-                  switch (label) {
-                    case leftScrollControllerLabel:
-                      _syncRightListViewScrollVontroller(
-                          _scrollingController, controller);
-                      break;
-                    case rightScrollControllerLabel:
-                      _syncLeftListViewScrollVontroller(
-                          _scrollingController, controller);
-                      break;
-                  }
-                } else {
-                  controller.jumpTo(_scrollingController.offset);
-                }
-              }
-            }
-          },
-        );
-        return;
-      }
-    }
-  }
-
-  void _syncLeftListViewScrollVontroller(
-      ScrollController _scrollingController, ScrollController controller) {
-    switch (_refreshController.headerStatus) {
-      case RefreshStatus.canRefresh:
-        {
-          if (_cacheScrollOffset < _scrollingController.offset) {
-            controller.jumpTo(_refreshIndicatorHeight * -1);
-            return;
-          } else {
-            _cacheScrollOffset = _scrollingController.offset;
-          }
-          break;
-        }
-      case RefreshStatus.refreshing:
-        {
-          return;
-        }
-      default:
-        {
-          _cacheScrollOffset = 0.0;
-          break;
-        }
-    }
-    controller.jumpTo(_scrollingController.offset);
-  }
-
-  void _syncRightListViewScrollVontroller(
-      ScrollController _scrollingController, ScrollController controller) {
-    if (!_scrollingController.position.outOfRange) {
-      controller.jumpTo(_scrollingController.offset);
-    } else {
-      if (_scrollingController.offset <= 0.0) {
-        _scrollingController
-            .jumpTo(_scrollingController.position.minScrollExtent);
-      } else {
-        _scrollingController
-            .jumpTo(_scrollingController.position.maxScrollExtent);
-      }
-    }
   }
 }

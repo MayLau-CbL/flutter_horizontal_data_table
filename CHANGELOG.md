@@ -1,3 +1,6 @@
+## [2.3.0] - 20210220
+* Update: changed base UI with CustomMultiChildLayout
+
 ## [2.2.0] - 20210211
 * Add: new tableHeight param
 
