@@ -31,6 +31,8 @@ HorizontalDataTable(
       this.rightHandSideColBackgroundColor = Colors.white,
       this.horizontalScrollController,
       this.verticalScrollController,
+      this.verticalScrollbarStyle,
+      this.horizontalScrollbarStyle,
       this.enablePullToRefresh = true,
       this.refreshIndicatorHeight: 60,
       this.refreshIndicator: const WaterDropHeader(),
@@ -52,7 +54,8 @@ HorizontalDataTable(
 7. elevationColor is for changing shadow color. This should be useful when using dark table background.
 8. added leftHandSideColBackgroundColor and rightHandSideColBackgroundColor for setting the default background of the back of table. Default is set to white following the Material widget.
 9. added horizontalScrollController and verticalScrollController allow maunally jump to certain offset position. Please aware that if you have enabled the pull to refresh function, the jump to action may conflict with the pull to refresh action.
-10. enablePullToRefresh is to define whether enable the pull-to-refresh function. Default is setting to false. Detail you may reference to the Pull to Refresh section.
+10. verticalScrollbarStyle and horizontalScrollbarStyle is a ScrollbarStyle class object which allows customizing isAlwaysShown, thumbColor, thickness and radius. Default is using system style scrollbar. 
+11. enablePullToRefresh is to define whether enable the pull-to-refresh function. Default is setting to false. Detail you may reference to the Pull to Refresh section.
  
 ## Pull to Refresh
 

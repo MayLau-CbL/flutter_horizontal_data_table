@@ -1,3 +1,7 @@
+## [2.4.0] - 20210228
+* Update: custom scollbar handling
+* Update: remove deprecated class 
+
 ## [2.3.0] - 20210220
 * Update: changed base UI with CustomMultiChildLayout
 

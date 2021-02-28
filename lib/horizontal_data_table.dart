@@ -1,5 +1,8 @@
 ///Exxport File
 
+///Scrollbar Style
+export 'package:horizontal_data_table/scroll/scroll_bar_style.dart';
+
 ///Wrapper Controller
 export 'package:horizontal_data_table/refresh/hdt_refresh_controller.dart';
 
@@ -17,11 +20,13 @@ import 'package:horizontal_data_table/model/scroll_shadow_model.dart';
 import 'package:horizontal_data_table/refresh/non_bounce_back_scroll_physics.dart';
 import 'package:horizontal_data_table/refresh/hdt_refresh_controller.dart';
 import 'package:horizontal_data_table/refresh/pull_to_refresh/src/smart_refresher.dart';
+import 'package:horizontal_data_table/scroll/scroll_bar_style.dart';
 
 import 'package:provider/provider.dart';
 
 import 'delegate/base_layout_view_delegate.dart';
 import 'delegate/list_view_layout_delegate.dart';
+import 'scroll/custom_scroll_bar.dart';
 import 'scroll/sync_scroll_controller_manager.dart';
 
 ///
@@ -75,6 +80,12 @@ class HorizontalDataTable extends StatefulWidget {
   ///Horizontal scroll controller, expose for allowing maunally jump to specific offset position.
   final ScrollController horizontalScrollController;
 
+  ///Vertical Scrollbar Style. Default the scrollbar is using that platform's sysmtem setting.
+  final ScrollbarStyle verticalScrollbarStyle;
+
+  ///Horizontal Scrollbar Style. Default the scrollbar is using that platform's sysmtem setting.
+  final ScrollbarStyle horizontalScrollbarStyle;
+
   ///Flag to indicate whether enable the pull_to_refresh function
   ///Default is false
   final bool enablePullToRefresh;
@@ -116,6 +127,8 @@ class HorizontalDataTable extends StatefulWidget {
     this.rightHandSideColBackgroundColor = Colors.white,
     this.horizontalScrollController,
     this.verticalScrollController,
+    this.verticalScrollbarStyle,
+    this.horizontalScrollbarStyle,
     this.enablePullToRefresh = false,
     this.refreshIndicatorHeight = 60.0,
     this.htdRefreshController,
@@ -263,23 +276,30 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
         ),
         LayoutId(
           id: BaseLayoutView.RightListView,
-          child: SingleChildScrollView(
-            controller: _rightHorizontalScrollController,
-            child: Container(
-              color: widget.rightHandSideColBackgroundColor,
-              child: _getFixedHeaderScrollColumn(
-                height: height,
-                listViewWidth: widget.rightHandSideColumnWidth,
-                header: Row(children: widget.headerWidgets.sublist(1)),
-                listView: _getScrollColumn(
-                  _getRightHandSideListView(),
-                  this._rightHandSideListViewScrollController,
-                  rightScrollControllerLabel,
+          child: CustomScrollBar(
+            controller: this._rightHorizontalScrollController,
+            scrollbarStyle: widget.horizontalScrollbarStyle,
+            child: SingleChildScrollView(
+              controller: _rightHorizontalScrollController,
+              child: Container(
+                color: widget.rightHandSideColBackgroundColor,
+                child: _getFixedHeaderScrollColumn(
+                  height: height,
+                  listViewWidth: widget.rightHandSideColumnWidth,
+                  header: Row(children: widget.headerWidgets.sublist(1)),
+                  listView: _getScrollColumn(
+                    CustomScrollBar(
+                        controller: this._rightHandSideListViewScrollController,
+                        scrollbarStyle: widget.verticalScrollbarStyle,
+                        child: _getRightHandSideListView()),
+                    this._rightHandSideListViewScrollController,
+                    rightScrollControllerLabel,
+                  ),
                 ),
+                width: widget.rightHandSideColumnWidth,
               ),
-              width: widget.rightHandSideColumnWidth,
+              scrollDirection: Axis.horizontal,
             ),
-            scrollDirection: Axis.horizontal,
           ),
         ),
         LayoutId(
