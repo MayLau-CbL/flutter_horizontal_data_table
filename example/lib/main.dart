@@ -68,13 +68,11 @@ class _MyHomePageState extends State<MyHomePage> {
         rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
         verticalScrollbarStyle: const ScrollbarStyle(
           isAlwaysShown: true,
-          thumbColor: Color(0xFFFFFF00),
           thickness: 4.0,
           radius: Radius.circular(5.0),
         ),
         horizontalScrollbarStyle: const ScrollbarStyle(
           isAlwaysShown: true,
-          thumbColor: Color(0xFF00FFFF),
           thickness: 4.0,
           radius: Radius.circular(5.0),
         ),
