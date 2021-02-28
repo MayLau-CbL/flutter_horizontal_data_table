@@ -1,3 +1,9 @@
+## [2.5.0] - 20210228
+* Update: disabled Scrollbar thumb color cutomization
+
+## [2.4.0-beta.3] - 20210228
+* Separated: RawScrollbar in beta channel
+
 ## [2.4.0+1] - 20210228
 * Fix: CustomScrollBar class resolve issue
 
