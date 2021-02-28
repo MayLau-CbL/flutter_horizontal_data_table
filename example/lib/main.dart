@@ -66,6 +66,18 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         leftHandSideColBackgroundColor: Color(0xFFFFFFFF),
         rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
+        verticalScrollbarStyle: const ScrollbarStyle(
+          isAlwaysShown: true,
+          thumbColor: Color(0xFFFFFF00),
+          thickness: 4.0,
+          radius: Radius.circular(5.0),
+        ),
+        horizontalScrollbarStyle: const ScrollbarStyle(
+          isAlwaysShown: true,
+          thumbColor: Color(0xFF00FFFF),
+          thickness: 4.0,
+          radius: Radius.circular(5.0),
+        ),
         enablePullToRefresh: true,
         refreshIndicator: const WaterDropHeader(),
         refreshIndicatorHeight: 60,
@@ -82,8 +94,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Widget> _getTitleWidget() {
     return [
-      FlatButton(
-        padding: EdgeInsets.all(0),
+      TextButton(
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.zero,
+        ),
         child: _getTitleItemWidget(
             'Name' + (sortType == sortName ? (isAscending ? '↓' : '↑') : ''),
             100),
@@ -94,8 +108,10 @@ class _MyHomePageState extends State<MyHomePage> {
           setState(() {});
         },
       ),
-      FlatButton(
-        padding: EdgeInsets.all(0),
+      TextButton(
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.zero,
+        ),
         child: _getTitleItemWidget(
             'Status' +
                 (sortType == sortStatus ? (isAscending ? '↓' : '↑') : ''),
