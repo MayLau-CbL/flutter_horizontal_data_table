@@ -1,3 +1,6 @@
+## [2.4.0+1] - 20210228
+* Fix: CustomScrollBar class resolve issue
+
 ## [2.4.0] - 20210228
 * Update: custom scollbar handling
 * Update: remove deprecated class 
