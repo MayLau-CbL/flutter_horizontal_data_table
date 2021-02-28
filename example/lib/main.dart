@@ -95,6 +95,9 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> _getTitleWidget() {
     return [
       TextButton(
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.zero,
+        ),
         child: _getTitleItemWidget(
             'Name' + (sortType == sortName ? (isAscending ? '↓' : '↑') : ''),
             100),
@@ -106,6 +109,9 @@ class _MyHomePageState extends State<MyHomePage> {
         },
       ),
       TextButton(
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.zero,
+        ),
         child: _getTitleItemWidget(
             'Status' +
                 (sortType == sortStatus ? (isAscending ? '↓' : '↑') : ''),
