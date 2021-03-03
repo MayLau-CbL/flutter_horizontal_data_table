@@ -17,16 +17,16 @@ class CustomScrollBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ///wait until [RawScollbar] stable or use beta version.
-    // if (this.scrollbarStyle?.thumbColor != null) {
-    //   return RawScrollbar(
-    //     controller: this.controller,
-    //     isAlwaysShown: this.scrollbarStyle?.isAlwaysShown ?? false,
-    //     thickness: this.scrollbarStyle?.thickness,
-    //     radius: this.scrollbarStyle?.radius,
-    //     thumbColor: this.scrollbarStyle?.thumbColor,
-    //     child: this.child,
-    //   );
-    // }
+    if (this.scrollbarStyle?.thumbColor != null) {
+      return RawScrollbar(
+        controller: this.controller,
+        isAlwaysShown: this.scrollbarStyle?.isAlwaysShown ?? false,
+        thickness: this.scrollbarStyle?.thickness,
+        radius: this.scrollbarStyle?.radius,
+        thumbColor: this.scrollbarStyle?.thumbColor,
+        child: this.child,
+      );
+    }
 
     return Scrollbar(
       controller: this.controller,

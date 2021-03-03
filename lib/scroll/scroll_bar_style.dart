@@ -13,9 +13,13 @@ class ScrollbarStyle {
   ///Set raius of the thumb. If radius is null, the default value is platform dependent.
   final Radius radius;
 
+  ///Set customized thumb color. If thumbColor is null, the default value is platform dependent.
+  final Color thumbColor;
+
   const ScrollbarStyle({
     this.isAlwaysShown = false,
     this.thickness,
     this.radius,
+    this.thumbColor,
   });
 }
