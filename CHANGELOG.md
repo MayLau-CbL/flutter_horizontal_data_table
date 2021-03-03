@@ -1,3 +1,6 @@
+## [2.5.1] [2.5.1-beta] - 20210303
+* Fix: scrollbar style null issue
+
 ## [2.5.0] - 20210228
 * Update: disabled Scrollbar thumb color cutomization
 
