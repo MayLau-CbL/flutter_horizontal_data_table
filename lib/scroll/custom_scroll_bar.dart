@@ -16,7 +16,6 @@ class CustomScrollBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ///wait until [RawScollbar] stable or use beta version.
     if (this.scrollbarStyle?.thumbColor != null) {
       return RawScrollbar(
         controller: this.controller,
