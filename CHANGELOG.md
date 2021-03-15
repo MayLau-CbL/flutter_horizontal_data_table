@@ -1,3 +1,6 @@
+## [2.6.0] - 20210315
+* Feature: null-safety support
+
 ## [2.5.2] - 20210310
 * Update: enable Scrollbar thumb color cutomization
 
