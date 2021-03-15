@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
@@ -209,8 +209,8 @@ class User {
   /// Single sort, sort Name's id
   void sortName(bool isAscending) {
     userInfo.sort((a, b) {
-      int aId = int.tryParse(a.name.replaceFirst('User_', ''));
-      int bId = int.tryParse(b.name.replaceFirst('User_', ''));
+      int aId = int.tryParse(a.name.replaceFirst('User_', '')) ?? 0;
+      int bId = int.tryParse(b.name.replaceFirst('User_', '')) ?? 0;
       return (aId - bId) * (isAscending ? 1 : -1);
     });
   }
@@ -220,8 +220,8 @@ class User {
   void sortStatus(bool isAscending) {
     userInfo.sort((a, b) {
       if (a.status == b.status) {
-        int aId = int.tryParse(a.name.replaceFirst('User_', ''));
-        int bId = int.tryParse(b.name.replaceFirst('User_', ''));
+        int aId = int.tryParse(a.name.replaceFirst('User_', '')) ?? 0;
+        int bId = int.tryParse(b.name.replaceFirst('User_', '')) ?? 0;
         return (aId - bId);
       } else if (a.status) {
         return isAscending ? 1 : -1;

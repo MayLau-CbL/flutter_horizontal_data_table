@@ -6,17 +6,17 @@ const String leftScrollControllerLabel = 'Left';
 const String rightScrollControllerLabel = 'Right';
 
 class SyncScrollControllerManager {
-  SyncScrollControllerManager(RefreshController refreshController,
+  SyncScrollControllerManager(RefreshController? refreshController,
       [double refreshIndicatorHeight = 0.0]) {
     _refreshController = refreshController;
     _refreshIndicatorHeight = refreshIndicatorHeight;
   }
   List<ScrollController> _registeredScrollControllers = [];
-  ScrollController _scrollingController;
+  ScrollController? _scrollingController;
   bool _scrollingActive = false;
 
   ///Refresh related
-  RefreshController _refreshController;
+  RefreshController? _refreshController;
   double _refreshIndicatorHeight = 0.0;
   double _cacheScrollOffset = 0.0;
 
@@ -51,16 +51,24 @@ class SyncScrollControllerManager {
                 if (_refreshController != null) {
                   switch (label) {
                     case leftScrollControllerLabel:
-                      _syncRightListViewScrollVontroller(
-                          _scrollingController, controller);
-                      break;
+                      {
+                        if (_scrollingController != null) {
+                          _syncRightListViewScrollVontroller(
+                              _scrollingController!, controller);
+                        }
+                        break;
+                      }
                     case rightScrollControllerLabel:
-                      _syncLeftListViewScrollVontroller(
-                          _scrollingController, controller);
-                      break;
+                      {
+                        if (_scrollingController != null) {
+                          _syncLeftListViewScrollVontroller(
+                              _scrollingController!, controller);
+                        }
+                        break;
+                      }
                   }
                 } else {
-                  controller.jumpTo(_scrollingController.offset);
+                  controller.jumpTo(_scrollingController?.offset ?? 0);
                 }
               }
             }
@@ -73,7 +81,7 @@ class SyncScrollControllerManager {
 
   void _syncLeftListViewScrollVontroller(
       ScrollController _scrollingController, ScrollController controller) {
-    switch (_refreshController.headerStatus) {
+    switch (_refreshController?.headerStatus) {
       case RefreshStatus.canRefresh:
         {
           if (_cacheScrollOffset < _scrollingController.offset) {

@@ -2,11 +2,11 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 class NonBounceBackScrollPhysics extends ScrollPhysics {
-  const NonBounceBackScrollPhysics({ScrollPhysics parent})
+  const NonBounceBackScrollPhysics({ScrollPhysics? parent})
       : super(parent: parent);
 
   @override
-  NonBounceBackScrollPhysics applyTo(ScrollPhysics ancestor) {
+  NonBounceBackScrollPhysics applyTo(ScrollPhysics? ancestor) {
     return NonBounceBackScrollPhysics(parent: buildParent(ancestor));
   }
 
@@ -21,7 +21,7 @@ class NonBounceBackScrollPhysics extends ScrollPhysics {
   }
 
   @override
-  Simulation createBallisticSimulation(
+  Simulation? createBallisticSimulation(
       ScrollMetrics position, double velocity) {
     if (position.outOfRange) {
       return null;
