@@ -13,6 +13,7 @@ import 'package:flutter/material.dart'
 import '../../src/internals/indicator_wrap.dart';
 import 'dart:math' as math;
 import 'package:flutter/physics.dart';
+
 enum BezierDismissType { None, RectSpread, ScaleToCenter }
 
 enum BezierCircleType { Raidal, Progress }
@@ -423,7 +424,8 @@ class _BezierCircleHeaderState extends State<BezierCircleHeader>
                   },
                   animation: _radialCtrl,
                 ),
-          alignment: _childMoveCtl.drive(_childMoveTween as Animatable<AlignmentGeometry>),
+          alignment: _childMoveCtl
+              .drive(_childMoveTween as Animatable<AlignmentGeometry>),
         ),
       ),
     );

@@ -1,3 +1,6 @@
+## [2.6.1-beta] - 20210317
+* Update: dart format
+
 ## [2.6.0-beta] - 20210316
 * Feature: null-safety support
 

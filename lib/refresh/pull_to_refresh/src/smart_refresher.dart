@@ -296,8 +296,8 @@ class SmartRefresherState extends State<SmartRefresher> {
   final LoadIndicator defaultFooter = ClassicFooter();
 
   //build slivers from child Widget
-  List<Widget>? _buildSliversByChild(
-      BuildContext context, Widget? child, RefreshConfiguration? configuration) {
+  List<Widget>? _buildSliversByChild(BuildContext context, Widget? child,
+      RefreshConfiguration? configuration) {
     List<Widget>? slivers;
     if (child is ScrollView) {
       if (child is BoxScrollView) {
@@ -449,7 +449,8 @@ class SmartRefresherState extends State<SmartRefresher> {
         semanticChildCount: childView.semanticChildCount,
         dragStartBehavior: childView.dragStartBehavior,
         viewportBuilder: (context, offset) {
-          Viewport viewport = childView.viewportBuilder(context, offset) as Viewport;
+          Viewport viewport =
+              childView.viewportBuilder(context, offset) as Viewport;
           if (widget.enablePullDown) {
             viewport.children.insert(
                 0,
@@ -543,11 +544,14 @@ class SmartRefresherState extends State<SmartRefresher> {
 
   @override
   Widget build(BuildContext context) {
-    final RefreshConfiguration? configuration = RefreshConfiguration.of(context);
+    final RefreshConfiguration? configuration =
+        RefreshConfiguration.of(context);
     Widget? body;
     if (widget.builder != null)
-      body = widget.builder!(context,
-          _getScrollPhysics(configuration, AlwaysScrollableScrollPhysics()) as RefreshPhysics);
+      body = widget.builder!(
+          context,
+          _getScrollPhysics(configuration, AlwaysScrollableScrollPhysics())
+              as RefreshPhysics);
     else {
       List<Widget>? slivers =
           _buildSliversByChild(context, widget.child, configuration);

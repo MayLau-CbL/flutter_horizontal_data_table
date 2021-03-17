@@ -7,7 +7,7 @@ A Flutter Widget that create a horizontal table with fixed column on left hand s
 
 ## Installation
 
-This package is starting to support sound null-safety. Although the package is migraded manually and tested with each functions, please feel free to file issue on GitHub if there is any problem on the integration/migration. The following is the guide for installation with different dart sdk and flutter version.
+This package is starting to support sound null-safety. Although the package is migrated manually and tested with each functions, please feel free to file issue on GitHub if there is any problem on the integration/migration. The following is the guide for installation with different dart sdk and flutter version.
 
 |minium dart sdk|flutter version (stable)|package version|
 |---|---|---|
