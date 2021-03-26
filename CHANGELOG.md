@@ -1,3 +1,6 @@
+## [3.0.0] - 20210326
+* Update: version for release null-safty support
+
 ## [2.6.1-beta] - 20210317
 * Update: dart format
 
