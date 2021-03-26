@@ -1,3 +1,12 @@
+## [3.0.0] - 20210326
+* Update: version for release null-safty support
+
+## [2.6.1-beta] - 20210317
+* Update: dart format
+
+## [2.6.0-beta] - 20210316
+* Feature: null-safety support
+
 ## [2.5.2] - 20210310
 * Update: enable Scrollbar thumb color cutomization
 

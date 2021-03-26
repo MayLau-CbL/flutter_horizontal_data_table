@@ -4,14 +4,14 @@ import 'scroll_bar_style.dart';
 
 class CustomScrollBar extends StatelessWidget {
   final ScrollController controller;
-  final ScrollbarStyle scrollbarStyle;
+  final ScrollbarStyle? scrollbarStyle;
   final Widget child;
 
   const CustomScrollBar({
-    Key key,
-    this.controller,
+    Key? key,
+    required this.controller,
     this.scrollbarStyle,
-    this.child,
+    required this.child,
   }) : super(key: key);
 
   @override

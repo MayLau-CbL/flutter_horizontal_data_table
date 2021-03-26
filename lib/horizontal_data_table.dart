@@ -39,7 +39,7 @@ class HorizontalDataTable extends StatefulWidget {
 
   ///tableHeight is the whole table widget height, including header and table body. This is for those want a shrinkWrap widget to input the calculated table height. If the tableHeight is smaller than the widget available height, the tableHeight is used instead. If the tableHeight is larger than the available height, available height is used.
   ///Default set to null, use up all available space. tableHeight must > 0.
-  final double tableHeight;
+  final double? tableHeight;
 
   ///if headerWidgets==true,
   ///HorizontalDataTable.headerWidgets[0] as the left hand side header
@@ -50,16 +50,16 @@ class HorizontalDataTable extends StatefulWidget {
   /// if no header needed, just ignore this, start data from index ==0
   ///
   final bool isFixedHeader;
-  final List<Widget> headerWidgets;
+  final List<Widget>? headerWidgets;
 
   ///Direct create children
-  final List<Widget> leftSideChildren;
-  final List<Widget> rightSideChildren;
+  final List<Widget>? leftSideChildren;
+  final List<Widget>? rightSideChildren;
 
   ///Suggest use builder for easier manage, like data update
   final int itemCount;
-  final IndexedWidgetBuilder leftSideItemBuilder;
-  final IndexedWidgetBuilder rightSideItemBuilder;
+  final IndexedWidgetBuilder? leftSideItemBuilder;
+  final IndexedWidgetBuilder? rightSideItemBuilder;
 
   ///Row Divider
 
@@ -75,16 +75,16 @@ class HorizontalDataTable extends StatefulWidget {
   final Color rightHandSideColBackgroundColor;
 
   ///Vertical scroll controller, expose for allowing maunally jump to specific offset position. Please aware this may conflict with the pull to refresh action.
-  final ScrollController verticalScrollController;
+  final ScrollController? verticalScrollController;
 
   ///Horizontal scroll controller, expose for allowing maunally jump to specific offset position.
-  final ScrollController horizontalScrollController;
+  final ScrollController? horizontalScrollController;
 
   ///Vertical Scrollbar Style. Default the scrollbar is using that platform's sysmtem setting.
-  final ScrollbarStyle verticalScrollbarStyle;
+  final ScrollbarStyle? verticalScrollbarStyle;
 
   ///Horizontal Scrollbar Style. Default the scrollbar is using that platform's sysmtem setting.
-  final ScrollbarStyle horizontalScrollbarStyle;
+  final ScrollbarStyle? horizontalScrollbarStyle;
 
   ///Flag to indicate whether enable the pull_to_refresh function
   ///Default is false
@@ -95,19 +95,19 @@ class HorizontalDataTable extends StatefulWidget {
   final double refreshIndicatorHeight;
 
   ///Support using pull-to-refresh's refresh indicator
-  final Widget refreshIndicator;
+  final Widget? refreshIndicator;
 
   ///Callback for pulled to refresh.
   ///Call HDTRefreshController.refreshCompleted() for finished refresh loading.
   ///Call HDTRefreshController.refreshFailed() for error refresh loading.
-  final Function onRefresh;
+  final Function? onRefresh;
 
   ///This is a wrapper controller for limilating using the available refresh controller function. Currently only refresh fail and complete is implemented.
-  final HDTRefreshController htdRefreshController;
+  final HDTRefreshController? htdRefreshController;
 
   const HorizontalDataTable({
-    @required this.leftHandSideColumnWidth,
-    @required this.rightHandSideColumnWidth,
+    required this.leftHandSideColumnWidth,
+    required this.rightHandSideColumnWidth,
     this.tableHeight,
     this.isFixedHeader = false,
     this.headerWidgets,
@@ -148,7 +148,7 @@ class HorizontalDataTable extends StatefulWidget {
             'tableHeight can only be null or > 0.0'),
         assert(itemCount >= 0, 'itemCount must >= 0'),
         assert(elevation >= 0.0, 'elevation must >= 0.0'),
-        assert(elevationColor != null, 'elevationColor must not be null'),
+        // assert(elevationColor != null, 'elevationColor must not be null'),
         assert(
             (enablePullToRefresh && refreshIndicatorHeight >= 0.0) ||
                 !enablePullToRefresh,
@@ -173,13 +173,13 @@ class HorizontalDataTable extends StatefulWidget {
 
 class _HorizontalDataTableState extends State<HorizontalDataTable> {
   ScrollController _leftHandSideListViewScrollController = ScrollController();
-  ScrollController _rightHandSideListViewScrollController;
-  ScrollController _rightHorizontalScrollController;
+  late ScrollController _rightHandSideListViewScrollController;
+  late ScrollController _rightHorizontalScrollController;
 
   ScrollShadowModel _scrollShadowModel = ScrollShadowModel();
 
-  SyncScrollControllerManager _syncScroller;
-  RefreshController _refreshController;
+  late SyncScrollControllerManager _syncScroller;
+  RefreshController? _refreshController;
 
   @override
   void initState() {
@@ -191,7 +191,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
 
     if (widget.enablePullToRefresh) {
       _refreshController = RefreshController(initialRefresh: false);
-      widget.htdRefreshController.setRefreshController(_refreshController);
+      widget.htdRefreshController?.setRefreshController(_refreshController);
       _syncScroller = SyncScrollControllerManager(
           _refreshController, widget.refreshIndicatorHeight);
     } else {
@@ -237,9 +237,9 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
             if (widget.tableHeight != null) {
               return _getParallelListView(
                 boxConstraint.maxWidth,
-                boxConstraint.maxHeight > widget.tableHeight
+                (boxConstraint.maxHeight > widget.tableHeight!
                     ? widget.tableHeight
-                    : boxConstraint.maxHeight,
+                    : boxConstraint.maxHeight)!,
               );
             } else {
               return _getParallelListView(
@@ -265,7 +265,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
             child: _getFixedHeaderScrollColumn(
               height: height,
               listViewWidth: widget.leftHandSideColumnWidth,
-              header: widget.headerWidgets[0],
+              header: widget.headerWidgets?.first,
               listView: _getScrollColumn(
                 _getLeftHandSideListView(),
                 this._leftHandSideListViewScrollController,
@@ -286,7 +286,9 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
                 child: _getFixedHeaderScrollColumn(
                   height: height,
                   listViewWidth: widget.rightHandSideColumnWidth,
-                  header: Row(children: widget.headerWidgets.sublist(1)),
+                  header: Row(
+                      children:
+                          widget.headerWidgets?.sublist(1).toList() ?? []),
                   listView: _getScrollColumn(
                     CustomScrollBar(
                         controller: this._rightHandSideListViewScrollController,
@@ -306,7 +308,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
           id: BaseLayoutView.MiddleShadow,
           child: Selector<ScrollShadowModel, double>(
               selector: (context, scrollShadowModel) {
-            return scrollShadowModel?.horizontalOffset ?? 0;
+            return scrollShadowModel.horizontalOffset;
           }, builder: (context, horizontalOffset, child) {
             return Container(
               width: _getElevation(horizontalOffset),
@@ -324,7 +326,10 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
   }
 
   Widget _getFixedHeaderScrollColumn(
-      {double height, double listViewWidth, Widget header, Widget listView}) {
+      {required double height,
+      required double listViewWidth,
+      Widget? header,
+      required Widget listView}) {
     return CustomMultiChildLayout(
       delegate: ListViewLayoutDelegate(
         height,
@@ -338,7 +343,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
           ? [
               LayoutId(
                 id: ListViewLayout.Header,
-                child: header,
+                child: header!,
               ),
               LayoutId(
                 id: ListViewLayout.Divider,
@@ -352,7 +357,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
                 id: ListViewLayout.Shadow,
                 child: Selector<ScrollShadowModel, double>(
                   selector: (context, scrollShadowModel) {
-                    return scrollShadowModel?.verticalOffset ?? 0;
+                    return scrollShadowModel.verticalOffset;
                   },
                   builder: (context, verticalOffset, child) {
                     return Container(
@@ -373,7 +378,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
                 id: ListViewLayout.Shadow,
                 child: Selector<ScrollShadowModel, double>(
                   selector: (context, scrollShadowModel) {
-                    return scrollShadowModel?.verticalOffset ?? 0;
+                    return scrollShadowModel.verticalOffset;
                   },
                   builder: (context, verticalOffset, child) {
                     return Container(
@@ -432,8 +437,8 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
   }
 
   Widget _getListView(ScrollController scrollController,
-      IndexedWidgetBuilder indexedWidgetBuilder, int itemCount,
-      [List<Widget> children]) {
+      IndexedWidgetBuilder? indexedWidgetBuilder, int itemCount,
+      [List<Widget>? children]) {
     if (indexedWidgetBuilder != null) {
       return ListView.separated(
         controller: scrollController,
@@ -446,20 +451,24 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
     } else {
       return ListView.builder(
         controller: scrollController,
-        itemCount: children.length,
+        itemCount: children?.length,
         itemBuilder: (context, index) {
-          return children[index];
+          return children![index];
         },
       );
     }
   }
 
   Widget _getPullToRefreshRightListView(ScrollController scrollController,
-      IndexedWidgetBuilder indexedWidgetBuilder, int itemCount,
-      [List<Widget> children]) {
+      IndexedWidgetBuilder? indexedWidgetBuilder, int itemCount,
+      [List<Widget>? children]) {
     return SmartRefresher(
-      controller: _refreshController,
-      onRefresh: widget.onRefresh,
+      controller: _refreshController!,
+      onRefresh: () {
+        if (widget.onRefresh != null) {
+          widget.onRefresh!();
+        }
+      },
       header: widget.refreshIndicator,
       child: _getListView(
         scrollController,
@@ -471,8 +480,8 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
   }
 
   Widget _getPullToRefreshLeftListView(ScrollController scrollController,
-      IndexedWidgetBuilder indexedWidgetBuilder, int itemCount,
-      [List<Widget> children]) {
+      IndexedWidgetBuilder? indexedWidgetBuilder, int itemCount,
+      [List<Widget>? children]) {
     if (indexedWidgetBuilder != null) {
       return ListView.separated(
         physics: const NonBounceBackScrollPhysics(),
@@ -487,12 +496,12 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
       return ListView(
         physics: const NonBounceBackScrollPhysics(),
         controller: scrollController,
-        children: children,
+        children: children!,
       );
     }
   }
 
-  double _getElevation(double offset) {
+  double _getElevation(double? offset) {
     if (offset != null) {
       double elevation = offset > widget.elevation ? widget.elevation : offset;
       if (elevation >= 0) {

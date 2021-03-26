@@ -8,13 +8,13 @@ class ScrollbarStyle {
   final bool isAlwaysShown;
 
   ///Set the thickness of thumb. If thickness is null, the default value is platform dependent.
-  final double thickness;
+  final double? thickness;
 
   ///Set raius of the thumb. If radius is null, the default value is platform dependent.
-  final Radius radius;
+  final Radius? radius;
 
   ///Set customized thumb color. If thumbColor is null, the default value is platform dependent.
-  final Color thumbColor;
+  final Color? thumbColor;
 
   const ScrollbarStyle({
     this.isAlwaysShown = false,
