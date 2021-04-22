@@ -20,8 +20,9 @@ This package is starting to support sound null-safety. Although the package is m
 This shows Widget's full customizations:
 ```
 HorizontalDataTable(
-      {@required this.leftHandSideColumnWidth,
-      @required this.rightHandSideColumnWidth,
+      {
+      required this.leftHandSideColumnWidth,
+      required this.rightHandSideColumnWidth,
       this.tableHeight,
       this.isFixedHeader = false,
       this.headerWidgets,
@@ -35,7 +36,7 @@ HorizontalDataTable(
         height: 0.0,
         thickness: 0.0,
       ),
-      this.elevation = 5.0,
+      this.elevation = 3.0,
       this.elevationColor = Colors.black54,
       this.leftHandSideColBackgroundColor = Colors.white,
       this.rightHandSideColBackgroundColor = Colors.white,
@@ -43,11 +44,12 @@ HorizontalDataTable(
       this.verticalScrollController,
       this.verticalScrollbarStyle,
       this.horizontalScrollbarStyle,
-      this.enablePullToRefresh = true,
-      this.refreshIndicatorHeight: 60,
+      this.enablePullToRefresh = false,
+      this.refreshIndicatorHeight = 60.0,
       this.refreshIndicator: const WaterDropHeader(),
       this.onRefresh: (){},
-      this.htdRefreshController: _hdtRefreshController,
+      this.htdRefreshController: _hdtRefreshController,             
+      this.scrollPhysics,
       }
      )
       
@@ -66,6 +68,7 @@ HorizontalDataTable(
 9. added horizontalScrollController and verticalScrollController allow maunally jump to certain offset position. Please aware that if you have enabled the pull to refresh function, the jump to action may conflict with the pull to refresh action.
 10. verticalScrollbarStyle and horizontalScrollbarStyle are a ScrollbarStyle class object which allows customizing isAlwaysShown, thumbColor, thickness and radius. Default is using system style scrollbar.
 11. enablePullToRefresh is to define whether enable the pull-to-refresh function. Default is setting to false. Detail you may reference to the Pull to Refresh section.
+12. scrollPhysics is to set scroll physics of the data table. Please aware this may causing conflict when enabling pull-to-refresh feature.
  
 ## Pull to Refresh
 
@@ -138,7 +141,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
@@ -186,6 +189,16 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         leftHandSideColBackgroundColor: Color(0xFFFFFFFF),
         rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
+        verticalScrollbarStyle: const ScrollbarStyle(
+          isAlwaysShown: true,
+          thickness: 4.0,
+          radius: Radius.circular(5.0),
+        ),
+        horizontalScrollbarStyle: const ScrollbarStyle(
+          isAlwaysShown: true,
+          thickness: 4.0,
+          radius: Radius.circular(5.0),
+        ),
         enablePullToRefresh: true,
         refreshIndicator: const WaterDropHeader(),
         refreshIndicatorHeight: 60,
@@ -202,8 +215,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Widget> _getTitleWidget() {
     return [
-      FlatButton(
-        padding: EdgeInsets.all(0),
+      TextButton(
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.zero,
+        ),
         child: _getTitleItemWidget(
             'Name' + (sortType == sortName ? (isAscending ? '↓' : '↑') : ''),
             100),
@@ -214,8 +229,10 @@ class _MyHomePageState extends State<MyHomePage> {
           setState(() {});
         },
       ),
-      FlatButton(
-        padding: EdgeInsets.all(0),
+      TextButton(
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.zero,
+        ),
         child: _getTitleItemWidget(
             'Status' +
                 (sortType == sortStatus ? (isAscending ? '↓' : '↑') : ''),
@@ -315,8 +332,8 @@ class User {
   /// Single sort, sort Name's id
   void sortName(bool isAscending) {
     userInfo.sort((a, b) {
-      int aId = int.tryParse(a.name.replaceFirst('User_', ''));
-      int bId = int.tryParse(b.name.replaceFirst('User_', ''));
+      int aId = int.tryParse(a.name.replaceFirst('User_', '')) ?? 0;
+      int bId = int.tryParse(b.name.replaceFirst('User_', '')) ?? 0;
       return (aId - bId) * (isAscending ? 1 : -1);
     });
   }
@@ -326,8 +343,8 @@ class User {
   void sortStatus(bool isAscending) {
     userInfo.sort((a, b) {
       if (a.status == b.status) {
-        int aId = int.tryParse(a.name.replaceFirst('User_', ''));
-        int bId = int.tryParse(b.name.replaceFirst('User_', ''));
+        int aId = int.tryParse(a.name.replaceFirst('User_', '')) ?? 0;
+        int bId = int.tryParse(b.name.replaceFirst('User_', '')) ?? 0;
         return (aId - bId);
       } else if (a.status) {
         return isAscending ? 1 : -1;
