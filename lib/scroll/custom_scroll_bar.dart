@@ -18,10 +18,8 @@ class CustomScrollBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ScrollNotificationPredicate snp = scrollNotificationPredicate ??
-        (scrollNotification) {
-          return scrollNotification.depth == 0;
-        };
+    ScrollNotificationPredicate snp =
+        scrollNotificationPredicate ?? defaultScrollNotificationPredicate;
     if (this.scrollbarStyle?.thumbColor != null) {
       return RawScrollbar(
         controller: this.controller,
