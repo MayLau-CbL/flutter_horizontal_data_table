@@ -26,7 +26,7 @@ class ListViewLayoutDelegate extends MultiChildLayoutDelegate {
     }
 
     if (hasChild(ListViewLayout.Divider)) {
-      layoutChild(
+      dividerSize = layoutChild(
         ListViewLayout.Divider,
         BoxConstraints(
           maxWidth: this.widgetWidth,
