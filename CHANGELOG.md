@@ -1,3 +1,6 @@
+## [3.2.0] - 20210508
+* Fix: vertical list view header divider height
+
 ## [3.1.0] - 20210422
 * Add: ScrollPhysics setting
 * Update: README.md with null-safety and ScrollPhysics info
