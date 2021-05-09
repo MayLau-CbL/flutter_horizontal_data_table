@@ -283,29 +283,33 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
           child: CustomScrollBar(
             controller: this._rightHorizontalScrollController,
             scrollbarStyle: widget.horizontalScrollbarStyle,
-            child: SingleChildScrollView(
-              physics: widget.scrollPhysics,
-              controller: _rightHorizontalScrollController,
-              child: Container(
-                color: widget.rightHandSideColBackgroundColor,
-                child: _getFixedHeaderScrollColumn(
-                  height: height,
-                  listViewWidth: widget.rightHandSideColumnWidth,
-                  header: Row(
-                      children:
-                          widget.headerWidgets?.sublist(1).toList() ?? []),
-                  listView: _getScrollColumn(
-                    CustomScrollBar(
-                        controller: this._rightHandSideListViewScrollController,
-                        scrollbarStyle: widget.verticalScrollbarStyle,
-                        child: _getRightHandSideListView()),
-                    this._rightHandSideListViewScrollController,
-                    rightScrollControllerLabel,
+            child: CustomScrollBar(
+              scrollNotificationPredicate: (notification) {
+                return notification.depth == 1;
+              },
+              controller: this._rightHandSideListViewScrollController,
+              scrollbarStyle: widget.verticalScrollbarStyle,
+              child: SingleChildScrollView(
+                physics: widget.scrollPhysics,
+                controller: _rightHorizontalScrollController,
+                child: Container(
+                  color: widget.rightHandSideColBackgroundColor,
+                  child: _getFixedHeaderScrollColumn(
+                    height: height,
+                    listViewWidth: widget.rightHandSideColumnWidth,
+                    header: Row(
+                        children:
+                            widget.headerWidgets?.sublist(1).toList() ?? []),
+                    listView: _getScrollColumn(
+                      _getRightHandSideListView(),
+                      this._rightHandSideListViewScrollController,
+                      rightScrollControllerLabel,
+                    ),
                   ),
+                  width: widget.rightHandSideColumnWidth,
                 ),
-                width: widget.rightHandSideColumnWidth,
+                scrollDirection: Axis.horizontal,
               ),
-              scrollDirection: Axis.horizontal,
             ),
           ),
         ),
