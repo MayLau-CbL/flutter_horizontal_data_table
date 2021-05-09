@@ -49,7 +49,8 @@ HorizontalDataTable(
       this.refreshIndicator: const WaterDropHeader(),
       this.onRefresh: (){},
       this.htdRefreshController: _hdtRefreshController,             
-      this.scrollPhysics,
+      this.verticalScrollPhysics,
+      this.horizontalScrollPhysics,
       }
      )
       
@@ -68,7 +69,7 @@ HorizontalDataTable(
 9. added horizontalScrollController and verticalScrollController allow maunally jump to certain offset position. Please aware that if you have enabled the pull to refresh function, the jump to action may conflict with the pull to refresh action.
 10. verticalScrollbarStyle and horizontalScrollbarStyle are a ScrollbarStyle class object which allows customizing isAlwaysShown, thumbColor, thickness and radius. Default is using system style scrollbar.
 11. enablePullToRefresh is to define whether enable the pull-to-refresh function. Default is setting to false. Detail you may reference to the Pull to Refresh section.
-12. scrollPhysics is to set scroll physics of the data table. Please aware this may causing conflict when enabling pull-to-refresh feature.
+12. verticalScrollPhysics and horizontalScrollPhysics are to set scroll physics of the data table. Please aware verticalScrollPhysics may causing conflict when enabling pull-to-refresh feature.
  
 ## Pull to Refresh
 

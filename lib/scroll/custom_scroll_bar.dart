@@ -6,12 +6,14 @@ class CustomScrollBar extends StatelessWidget {
   final ScrollController controller;
   final ScrollbarStyle? scrollbarStyle;
   final Widget child;
+  final ScrollNotificationPredicate notificationPredicate;
 
   const CustomScrollBar({
     Key? key,
     required this.controller,
     this.scrollbarStyle,
     required this.child,
+    this.notificationPredicate = defaultScrollNotificationPredicate,
   }) : super(key: key);
 
   @override
@@ -24,6 +26,7 @@ class CustomScrollBar extends StatelessWidget {
         radius: this.scrollbarStyle?.radius,
         thumbColor: this.scrollbarStyle?.thumbColor,
         child: this.child,
+        notificationPredicate: notificationPredicate,
       );
     }
 
@@ -33,6 +36,7 @@ class CustomScrollBar extends StatelessWidget {
       thickness: this.scrollbarStyle?.thickness,
       radius: this.scrollbarStyle?.radius,
       child: this.child,
+      notificationPredicate: notificationPredicate,
     );
   }
 }
