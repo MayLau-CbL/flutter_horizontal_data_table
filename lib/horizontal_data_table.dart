@@ -103,10 +103,10 @@ class HorizontalDataTable extends StatefulWidget {
   ///Call HDTRefreshController.refreshFailed() for error refresh loading.
   final Function? onRefresh;
 
-  ///Scroll physics of the data table
-  final ScrollPhysics? verticalScrollPhysics;
+  ///Vertical scroll physics of the data table
+  final ScrollPhysics? scrollPhysics;
 
-  ///Horizomtal Scroll physics of the data table
+  ///Horizontal Scroll physics of the data table
   final ScrollPhysics? horizontalScrollPhysics;
 
   ///This is a wrapper controller for limilating using the available refresh controller function. Currently only refresh fail and complete is implemented.
@@ -141,7 +141,7 @@ class HorizontalDataTable extends StatefulWidget {
     this.htdRefreshController,
     this.onRefresh,
     this.refreshIndicator,
-    this.verticalScrollPhysics,
+    this.scrollPhysics,
     this.horizontalScrollPhysics,
   })  : assert(
             (leftSideChildren == null && leftSideItemBuilder != null) ||
@@ -524,7 +524,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
       [List<Widget>? children]) {
     if (indexedWidgetBuilder != null) {
       return ListView.separated(
-        physics: widget.verticalScrollPhysics,
+        physics: widget.scrollPhysics,
         controller: scrollController,
         itemBuilder: indexedWidgetBuilder,
         itemCount: itemCount,
@@ -534,7 +534,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
       );
     } else {
       return ListView.builder(
-        physics: widget.verticalScrollPhysics,
+        physics: widget.scrollPhysics,
         controller: scrollController,
         itemCount: children?.length,
         itemBuilder: (context, index) {
