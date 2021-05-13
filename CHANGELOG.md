@@ -1,3 +1,8 @@
+## [3.3.0] - 20210509
+* Update: separated right header and listview horizontal scroll
+* Add: horizontal scroll physics field for right horizontal scroll
+* Update: always show vertical scroll bar on right
+
 ## [3.2.0] - 20210508
 * Fix: vertical list view header divider height
 

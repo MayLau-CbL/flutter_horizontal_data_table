@@ -27,6 +27,7 @@ import 'package:provider/provider.dart';
 import 'delegate/base_layout_view_delegate.dart';
 import 'delegate/list_view_layout_delegate.dart';
 import 'scroll/custom_scroll_bar.dart';
+import 'scroll/sync_horizontal_scroll_controller_manager.dart';
 import 'scroll/sync_scroll_controller_manager.dart';
 
 ///
@@ -102,8 +103,11 @@ class HorizontalDataTable extends StatefulWidget {
   ///Call HDTRefreshController.refreshFailed() for error refresh loading.
   final Function? onRefresh;
 
-  ///Scroll physics of the data table
+  ///Vertical scroll physics of the data table
   final ScrollPhysics? scrollPhysics;
+
+  ///Horizontal Scroll physics of the data table
+  final ScrollPhysics? horizontalScrollPhysics;
 
   ///This is a wrapper controller for limilating using the available refresh controller function. Currently only refresh fail and complete is implemented.
   final HDTRefreshController? htdRefreshController;
@@ -138,6 +142,7 @@ class HorizontalDataTable extends StatefulWidget {
     this.onRefresh,
     this.refreshIndicator,
     this.scrollPhysics,
+    this.horizontalScrollPhysics,
   })  : assert(
             (leftSideChildren == null && leftSideItemBuilder != null) ||
                 (leftSideChildren != null),
@@ -179,6 +184,8 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
   ScrollController _leftHandSideListViewScrollController = ScrollController();
   late ScrollController _rightHandSideListViewScrollController;
   late ScrollController _rightHorizontalScrollController;
+  SyncHorizontalScrollControllerManager? _syncHorizontalScrollControllerManager;
+  ScrollController? _rightHeaderHorizontalScrollController;
 
   ScrollShadowModel _scrollShadowModel = ScrollShadowModel();
 
@@ -190,8 +197,6 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
     super.initState();
     _rightHandSideListViewScrollController =
         widget.verticalScrollController ?? ScrollController();
-    _rightHorizontalScrollController =
-        widget.horizontalScrollController ?? ScrollController();
 
     if (widget.enablePullToRefresh) {
       _refreshController = RefreshController(initialRefresh: false);
@@ -211,11 +216,24 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
           _leftHandSideListViewScrollController.offset;
       setState(() {});
     });
+
+    //horizontal scroll
+    _rightHorizontalScrollController =
+        widget.horizontalScrollController ?? ScrollController();
     _rightHorizontalScrollController.addListener(() {
       _scrollShadowModel.horizontalOffset =
           _rightHorizontalScrollController.offset;
       setState(() {});
     });
+    if (widget.isFixedHeader) {
+      _rightHeaderHorizontalScrollController = ScrollController();
+      _syncHorizontalScrollControllerManager =
+          SyncHorizontalScrollControllerManager();
+      _syncHorizontalScrollControllerManager
+          ?.registerScrollController(_rightHorizontalScrollController);
+      _syncHorizontalScrollControllerManager
+          ?.registerScrollController(_rightHeaderHorizontalScrollController!);
+    }
   }
 
   @override
@@ -227,6 +245,13 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
     _leftHandSideListViewScrollController.dispose();
     _rightHandSideListViewScrollController.dispose();
     _rightHorizontalScrollController.dispose();
+    if (widget.isFixedHeader) {
+      _rightHeaderHorizontalScrollController?.dispose();
+      _syncHorizontalScrollControllerManager
+          ?.unregisterScrollController(_rightHorizontalScrollController);
+      _syncHorizontalScrollControllerManager
+          ?.unregisterScrollController(_rightHeaderHorizontalScrollController!);
+    }
     widget.htdRefreshController?.setRefreshController(null);
     super.dispose();
   }
@@ -266,7 +291,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
           id: BaseLayoutView.LeftListView,
           child: Container(
             color: widget.leftHandSideColBackgroundColor,
-            child: _getFixedHeaderScrollColumn(
+            child: _getLeftFixedHeaderScrollColumn(
               height: height,
               listViewWidth: widget.leftHandSideColumnWidth,
               header: widget.headerWidgets?.first,
@@ -280,32 +305,20 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
         ),
         LayoutId(
           id: BaseLayoutView.RightListView,
-          child: CustomScrollBar(
-            controller: this._rightHorizontalScrollController,
-            scrollbarStyle: widget.horizontalScrollbarStyle,
-            child: SingleChildScrollView(
-              physics: widget.scrollPhysics,
-              controller: _rightHorizontalScrollController,
-              child: Container(
-                color: widget.rightHandSideColBackgroundColor,
-                child: _getFixedHeaderScrollColumn(
-                  height: height,
-                  listViewWidth: widget.rightHandSideColumnWidth,
-                  header: Row(
-                      children:
-                          widget.headerWidgets?.sublist(1).toList() ?? []),
-                  listView: _getScrollColumn(
-                    CustomScrollBar(
-                        controller: this._rightHandSideListViewScrollController,
-                        scrollbarStyle: widget.verticalScrollbarStyle,
-                        child: _getRightHandSideListView()),
-                    this._rightHandSideListViewScrollController,
-                    rightScrollControllerLabel,
-                  ),
-                ),
-                width: widget.rightHandSideColumnWidth,
+          child: Container(
+            color: widget.rightHandSideColBackgroundColor,
+            child: _getRightFixedHeaderScrollColumn(
+              height: height,
+              listViewWidth: width - widget.leftHandSideColumnWidth,
+              header: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: widget.headerWidgets?.sublist(1).toList() ?? [],
               ),
-              scrollDirection: Axis.horizontal,
+              listView: _getScrollColumn(
+                _getRightHandSideListView(),
+                this._rightHandSideListViewScrollController,
+                rightScrollControllerLabel,
+              ),
             ),
           ),
         ),
@@ -322,7 +335,6 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
                 _getShadowAlpha(
                     _getElevation(horizontalOffset), widget.elevation),
               ),
-              // color: Colors.purpleAccent,
             );
           }),
         ),
@@ -330,7 +342,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
     );
   }
 
-  Widget _getFixedHeaderScrollColumn(
+  Widget _getLeftFixedHeaderScrollColumn(
       {required double height,
       required double listViewWidth,
       Widget? header,
@@ -341,60 +353,126 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
         listViewWidth,
         widget.elevation,
       ),
+      children: [
+        if (widget.isFixedHeader)
+          LayoutId(
+            id: ListViewLayout.Header,
+            child: header!,
+          ),
+        if (widget.isFixedHeader)
+          LayoutId(
+            id: ListViewLayout.Divider,
+            child: widget.rowSeparatorWidget,
+          ),
+        LayoutId(
+          id: ListViewLayout.ListView,
+          child: listView,
+        ),
+        LayoutId(
+          id: ListViewLayout.Shadow,
+          child: Selector<ScrollShadowModel, double>(
+            selector: (context, scrollShadowModel) {
+              return scrollShadowModel.verticalOffset;
+            },
+            builder: (context, verticalOffset, child) {
+              return Container(
+                color: widget.elevationColor.withAlpha(_getShadowAlpha(
+                    _getElevation(verticalOffset), widget.elevation)),
+                height: _getElevation(widget.elevation),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
 
-      ///not used if(xxx) for dart version below 2.3.0
-      ///will update later
-      children: widget.isFixedHeader
-          ? [
-              LayoutId(
-                id: ListViewLayout.Header,
+  Widget _getRightFixedHeaderScrollColumn(
+      {required double height,
+      required double listViewWidth,
+      Widget? header,
+      required Widget listView}) {
+    return CustomMultiChildLayout(
+      delegate: ListViewLayoutDelegate(
+        height,
+        listViewWidth,
+        widget.elevation,
+      ),
+      children: [
+        if (widget.isFixedHeader)
+          LayoutId(
+            id: ListViewLayout.Header,
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification scrollInfo) {
+                _syncHorizontalScrollControllerManager?.processNotification(
+                  scrollInfo,
+                  _rightHeaderHorizontalScrollController!,
+                  topScrollControllerLabel,
+                );
+                return false;
+              },
+              child: SingleChildScrollView(
+                physics: widget.horizontalScrollPhysics,
+                controller: _rightHeaderHorizontalScrollController!,
+                scrollDirection: Axis.horizontal,
                 child: header!,
               ),
-              LayoutId(
-                id: ListViewLayout.Divider,
-                child: widget.rowSeparatorWidget,
-              ),
-              LayoutId(
-                id: ListViewLayout.ListView,
-                child: listView,
-              ),
-              LayoutId(
-                id: ListViewLayout.Shadow,
-                child: Selector<ScrollShadowModel, double>(
-                  selector: (context, scrollShadowModel) {
-                    return scrollShadowModel.verticalOffset;
-                  },
-                  builder: (context, verticalOffset, child) {
-                    return Container(
-                      color: widget.elevationColor.withAlpha(_getShadowAlpha(
-                          _getElevation(verticalOffset), widget.elevation)),
-                      height: _getElevation(widget.elevation),
-                    );
-                  },
+            ),
+          ),
+        if (widget.isFixedHeader)
+          LayoutId(
+            id: ListViewLayout.Divider,
+            child: widget.rowSeparatorWidget,
+          ),
+        LayoutId(
+          id: ListViewLayout.ListView,
+          child: CustomScrollBar(
+            controller: this._rightHandSideListViewScrollController,
+            scrollbarStyle: widget.verticalScrollbarStyle,
+            notificationPredicate: (ScrollNotification notification) {
+              return notification.depth == 1;
+            },
+            child: CustomScrollBar(
+              controller: this._rightHorizontalScrollController,
+              scrollbarStyle: widget.horizontalScrollbarStyle,
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification scrollInfo) {
+                  _syncHorizontalScrollControllerManager?.processNotification(
+                    scrollInfo,
+                    _rightHorizontalScrollController,
+                    bottomScrollControllerLabel,
+                  );
+                  return false;
+                },
+                child: SingleChildScrollView(
+                  physics: widget.horizontalScrollPhysics,
+                  controller: _rightHorizontalScrollController,
+                  scrollDirection: Axis.horizontal,
+                  child: Container(
+                    width: widget.rightHandSideColumnWidth,
+                    child: listView,
+                  ),
                 ),
               ),
-            ]
-          : [
-              LayoutId(
-                id: ListViewLayout.ListView,
-                child: listView,
-              ),
-              LayoutId(
-                id: ListViewLayout.Shadow,
-                child: Selector<ScrollShadowModel, double>(
-                  selector: (context, scrollShadowModel) {
-                    return scrollShadowModel.verticalOffset;
-                  },
-                  builder: (context, verticalOffset, child) {
-                    return Container(
-                      color: widget.elevationColor.withAlpha(_getShadowAlpha(
-                          _getElevation(verticalOffset), widget.elevation)),
-                      height: _getElevation(widget.elevation),
-                    );
-                  },
-                ),
-              ),
-            ],
+            ),
+          ),
+        ),
+        LayoutId(
+          id: ListViewLayout.Shadow,
+          child: Selector<ScrollShadowModel, double>(
+            selector: (context, scrollShadowModel) {
+              return scrollShadowModel.verticalOffset;
+            },
+            builder: (context, verticalOffset, child) {
+              return Container(
+                color: widget.elevationColor.withAlpha(_getShadowAlpha(
+                    _getElevation(verticalOffset), widget.elevation)),
+                height: _getElevation(widget.elevation),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
