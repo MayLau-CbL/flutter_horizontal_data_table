@@ -88,14 +88,13 @@ HorizontalDataTable(
       
 ```
 1. refreshIndicator is the header widget when pull to refresh. 
-    Available refreshIndicator:
+    Supported refreshIndicator:
       1. ClassicHeader
       2. WaterDropHeader
-      3. CustomHeader
-      4. LinkHeader
-      5. MaterialClassicHeader
-      6. BezierHeader
+      3. CustomHeader         
+      4. BezierHeader
 
+    Basically single level header with a certain height while refreshing. For the on-top header is currently not supported.
     Since refreshIndicator is a Widget type field, you may customize yourself on the header, but you must set the height of the header. The detail usage you may reference to the [pull-to-refresh](https://pub.dev/packages/pull_to_refresh) package.
 2. refreshIndicatorHeight is the height of the refreshIndicator. Default is set to 60.
 3. onRefresh is the callback from the refresh action.     

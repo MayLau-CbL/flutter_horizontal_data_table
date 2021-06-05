@@ -1,3 +1,8 @@
+## [3.4.0] - 20210605
+* Update: Refresh Status export
+* Update: vertical scroll sync logic when pull to refresh is on
+* Update: README.md supported refresh header description
+
 ## [3.3.0] - 20210509
 * Update: separated right header and listview horizontal scroll
 * Add: horizontal scroll physics field for right horizontal scroll
