@@ -18,7 +18,6 @@ class SyncScrollControllerManager {
   ///Refresh related
   RefreshController? _refreshController;
   double _refreshIndicatorHeight = 0.0;
-  double _cacheScrollOffset = 0.0;
 
   void registerScrollController(ScrollController controller) {
     _registeredScrollControllers.add(controller);
@@ -81,42 +80,54 @@ class SyncScrollControllerManager {
 
   void _syncLeftListViewScrollVontroller(
       ScrollController _scrollingController, ScrollController controller) {
-    switch (_refreshController?.headerStatus) {
-      case RefreshStatus.canRefresh:
-        {
-          if (_cacheScrollOffset < _scrollingController.offset) {
+    if (_refreshController?.headerStatus != null) {
+      switch (_refreshController?.headerStatus) {
+        case RefreshStatus.refreshing:
+          {
             controller.jumpTo(_refreshIndicatorHeight * -1);
-            return;
-          } else {
-            _cacheScrollOffset = _scrollingController.offset;
+            break;
           }
-          break;
-        }
-      case RefreshStatus.refreshing:
-        {
-          return;
-        }
-      default:
-        {
-          _cacheScrollOffset = 0.0;
-          break;
-        }
+        default:
+          {
+            if (_scrollingController.offset < (_refreshIndicatorHeight * -1)) {
+              controller.jumpTo(_refreshIndicatorHeight * -1);
+            } else {
+              controller.jumpTo(_scrollingController.offset);
+            }
+            break;
+          }
+      }
+    } else {
+      controller.jumpTo(_scrollingController.offset);
     }
-    controller.jumpTo(_scrollingController.offset);
   }
 
   void _syncRightListViewScrollVontroller(
       ScrollController _scrollingController, ScrollController controller) {
-    if (!_scrollingController.position.outOfRange) {
-      controller.jumpTo(_scrollingController.offset);
-    } else {
-      if (_scrollingController.offset <= 0.0) {
-        _scrollingController
-            .jumpTo(_scrollingController.position.minScrollExtent);
-      } else {
-        _scrollingController
-            .jumpTo(_scrollingController.position.maxScrollExtent);
+    if (_refreshController?.headerStatus != null) {
+      switch (_refreshController?.headerStatus) {
+        case RefreshStatus.idle:
+          {
+            if (!_scrollingController.position.outOfRange) {
+              controller.jumpTo(_scrollingController.offset);
+            } else {
+              if (_scrollingController.offset <= 0.0) {
+                _scrollingController
+                    .jumpTo(_scrollingController.position.minScrollExtent);
+              } else {
+                _scrollingController
+                    .jumpTo(_scrollingController.position.maxScrollExtent);
+              }
+            }
+            break;
+          }
+        default:
+          {
+            break;
+          }
       }
+    } else {
+      controller.jumpTo(_scrollingController.offset);
     }
   }
 }
