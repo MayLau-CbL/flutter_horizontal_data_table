@@ -13,6 +13,7 @@ export 'package:horizontal_data_table/refresh/pull_to_refresh/src/indicator/cust
 export 'package:horizontal_data_table/refresh/pull_to_refresh/src/indicator/link_indicator.dart';
 export 'package:horizontal_data_table/refresh/pull_to_refresh/src/indicator/material_indicator.dart';
 export 'package:horizontal_data_table/refresh/pull_to_refresh/src/indicator/bezier_indicator.dart';
+export 'package:horizontal_data_table/refresh/pull_to_refresh/src/smart_refresher.dart';
 
 ///Main File
 import 'package:flutter/material.dart';
