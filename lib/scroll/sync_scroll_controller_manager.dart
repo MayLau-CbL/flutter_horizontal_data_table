@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import '../refresh/pull_to_refresh/pull_to_refresh.dart';
@@ -81,7 +83,19 @@ class SyncScrollControllerManager {
   void _syncLeftListViewScrollVontroller(
       ScrollController _scrollingController, ScrollController controller) {
     if (_refreshController?.headerStatus != null) {
+      //log(_refreshController!.headerStatus.toString());
+
       switch (_refreshController?.headerStatus) {
+        case RefreshStatus.canRefresh:
+          {
+            //log(_scrollingController.offset.toString() + ", " + _refreshIndicatorHeight.toString());
+            if (_scrollingController.offset.abs() < _refreshIndicatorHeight) {
+              controller.jumpTo(_refreshIndicatorHeight * -1);
+            } else {
+              controller.jumpTo(_refreshIndicatorHeight * -2);
+            }
+            break;
+          }
         case RefreshStatus.refreshing:
           {
             controller.jumpTo(_refreshIndicatorHeight * -1);
