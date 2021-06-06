@@ -1,3 +1,6 @@
+## [3.4.1] - 20210606
+* Fix: left and right scroll when refreshing
+
 ## [3.4.0] - 20210605
 * Update: Refresh Status export
 * Update: vertical scroll sync logic when pull to refresh is on
