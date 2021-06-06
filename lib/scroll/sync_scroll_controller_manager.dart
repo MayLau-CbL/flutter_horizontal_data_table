@@ -82,6 +82,15 @@ class SyncScrollControllerManager {
       ScrollController _scrollingController, ScrollController controller) {
     if (_refreshController?.headerStatus != null) {
       switch (_refreshController?.headerStatus) {
+        case RefreshStatus.canRefresh:
+          {
+            if (_scrollingController.offset.abs() < _refreshIndicatorHeight) {
+              controller.jumpTo(_refreshIndicatorHeight * -1);
+            } else {
+              controller.jumpTo(_refreshIndicatorHeight * -2);
+            }
+            break;
+          }
         case RefreshStatus.refreshing:
           {
             controller.jumpTo(_refreshIndicatorHeight * -1);
