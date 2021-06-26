@@ -1,3 +1,6 @@
+## [3.4.2] - 20210626
+* Update: smoothen refresh action
+
 ## [3.4.1] - 20210606
 * Fix: left and right scroll when refreshing
 
