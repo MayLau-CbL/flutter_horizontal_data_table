@@ -1,3 +1,6 @@
+## [3.4.3] - 20210827
+* Update: upgraded dependence
+
 ## [3.4.2] - 20210626
 * Update: smoothen refresh action
 
