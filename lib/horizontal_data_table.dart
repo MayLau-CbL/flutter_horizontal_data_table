@@ -436,6 +436,22 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
             child: CustomScrollBar(
               controller: this._rightHorizontalScrollController,
               scrollbarStyle: widget.horizontalScrollbarStyle,
+              notificationPredicate: (notification) {
+                // For some reason, on  _web only_, the scrollbar catches
+                // notifications from a vertical scrollable with depth: 0.
+                // This causes issues with the horizontal scrollbar disappearing
+                // as soon as vertical scrolling starts, and not obeying the fade
+                // logic or `isShownAlways` styling.
+                //
+                // No idea what the source is. As a workaround, we can just
+                // check the axis of the source scrollable.
+                if (notification.depth == 0 &&
+                    notification.metrics.axis == Axis.horizontal) {
+                  return true;
+                }
+
+                return false;
+              },
               child: NotificationListener<ScrollNotification>(
                 onNotification: (ScrollNotification scrollInfo) {
                   _syncHorizontalScrollControllerManager?.processNotification(
