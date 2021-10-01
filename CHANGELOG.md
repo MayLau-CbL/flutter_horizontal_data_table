@@ -1,3 +1,7 @@
+## [3.5.0] - 20211001
+* Fix: horizontal scrollbar disappear even isAlwaysShown true
+* Update: upgraded dependence
+
 ## [3.4.3] - 20210827
 * Update: upgraded dependence
 
