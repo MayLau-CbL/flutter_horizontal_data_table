@@ -1,3 +1,6 @@
+## [3.6.0] - 20211206
+* Add: pull to load new data
+
 ## [3.5.0] - 20211001
 * Fix: horizontal scrollbar disappear even isAlwaysShown true
 * Update: upgraded dependence
