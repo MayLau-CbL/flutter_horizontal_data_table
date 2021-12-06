@@ -86,6 +86,13 @@ class _MyHomePageState extends State<MyHomePage> {
           await Future.delayed(const Duration(milliseconds: 500));
           _hdtRefreshController.refreshCompleted();
         },
+        enablePullToLoadNewData: true,
+        loadIndicator: const ClassicFooter(),
+        onLoad: () async {
+          //Do sth
+          await Future.delayed(const Duration(milliseconds: 500));
+          _hdtRefreshController.loadComplete();
+        },
         htdRefreshController: _hdtRefreshController,
       ),
       height: MediaQuery.of(context).size.height,
