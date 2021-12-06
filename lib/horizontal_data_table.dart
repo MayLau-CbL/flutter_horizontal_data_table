@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:horizontal_data_table/model/scroll_shadow_model.dart';
 import 'package:horizontal_data_table/refresh/non_bounce_back_scroll_physics.dart';
 import 'package:horizontal_data_table/refresh/hdt_refresh_controller.dart';
+import 'package:horizontal_data_table/refresh/pull_to_refresh/pull_to_refresh.dart';
 import 'package:horizontal_data_table/refresh/pull_to_refresh/src/smart_refresher.dart';
 import 'package:horizontal_data_table/scroll/scroll_bar_style.dart';
 
@@ -104,13 +105,26 @@ class HorizontalDataTable extends StatefulWidget {
   ///Call HDTRefreshController.refreshFailed() for error refresh loading.
   final Function? onRefresh;
 
+  ///Flag to indicate whether enable the pull_to_load function
+  ///Default is false
+  final bool enablePullToLoadNewData;
+
+  ///Support using pull-to-refresh's load indicator
+  final Widget? loadIndicator;
+
+  ///Callback for pulled to load more.
+  ///Call HDTRefreshController.loadComplete() for finished loading.
+  ///Call HDTRefreshController.loadFailed() for error loading.
+  ///Call HDTRefreshController.loadNoData() for no more data.
+  final Function? onLoad;
+
   ///Vertical scroll physics of the data table
   final ScrollPhysics? scrollPhysics;
 
   ///Horizontal Scroll physics of the data table
   final ScrollPhysics? horizontalScrollPhysics;
 
-  ///This is a wrapper controller for limilating using the available refresh controller function. Currently only refresh fail and complete is implemented.
+  ///This is a wrapper controller for limilating using the available refresh and load new data controller function. Currently only refresh and load fail and complete are implemented.
   final HDTRefreshController? htdRefreshController;
 
   const HorizontalDataTable({
@@ -142,6 +156,9 @@ class HorizontalDataTable extends StatefulWidget {
     this.htdRefreshController,
     this.onRefresh,
     this.refreshIndicator,
+    this.enablePullToLoadNewData = false,
+    this.onLoad,
+    this.loadIndicator,
     this.scrollPhysics,
     this.horizontalScrollPhysics,
   })  : assert(
@@ -168,12 +185,21 @@ class HorizontalDataTable extends StatefulWidget {
                 !enablePullToRefresh,
             'refreshIndicator must not be null if pull to refresh is enabled'),
         assert(
-            (enablePullToRefresh && htdRefreshController != null) ||
-                !enablePullToRefresh,
-            'htdRefreshController must not be null if pull to refresh is enabled'),
+            ((enablePullToRefresh || enablePullToLoadNewData) &&
+                    htdRefreshController != null) ||
+                !(enablePullToRefresh || enablePullToLoadNewData),
+            'htdRefreshController must not be null if pull to refresh or load is enabled'),
         assert(
             (enablePullToRefresh && onRefresh != null) || !enablePullToRefresh,
-            'onRefresh must not be null if pull to refresh is enabled');
+            'onRefresh must not be null if pull to refresh is enabled'),
+        assert(
+            (enablePullToLoadNewData && onLoad != null) ||
+                !enablePullToLoadNewData,
+            'onLoad must not be null if pull to load is enabled'),
+        assert(
+            (enablePullToLoadNewData && loadIndicator != null) ||
+                !enablePullToLoadNewData,
+            'loadIndicator must not be null if pull to load is enabled');
 
   @override
   State<StatefulWidget> createState() {
@@ -566,12 +592,20 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
       [List<Widget>? children]) {
     return SmartRefresher(
       controller: _refreshController!,
+      enablePullDown: widget.enablePullToRefresh,
+      enablePullUp: widget.enablePullToLoadNewData,
       onRefresh: () {
         if (widget.onRefresh != null) {
           widget.onRefresh!();
         }
       },
+      onLoading: () {
+        if (widget.onLoad != null) {
+          widget.onLoad!();
+        }
+      },
       header: widget.refreshIndicator,
+      footer: widget.loadIndicator,
       child: _getListView(
         scrollController,
         indexedWidgetBuilder,

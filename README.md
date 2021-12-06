@@ -48,6 +48,9 @@ HorizontalDataTable(
       this.refreshIndicatorHeight = 60.0,
       this.refreshIndicator: const WaterDropHeader(),
       this.onRefresh: (){},
+      this.enablePullToLoadNewData = false,
+      this.onLoad,
+      this.loadIndicator,
       this.htdRefreshController: _hdtRefreshController,             
       this.scrollPhysics,
       this.horizontalScrollPhysics,
@@ -68,10 +71,11 @@ HorizontalDataTable(
 8. added leftHandSideColBackgroundColor and rightHandSideColBackgroundColor for setting the default background of the back of table. Default is set to white following the Material widget.
 9. added horizontalScrollController and verticalScrollController allow maunally jump to certain offset position. Please aware that if you have enabled the pull to refresh function, the jump to action may conflict with the pull to refresh action.
 10. verticalScrollbarStyle and horizontalScrollbarStyle are a ScrollbarStyle class object which allows customizing isAlwaysShown, thumbColor, thickness and radius. Default is using system style scrollbar.
-11. enablePullToRefresh is to define whether enable the pull-to-refresh function. Default is setting to false. Detail you may reference to the Pull to Refresh section.
-12. scrollPhysics and horizontalScrollPhysics are to set scroll physics of the data table. Please aware scrollPhysics may causing conflict when enabling pull-to-refresh feature.
+11. enablePullToRefresh is to define whether enable the pull-to-refresh function. Default is setting to false. Detail you may reference to the Pull to Refresh/Load section.
+12. enablePullToLoadNewData is to define whether enable the pull-to-load function. Default is setting to false. Detail you may reference to the Pull to Refresh/Load section.
+13. scrollPhysics and horizontalScrollPhysics are to set scroll physics of the data table. Please aware scrollPhysics may causing conflict when enabling pull-to-refresh feature.
  
-## Pull to Refresh
+## Pull to Refresh/Load
 
 The pull to refresh action is impletemented based on the 'pull-to-refresh' package code. Currently only part of the function is available. 
 
@@ -82,6 +86,9 @@ HorizontalDataTable(
       this.enablePullToRefresh = true,
       this.refreshIndicator: const WaterDropHeader(),
       this.onRefresh: _onRefresh,
+      this.enablePullToLoadNewData = true,
+      this.onLoad: _onLoad,
+      this.loadIndicator: const ClassicFooter(),
       this.htdRefreshController: _hdtRefreshController,
       }
      )
@@ -98,7 +105,12 @@ HorizontalDataTable(
     Since refreshIndicator is a Widget type field, you may customize yourself on the header, but you must set the height of the header. The detail usage you may reference to the [pull-to-refresh](https://pub.dev/packages/pull_to_refresh) package.
 2. refreshIndicatorHeight is the height of the refreshIndicator. Default is set to 60.
 3. onRefresh is the callback from the refresh action.     
-4. htdRefreshController is the wrapper controller for returning the refresh result. 
+4. loadIndicator is the header widget when pull to load. 
+    Supported refreshIndicator:
+      1. ClassicFooter
+      2. CustomFooter
+5. onLoad is the callback from the load action.     
+6. htdRefreshController is the wrapper controller for returning the refresh or load result. 
     This is the example on how to use onRefresh and htdRefreshController.
     ```
     void _onRefresh() async {
@@ -110,6 +122,21 @@ HorizontalDataTable(
       }else{
         //call this when it is a success case
         _hdtRefreshController.refreshCompleted();
+      }      
+    },
+
+    void _onLoad() async {
+      //do some network call and get the response
+      
+      if(isError){
+        //call this when it is an error case
+        _hdtRefreshController.loadFailed();
+      }else if(isNoMoreData){
+        //call this when it is end loading data
+        _hdtRefreshController.loadNoData();
+      }else{
+        //call this when it is a success case
+        _hdtRefreshController.loadCompleted();
       }      
     },
     ```

@@ -16,4 +16,16 @@ class HDTRefreshController {
   void refreshFailed() {
     _refreshController?.refreshFailed();
   }
+
+  void loadComplete() {
+    _refreshController?.loadComplete();
+  }
+
+  void loadNoData() {
+    _refreshController?.loadNoData();
+  }
+
+  void loadFailed() {
+    _refreshController?.loadFailed();
+  }
 }
