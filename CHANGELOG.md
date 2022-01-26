@@ -1,3 +1,7 @@
+## [3.4.3] - 20220126
+* Update: upgraded dependence
+* Update: README.md example
+
 ## [3.6.0] - 20211206
 * Add: pull to load new data
 
