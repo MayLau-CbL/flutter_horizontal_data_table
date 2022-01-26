@@ -1,4 +1,4 @@
-## [3.4.3] - 20220126
+## [3.6.1] - 20220126
 * Update: upgraded dependence
 * Update: README.md example
 
