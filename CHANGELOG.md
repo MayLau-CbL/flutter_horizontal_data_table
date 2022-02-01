@@ -1,3 +1,6 @@
+## [3.6.1+1] - 20220201
+* Remove: unused import in pull to refresh lib
+
 ## [3.6.1] - 20220126
 * Update: upgraded dependence
 * Update: README.md example
