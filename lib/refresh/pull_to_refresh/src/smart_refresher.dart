@@ -10,10 +10,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import '../pull_to_refresh.dart';
 import '../src/internals/slivers.dart';
-import 'internals/indicator_wrap.dart';
-import 'internals/refresh_physics.dart';
-import 'indicator/classic_indicator.dart';
-import 'indicator/material_indicator.dart';
 
 // ignore_for_file: INVALID_USE_OF_PROTECTED_MEMBER
 // ignore_for_file: INVALID_USE_OF_VISIBLE_FOR_TESTING_MEMBER
