@@ -1,3 +1,8 @@
+## [3.6.2] - 20220501
+* Update: example android project for 2.10.5 flutter version
+* Remove: uneccessary import of pull to refresh
+* Fix: minor comment typo
+
 ## [3.6.1+1] - 20220201
 * Remove: unused import in pull to refresh lib
 
