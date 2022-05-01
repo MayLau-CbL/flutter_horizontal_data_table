@@ -1,4 +1,4 @@
-///Exxport File
+///Export File
 
 ///Scrollbar Style
 export 'package:horizontal_data_table/scroll/scroll_bar_style.dart';
@@ -77,16 +77,16 @@ class HorizontalDataTable extends StatefulWidget {
   final Color leftHandSideColBackgroundColor;
   final Color rightHandSideColBackgroundColor;
 
-  ///Vertical scroll controller, expose for allowing maunally jump to specific offset position. Please aware this may conflict with the pull to refresh action.
+  ///Vertical scroll controller, expose for allowing manually jump to specific offset position. Please aware this may conflict with the pull to refresh action.
   final ScrollController? verticalScrollController;
 
-  ///Horizontal scroll controller, expose for allowing maunally jump to specific offset position.
+  ///Horizontal scroll controller, expose for allowing manually jump to specific offset position.
   final ScrollController? horizontalScrollController;
 
-  ///Vertical Scrollbar Style. Default the scrollbar is using that platform's sysmtem setting.
+  ///Vertical Scrollbar Style. Default the scrollbar is using that platform's system setting.
   final ScrollbarStyle? verticalScrollbarStyle;
 
-  ///Horizontal Scrollbar Style. Default the scrollbar is using that platform's sysmtem setting.
+  ///Horizontal Scrollbar Style. Default the scrollbar is using that platform's system setting.
   final ScrollbarStyle? horizontalScrollbarStyle;
 
   ///Flag to indicate whether enable the pull_to_refresh function
@@ -124,7 +124,7 @@ class HorizontalDataTable extends StatefulWidget {
   ///Horizontal Scroll physics of the data table
   final ScrollPhysics? horizontalScrollPhysics;
 
-  ///This is a wrapper controller for limilating using the available refresh and load new data controller function. Currently only refresh and load fail and complete are implemented.
+  ///This is a wrapper controller for limiting using the available refresh and load new data controller function. Currently only refresh and load fail and complete are implemented.
   final HDTRefreshController? htdRefreshController;
 
   const HorizontalDataTable({
