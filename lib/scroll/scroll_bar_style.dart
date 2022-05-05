@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 ///Customizing scroll bar style. If not set thumbColor, other configuration will applied with the plaform system style scroll bar. If a specific Color is set for the thumb, all platform will use the [RawScrollbar] with the config set in this class.
