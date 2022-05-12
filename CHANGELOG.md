@@ -1,3 +1,6 @@
+## [3.6.3] - 20220512
+* Update: WidgetsBinding.instance handling after flutter 3.0.0
+
 ## [3.6.2+1] - 20220505
 * Update: flutter formating
 
