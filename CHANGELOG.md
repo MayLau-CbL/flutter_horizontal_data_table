@@ -1,3 +1,6 @@
+## [3.6.4] - 20220516
+* Fix: WidgetsBinding.instance handling after flutter 3.0.0
+
 ## [3.6.3] - 20220512
 * Update: WidgetsBinding.instance handling after flutter 3.0.0
 
