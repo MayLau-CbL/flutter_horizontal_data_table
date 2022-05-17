@@ -1,3 +1,6 @@
+## [3.6.5] - 20220517
+* Fix: Replace flutter scrollbar widget isAlwaysShown with thumbVisibility
+
 ## [3.6.4] - 20220516
 * Fix: WidgetsBinding.instance handling after flutter 3.0.0
 
