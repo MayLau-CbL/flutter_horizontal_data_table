@@ -21,7 +21,7 @@ class CustomScrollBar extends StatelessWidget {
     if (this.scrollbarStyle?.thumbColor != null) {
       return RawScrollbar(
         controller: this.controller,
-        isAlwaysShown: this.scrollbarStyle?.isAlwaysShown ?? false,
+        thumbVisibility: this.scrollbarStyle?.isAlwaysShown ?? false,
         thickness: this.scrollbarStyle?.thickness,
         radius: this.scrollbarStyle?.radius,
         thumbColor: this.scrollbarStyle?.thumbColor,
@@ -32,7 +32,7 @@ class CustomScrollBar extends StatelessWidget {
 
     return Scrollbar(
       controller: this.controller,
-      isAlwaysShown: this.scrollbarStyle?.isAlwaysShown ?? false,
+      thumbVisibility: this.scrollbarStyle?.isAlwaysShown ?? false,
       thickness: this.scrollbarStyle?.thickness,
       radius: this.scrollbarStyle?.radius,
       child: this.child,
