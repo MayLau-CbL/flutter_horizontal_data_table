@@ -33,7 +33,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "3.6.4"
+    version: "3.6.5"
   material_color_utilities:
     dependency: transitive
     description:
