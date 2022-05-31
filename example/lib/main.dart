@@ -33,6 +33,8 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isAscending = true;
   int sortType = sortName;
 
+  bool isLTRmode = true;
+
   @override
   void initState() {
     user.initData(100);
@@ -51,51 +53,124 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _getBodyWidget() {
     return Container(
-      child: HorizontalDataTable(
-        leftHandSideColumnWidth: 100,
-        rightHandSideColumnWidth: 600,
-        isFixedHeader: true,
-        headerWidgets: _getTitleWidget(),
-        leftSideItemBuilder: _generateFirstColumnRow,
-        rightSideItemBuilder: _generateRightHandSideColumnRow,
-        itemCount: user.userInfo.length,
-        rowSeparatorWidget: const Divider(
-          color: Colors.black54,
-          height: 1.0,
-          thickness: 0.0,
-        ),
-        leftHandSideColBackgroundColor: Color(0xFFFFFFFF),
-        rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
-        verticalScrollbarStyle: const ScrollbarStyle(
-          thumbColor: Colors.yellow,
-          isAlwaysShown: true,
-          thickness: 4.0,
-          radius: Radius.circular(5.0),
-        ),
-        horizontalScrollbarStyle: const ScrollbarStyle(
-          thumbColor: Colors.red,
-          isAlwaysShown: true,
-          thickness: 4.0,
-          radius: Radius.circular(5.0),
-        ),
-        enablePullToRefresh: true,
-        refreshIndicator: const WaterDropHeader(),
-        refreshIndicatorHeight: 60,
-        onRefresh: () async {
-          //Do sth
-          await Future.delayed(const Duration(milliseconds: 500));
-          _hdtRefreshController.refreshCompleted();
-        },
-        enablePullToLoadNewData: true,
-        loadIndicator: const ClassicFooter(),
-        onLoad: () async {
-          //Do sth
-          await Future.delayed(const Duration(milliseconds: 500));
-          _hdtRefreshController.loadComplete();
-        },
-        htdRefreshController: _hdtRefreshController,
+      child: Column(
+        children: [
+          ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  isLTRmode = !isLTRmode;
+                });
+              },
+              child: Text(isLTRmode
+                  ? 'change to right-to-left'
+                  : 'change to left-to-right')),
+
+          /// horizontal data table must declaire a finite height
+          /// either fixed height or using expanded
+          Expanded(
+            child: isLTRmode ? _getLTRTable() : _getRTLTable(),
+          ),
+        ],
       ),
-      height: MediaQuery.of(context).size.height,
+    );
+  }
+
+  /// left to right table
+  /// same setting as the previous version
+  Widget _getLTRTable() {
+    return HorizontalDataTable(
+      leftHandSideColumnWidth: 100,
+      rightHandSideColumnWidth: 600,
+      isFixedHeader: true,
+      headerWidgets: _getTitleWidget(),
+      leftSideItemBuilder: _generateFirstColumnRow,
+      rightSideItemBuilder: _generateRightHandSideColumnRow,
+      itemCount: user.userInfo.length,
+      rowSeparatorWidget: const Divider(
+        color: Colors.black54,
+        height: 1.0,
+        thickness: 0.0,
+      ),
+      leftHandSideColBackgroundColor: Color(0xFFFFFFFF),
+      rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
+      verticalScrollbarStyle: const ScrollbarStyle(
+        thumbColor: Colors.yellow,
+        isAlwaysShown: true,
+        thickness: 4.0,
+        radius: Radius.circular(5.0),
+      ),
+      horizontalScrollbarStyle: const ScrollbarStyle(
+        thumbColor: Colors.red,
+        isAlwaysShown: true,
+        thickness: 4.0,
+        radius: Radius.circular(5.0),
+      ),
+      enablePullToRefresh: true,
+      refreshIndicator: const WaterDropHeader(),
+      refreshIndicatorHeight: 60,
+      onRefresh: () async {
+        //Do sth
+        await Future.delayed(const Duration(milliseconds: 500));
+        _hdtRefreshController.refreshCompleted();
+      },
+      enablePullToLoadNewData: true,
+      loadIndicator: const ClassicFooter(),
+      onLoad: () async {
+        //Do sth
+        await Future.delayed(const Duration(milliseconds: 500));
+        _hdtRefreshController.loadComplete();
+      },
+      htdRefreshController: _hdtRefreshController,
+    );
+  }
+
+  /// right to left table
+  /// experimental, as i am not so familiar with the Arabic app UX,
+  /// please feel free to comment and contribute with the rtl behaviour
+  Widget _getRTLTable() {
+    return HorizontalDataTable.rtl(
+      rightHandSideColumnWidth: 100,
+      leftHandSideColumnWidth: 600,
+      isFixedHeader: true,
+      headerWidgets: _getTitleWidget(),
+      rightSideItemBuilder: _generateFirstColumnRow,
+      leftSideItemBuilder: _generateRightHandSideColumnRow,
+      itemCount: user.userInfo.length,
+      rowSeparatorWidget: const Divider(
+        color: Colors.black54,
+        height: 1.0,
+        thickness: 0.0,
+      ),
+      rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
+      leftHandSideColBackgroundColor: Color(0xFFFFFFFF),
+      verticalScrollbarStyle: const ScrollbarStyle(
+        thumbColor: Colors.yellow,
+        isAlwaysShown: true,
+        thickness: 4.0,
+        radius: Radius.circular(5.0),
+      ),
+      horizontalScrollbarStyle: const ScrollbarStyle(
+        thumbColor: Colors.red,
+        isAlwaysShown: true,
+        thickness: 4.0,
+        radius: Radius.circular(5.0),
+      ),
+      enablePullToRefresh: true,
+      refreshIndicator: const WaterDropHeader(),
+      refreshIndicatorHeight: 60,
+      onRefresh: () async {
+        //Do sth
+        await Future.delayed(const Duration(milliseconds: 500));
+        _hdtRefreshController.refreshCompleted();
+      },
+      enablePullToLoadNewData: true,
+      loadIndicator: const ClassicFooter(),
+      onLoad: () async {
+        //Do sth
+        await Future.delayed(const Duration(milliseconds: 500));
+        _hdtRefreshController.loadComplete();
+      },
+      htdRefreshController: _hdtRefreshController,
     );
   }
 

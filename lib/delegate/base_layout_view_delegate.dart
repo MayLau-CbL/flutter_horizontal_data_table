@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TableBaseLayoutDelegate extends MultiChildLayoutDelegate {
+  final bool isRTL;
   final double widgetHeight;
   final double widgetWidth;
   final double headerWidth;
@@ -10,16 +11,25 @@ class TableBaseLayoutDelegate extends MultiChildLayoutDelegate {
     this.widgetHeight,
     this.widgetWidth,
     this.headerWidth,
-    this.middleShadowWidth,
-  );
+    this.middleShadowWidth, [
+    this.isRTL = false,
+  ]);
 
   @override
   void performLayout(Size size) {
+    if (isRTL) {
+      _performRTLLayout(size);
+    } else {
+      _performLTRLayout(size);
+    }
+  }
+
+  void _performLTRLayout(Size size) {
     Size leftListViewSize = Size.zero;
 
-    if (hasChild(BaseLayoutView.LeftListView)) {
+    if (hasChild(BaseLayoutView.FixedColumnListView)) {
       leftListViewSize = layoutChild(
-        BaseLayoutView.LeftListView,
+        BaseLayoutView.FixedColumnListView,
         BoxConstraints(
           maxHeight: this.widgetHeight,
           maxWidth: this.headerWidth,
@@ -27,14 +37,14 @@ class TableBaseLayoutDelegate extends MultiChildLayoutDelegate {
       );
 
       positionChild(
-        BaseLayoutView.LeftListView,
+        BaseLayoutView.FixedColumnListView,
         Offset(0, 0),
       );
     }
 
-    if (hasChild(BaseLayoutView.RightListView)) {
+    if (hasChild(BaseLayoutView.BiDirectionScrollListView)) {
       layoutChild(
-        BaseLayoutView.RightListView,
+        BaseLayoutView.BiDirectionScrollListView,
         BoxConstraints(
           maxHeight: this.widgetHeight,
           maxWidth: this.widgetWidth - leftListViewSize.width,
@@ -42,7 +52,7 @@ class TableBaseLayoutDelegate extends MultiChildLayoutDelegate {
       );
 
       positionChild(
-        BaseLayoutView.RightListView,
+        BaseLayoutView.BiDirectionScrollListView,
         Offset(leftListViewSize.width, 0),
       );
     }
@@ -63,10 +73,65 @@ class TableBaseLayoutDelegate extends MultiChildLayoutDelegate {
     }
   }
 
+  void _performRTLLayout(Size size) {
+    Size rightListViewSize = Size.zero;
+    Size leftListViewSize = Size.zero;
+
+    if (hasChild(BaseLayoutView.FixedColumnListView)) {
+      rightListViewSize = layoutChild(
+        BaseLayoutView.FixedColumnListView,
+        BoxConstraints(
+          maxHeight: this.widgetHeight,
+          maxWidth: this.headerWidth,
+        ),
+      );
+
+      positionChild(
+        BaseLayoutView.FixedColumnListView,
+        Offset(this.widgetWidth - rightListViewSize.width, 0),
+      );
+    }
+
+    if (hasChild(BaseLayoutView.BiDirectionScrollListView)) {
+      leftListViewSize = layoutChild(
+        BaseLayoutView.BiDirectionScrollListView,
+        BoxConstraints(
+          maxHeight: this.widgetHeight,
+          maxWidth: this.widgetWidth - rightListViewSize.width,
+        ),
+      );
+
+      positionChild(
+        BaseLayoutView.BiDirectionScrollListView,
+        Offset(0, 0),
+      );
+    }
+
+    if (hasChild(BaseLayoutView.MiddleShadow)) {
+      layoutChild(
+        BaseLayoutView.MiddleShadow,
+        BoxConstraints(
+          maxHeight: this.widgetHeight,
+          maxWidth: this.middleShadowWidth,
+        ),
+      );
+
+      positionChild(
+        BaseLayoutView.MiddleShadow,
+        Offset(leftListViewSize.width - this.middleShadowWidth, 0),
+      );
+    }
+  }
+
   @override
   bool shouldRelayout(covariant MultiChildLayoutDelegate oldDelegate) {
     return this != oldDelegate;
   }
 }
 
-enum BaseLayoutView { LeftListView, RightListView, MiddleShadow, Divider }
+enum BaseLayoutView {
+  FixedColumnListView,
+  BiDirectionScrollListView,
+  MiddleShadow,
+  Divider
+}

@@ -33,7 +33,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "3.6.5"
+    version: "3.7.0"
   material_color_utilities:
     dependency: transitive
     description:
@@ -61,7 +61,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.2"
+    version: "6.0.3"
   sky_engine:
     dependency: transitive
     description: flutter
