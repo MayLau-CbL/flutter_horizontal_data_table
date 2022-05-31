@@ -1,3 +1,8 @@
+## [3.7.0] - 20220531
+* Add: Right-to-left constructor
+* Update: Right-to-left example and README.md
+* Update: upgraded dependence
+
 ## [3.6.5] - 20220517
 * Fix: Replace flutter scrollbar widget isAlwaysShown with thumbVisibility
 

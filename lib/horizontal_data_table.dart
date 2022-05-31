@@ -127,6 +127,8 @@ class HorizontalDataTable extends StatefulWidget {
   ///This is a wrapper controller for limiting using the available refresh and load new data controller function. Currently only refresh and load fail and complete are implemented.
   final HDTRefreshController? htdRefreshController;
 
+  final bool enableRTL;
+
   const HorizontalDataTable({
     required this.leftHandSideColumnWidth,
     required this.rightHandSideColumnWidth,
@@ -161,7 +163,91 @@ class HorizontalDataTable extends StatefulWidget {
     this.loadIndicator,
     this.scrollPhysics,
     this.horizontalScrollPhysics,
-  })  : assert(
+  })  : this.enableRTL = false,
+        assert(
+            (leftSideChildren == null && leftSideItemBuilder != null) ||
+                (leftSideChildren != null),
+            'Either using itemBuilder or children to assign left side widgets'),
+        assert(
+            (rightSideChildren == null && rightSideItemBuilder != null) ||
+                (rightSideChildren != null),
+            'Either using itemBuilder or children to assign right side widgets'),
+        assert((isFixedHeader && headerWidgets != null) || !isFixedHeader,
+            'If use fixed top row header, isFixedHeader==true, headerWidgets must not be null'),
+        assert(tableHeight == null || tableHeight > 0.0,
+            'tableHeight can only be null or > 0.0'),
+        assert(itemCount >= 0, 'itemCount must >= 0'),
+        assert(elevation >= 0.0, 'elevation must >= 0.0'),
+        // assert(elevationColor != null, 'elevationColor must not be null'),
+        assert(
+            (enablePullToRefresh && refreshIndicatorHeight >= 0.0) ||
+                !enablePullToRefresh,
+            'refreshIndicator must >= 0 if pull to refresh is enabled'),
+        assert(
+            (enablePullToRefresh && refreshIndicator != null) ||
+                !enablePullToRefresh,
+            'refreshIndicator must not be null if pull to refresh is enabled'),
+        assert(
+            ((enablePullToRefresh || enablePullToLoadNewData) &&
+                    htdRefreshController != null) ||
+                !(enablePullToRefresh || enablePullToLoadNewData),
+            'htdRefreshController must not be null if pull to refresh or load is enabled'),
+        assert(
+            (enablePullToRefresh && onRefresh != null) || !enablePullToRefresh,
+            'onRefresh must not be null if pull to refresh is enabled'),
+        assert(
+            (enablePullToLoadNewData && onLoad != null) ||
+                !enablePullToLoadNewData,
+            'onLoad must not be null if pull to load is enabled'),
+        assert(
+            (enablePullToLoadNewData && loadIndicator != null) ||
+                !enablePullToLoadNewData,
+            'loadIndicator must not be null if pull to load is enabled');
+
+  HorizontalDataTable.rtl({
+    required double leftHandSideColumnWidth,
+    required double rightHandSideColumnWidth,
+    this.tableHeight,
+    this.isFixedHeader = false,
+    this.headerWidgets,
+    Widget Function(BuildContext, int)? leftSideItemBuilder,
+    Widget Function(BuildContext, int)? rightSideItemBuilder,
+    this.itemCount = 0,
+    List<Widget>? leftSideChildren,
+    List<Widget>? rightSideChildren,
+    this.rowSeparatorWidget = const Divider(
+      color: Colors.transparent,
+      height: 0.0,
+      thickness: 0.0,
+    ),
+    this.elevation = 3.0,
+    this.elevationColor = Colors.black54,
+    Color leftHandSideColBackgroundColor = Colors.white,
+    Color rightHandSideColBackgroundColor = Colors.white,
+    this.horizontalScrollController,
+    this.verticalScrollController,
+    this.verticalScrollbarStyle,
+    this.horizontalScrollbarStyle,
+    this.enablePullToRefresh = false,
+    this.refreshIndicatorHeight = 60.0,
+    this.htdRefreshController,
+    this.onRefresh,
+    this.refreshIndicator,
+    this.enablePullToLoadNewData = false,
+    this.onLoad,
+    this.loadIndicator,
+    this.scrollPhysics,
+    this.horizontalScrollPhysics,
+  })  : this.enableRTL = true,
+        this.leftHandSideColumnWidth = rightHandSideColumnWidth,
+        this.rightHandSideColumnWidth = leftHandSideColumnWidth,
+        this.leftSideItemBuilder = rightSideItemBuilder,
+        this.rightSideItemBuilder = leftSideItemBuilder,
+        this.leftSideChildren = rightSideChildren,
+        this.rightSideChildren = leftSideChildren,
+        this.leftHandSideColBackgroundColor = rightHandSideColBackgroundColor,
+        this.rightHandSideColBackgroundColor = leftHandSideColBackgroundColor,
+        assert(
             (leftSideChildren == null && leftSideItemBuilder != null) ||
                 (leftSideChildren != null),
             'Either using itemBuilder or children to assign left side widgets'),
@@ -285,25 +371,28 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ScrollShadowModel>(
-      create: (context) => _scrollShadowModel,
-      child: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, boxConstraint) {
-            if (widget.tableHeight != null) {
-              return _getParallelListView(
-                boxConstraint.maxWidth,
-                (boxConstraint.maxHeight > widget.tableHeight!
-                    ? widget.tableHeight
-                    : boxConstraint.maxHeight)!,
-              );
-            } else {
-              return _getParallelListView(
-                boxConstraint.maxWidth,
-                boxConstraint.maxHeight,
-              );
-            }
-          },
+    return Directionality(
+      textDirection: widget.enableRTL ? TextDirection.rtl : TextDirection.ltr,
+      child: ChangeNotifierProvider<ScrollShadowModel>(
+        create: (context) => _scrollShadowModel,
+        child: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, boxConstraint) {
+              if (widget.tableHeight != null) {
+                return _getParallelListView(
+                  boxConstraint.maxWidth,
+                  (boxConstraint.maxHeight > widget.tableHeight!
+                      ? widget.tableHeight
+                      : boxConstraint.maxHeight)!,
+                );
+              } else {
+                return _getParallelListView(
+                  boxConstraint.maxWidth,
+                  boxConstraint.maxHeight,
+                );
+              }
+            },
+          ),
         ),
       ),
     );
@@ -311,11 +400,11 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
 
   Widget _getParallelListView(double width, double height) {
     return CustomMultiChildLayout(
-      delegate: TableBaseLayoutDelegate(
-          height, width, widget.leftHandSideColumnWidth, widget.elevation),
+      delegate: TableBaseLayoutDelegate(height, width,
+          widget.leftHandSideColumnWidth, widget.elevation, widget.enableRTL),
       children: [
         LayoutId(
-          id: BaseLayoutView.LeftListView,
+          id: BaseLayoutView.FixedColumnListView,
           child: Container(
             color: widget.leftHandSideColBackgroundColor,
             child: _getLeftFixedHeaderScrollColumn(
@@ -331,7 +420,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
           ),
         ),
         LayoutId(
-          id: BaseLayoutView.RightListView,
+          id: BaseLayoutView.BiDirectionScrollListView,
           child: Container(
             color: widget.rightHandSideColBackgroundColor,
             child: _getRightFixedHeaderScrollColumn(

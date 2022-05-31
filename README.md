@@ -56,10 +56,13 @@ HorizontalDataTable(
       this.horizontalScrollPhysics,
       }
      )
-      
+
+/// right-to-left mode constructor
+HorizontalDataTable.rtl({...same as the above})
+
 ```
 
-1. Left side column(leftHandSideColumnWidth) and right side maximum scrollable area width(rightHandSideColumnWidth) are required to input.
+1. Fixed side column(ltr: leftHandSideColumnWidth, rtl: rightHandSideColumnWidth) and horizontal scollable side maximum scrollable area width(ltr: rightHandSideColumnWidth, rtl: leftHandSideColumnWidth) are required to input.
 2. tableHeight is for manually set the table widget's height. The table widget height is using the smaller value of tableHeight and available height. Default is set to null, which is equal to using available height.
 3. isFixedHeader is to define whether use fixed top row header. If true, headerWidgets is required. Default is false.
 4. This widget allow set children in two ways, 
