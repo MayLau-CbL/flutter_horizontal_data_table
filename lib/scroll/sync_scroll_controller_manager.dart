@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../refresh/pull_to_refresh/pull_to_refresh.dart';
 
-const String leftScrollControllerLabel = 'Left';
-const String rightScrollControllerLabel = 'Right';
+const String fixedSideScrollControllerLabel = 'Fixed';
+const String bidirectionalSideScrollControllerLabel = 'Bi-directional';
 
 class SyncScrollControllerManager {
   SyncScrollControllerManager(RefreshController? refreshController,
@@ -49,18 +49,18 @@ class SyncScrollControllerManager {
               if (controller.hasClients) {
                 if (_refreshController != null) {
                   switch (label) {
-                    case leftScrollControllerLabel:
+                    case fixedSideScrollControllerLabel:
                       {
                         if (_scrollingController != null) {
-                          _syncRightListViewScrollVontroller(
+                          _syncBidirectionalSideListViewScrollVontroller(
                               _scrollingController!, controller);
                         }
                         break;
                       }
-                    case rightScrollControllerLabel:
+                    case bidirectionalSideScrollControllerLabel:
                       {
                         if (_scrollingController != null) {
-                          _syncLeftListViewScrollVontroller(
+                          _syncFixedSideListViewScrollVontroller(
                               _scrollingController!, controller);
                         }
                         break;
@@ -78,7 +78,7 @@ class SyncScrollControllerManager {
     }
   }
 
-  void _syncLeftListViewScrollVontroller(
+  void _syncFixedSideListViewScrollVontroller(
       ScrollController _scrollingController, ScrollController controller) {
     if (_refreshController?.headerStatus != null) {
       switch (_refreshController?.headerStatus) {
@@ -107,7 +107,7 @@ class SyncScrollControllerManager {
     }
   }
 
-  void _syncRightListViewScrollVontroller(
+  void _syncBidirectionalSideListViewScrollVontroller(
       ScrollController _scrollingController, ScrollController controller) {
     if (_refreshController?.headerStatus != null) {
       switch (_refreshController?.headerStatus) {

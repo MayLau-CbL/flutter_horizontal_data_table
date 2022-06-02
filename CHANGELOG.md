@@ -1,3 +1,7 @@
+## [3.8.0] - 20220602
+* Update: refactored left right naming to fixed or bidirectional
+* Update: README.md for flutter version and package version 
+
 ## [3.7.0] - 20220531
 * Add: Right-to-left constructor
 * Update: Right-to-left example and README.md

@@ -25,10 +25,10 @@ class TableBaseLayoutDelegate extends MultiChildLayoutDelegate {
   }
 
   void _performLTRLayout(Size size) {
-    Size leftListViewSize = Size.zero;
+    Size fixedSideListViewSize = Size.zero;
 
     if (hasChild(BaseLayoutView.FixedColumnListView)) {
-      leftListViewSize = layoutChild(
+      fixedSideListViewSize = layoutChild(
         BaseLayoutView.FixedColumnListView,
         BoxConstraints(
           maxHeight: this.widgetHeight,
@@ -47,13 +47,13 @@ class TableBaseLayoutDelegate extends MultiChildLayoutDelegate {
         BaseLayoutView.BiDirectionScrollListView,
         BoxConstraints(
           maxHeight: this.widgetHeight,
-          maxWidth: this.widgetWidth - leftListViewSize.width,
+          maxWidth: this.widgetWidth - fixedSideListViewSize.width,
         ),
       );
 
       positionChild(
         BaseLayoutView.BiDirectionScrollListView,
-        Offset(leftListViewSize.width, 0),
+        Offset(fixedSideListViewSize.width, 0),
       );
     }
 
@@ -68,17 +68,17 @@ class TableBaseLayoutDelegate extends MultiChildLayoutDelegate {
 
       positionChild(
         BaseLayoutView.MiddleShadow,
-        Offset(leftListViewSize.width, 0),
+        Offset(fixedSideListViewSize.width, 0),
       );
     }
   }
 
   void _performRTLLayout(Size size) {
-    Size rightListViewSize = Size.zero;
-    Size leftListViewSize = Size.zero;
+    Size fixedSideListViewSize = Size.zero;
+    Size bidirectionalSideListViewSize = Size.zero;
 
     if (hasChild(BaseLayoutView.FixedColumnListView)) {
-      rightListViewSize = layoutChild(
+      fixedSideListViewSize = layoutChild(
         BaseLayoutView.FixedColumnListView,
         BoxConstraints(
           maxHeight: this.widgetHeight,
@@ -88,16 +88,16 @@ class TableBaseLayoutDelegate extends MultiChildLayoutDelegate {
 
       positionChild(
         BaseLayoutView.FixedColumnListView,
-        Offset(this.widgetWidth - rightListViewSize.width, 0),
+        Offset(this.widgetWidth - fixedSideListViewSize.width, 0),
       );
     }
 
     if (hasChild(BaseLayoutView.BiDirectionScrollListView)) {
-      leftListViewSize = layoutChild(
+      bidirectionalSideListViewSize = layoutChild(
         BaseLayoutView.BiDirectionScrollListView,
         BoxConstraints(
           maxHeight: this.widgetHeight,
-          maxWidth: this.widgetWidth - rightListViewSize.width,
+          maxWidth: this.widgetWidth - fixedSideListViewSize.width,
         ),
       );
 
@@ -118,7 +118,7 @@ class TableBaseLayoutDelegate extends MultiChildLayoutDelegate {
 
       positionChild(
         BaseLayoutView.MiddleShadow,
-        Offset(leftListViewSize.width - this.middleShadowWidth, 0),
+        Offset(bidirectionalSideListViewSize.width - this.middleShadowWidth, 0),
       );
     }
   }
