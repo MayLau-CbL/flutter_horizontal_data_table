@@ -3,6 +3,10 @@
 [![issues](https://img.shields.io/github/issues/MayLau-CbL/flutter_horizontal_data_table)](https://github.com/MayLau-CbL/flutter_horizontal_data_table/issues)
 [![GitHub Page](https://img.shields.io/github/stars/MayLau-CbL/flutter_horizontal_data_table?style=social)](https://github.com/MayLau-CbL/flutter_horizontal_data_table)
 
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/N4N8D1EWN)
+
+
 A Flutter Widget that create a horizontal table with fixed column on left hand side.
 
 ## Installation
@@ -13,7 +17,8 @@ This package is starting to support sound null-safety. Although the package is m
 |---|---|---|
 |<2.12.0|<2.0.1|v2.5.1|
 |<2.12.0|=2.0.1|v2.5.2|
-|>=2.12.0 (enabled null-safety)|=2.0.1|latest|
+|>=2.12.0 (enabled null-safety)|>=2.0.1 && <3.0.0|3.6.2+1|
+|>=2.12.0|>=3.0.0|latest|
 
 ## Usage
 
