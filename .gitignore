@@ -65,6 +65,16 @@ build/
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
 
+# Linux Generated files
+**/example/linux/flutter/generated_plugin_registrant.cc
+**/example/linux/flutter/generated_plugin_registrant.h
+**/example/linux/flutter/generated_plugins.cmake
+# MacOS Generated files
+**/example/macos/Flutter/ephemeral/flutter_export_environment.sh
+**/example/macos/Flutter/ephemeral/Flutter-Generated.xcconfig
+**/example/macos/Flutter/GeneratedPluginRegistrant.swift
+
+
 # Exceptions to above rules.
 !**/ios/**/default.mode1v3
 !**/ios/**/default.mode2v3
