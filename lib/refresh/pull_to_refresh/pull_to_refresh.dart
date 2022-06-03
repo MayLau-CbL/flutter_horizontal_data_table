@@ -7,6 +7,7 @@
 // library pulltorefresh;
 
 export 'src/smart_refresher.dart';
+export 'src/indicator/placeholder_indicator.dart';
 export 'src/indicator/classic_indicator.dart';
 export 'src/indicator/waterdrop_header.dart';
 export 'src/indicator/custom_indicator.dart';

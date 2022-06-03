@@ -78,6 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
   /// left to right table
   /// same setting as the previous version
   Widget _getLTRTable() {
+    ///TODO: example for onVerticalScrollComtrollerReady, load and refresh indicator on fixed side
     return HorizontalDataTable(
       leftHandSideColumnWidth: 100,
       rightHandSideColumnWidth: 600,
@@ -117,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
       loadIndicator: const ClassicFooter(),
       onLoad: () async {
         //Do sth
-        await Future.delayed(const Duration(milliseconds: 500));
+        await Future.delayed(const Duration(milliseconds: 2000));
         _hdtRefreshController.loadComplete();
       },
       htdRefreshController: _hdtRefreshController,
