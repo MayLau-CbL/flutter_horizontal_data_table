@@ -7,11 +7,11 @@
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/N4N8D1EWN)
 
 
-A Flutter Widget that create a horizontal table with fixed column on left hand side.
+A Flutter Widget that create a horizontal table with fixed first column.
 
 ## Installation
 
-This package is starting to support sound null-safety. Although the package is migrated manually and tested with each functions, please feel free to file issue on GitHub if there is any problem on the integration/migration. The following is the guide for installation with different dart sdk and flutter version.
+The following is the guide for installation with different dart sdk and flutter version.
 
 |minium dart sdk|flutter version (stable)|package version|
 |---|---|---|
@@ -20,22 +20,39 @@ This package is starting to support sound null-safety. Although the package is m
 |>=2.12.0 (enabled null-safety)|>=2.0.1 && <3.0.0|3.6.2+1|
 |>=2.12.0|>=3.0.0|latest|
 
+
+Run this command to install latest:
+```
+flutter pub add horizontal_data_table
+```
+
+## Breaking Change Upgrading to 4.xx
+
+1. horizontalScrollController and verticalScrollController is removed. Please use onScrollControllerReady to get the returned ScrollController.
+
+```
+  onScrollControllerReady: (vertical, horizontal) {
+    _verticalScrollController = vertical;
+    _horizontalScrollController = horizontal;
+  },
+```
+
 ## Usage
 
 This shows Widget's full customizations:
 ```
 HorizontalDataTable(
       {
-      required this.leftHandSideColumnWidth,
-      required this.rightHandSideColumnWidth,
+      required double leftHandSideColumnWidth,
+      required double rightHandSideColumnWidth,
       this.tableHeight,
       this.isFixedHeader = false,
       this.headerWidgets,
-      this.leftSideItemBuilder,
-      this.rightSideItemBuilder,
+      IndexedWidgetBuilder? leftSideItemBuilder,
+      IndexedWidgetBuilder? rightSideItemBuilder,
       this.itemCount = 0,
-      this.leftSideChildren,
-      this.rightSideChildren,
+      List<Widget>? leftSideChildren,
+      List<Widget>? rightSideChildren,
       this.rowSeparatorWidget = const Divider(
         color: Colors.transparent,
         height: 0.0,
@@ -43,20 +60,21 @@ HorizontalDataTable(
       ),
       this.elevation = 3.0,
       this.elevationColor = Colors.black54,
-      this.leftHandSideColBackgroundColor = Colors.white,
-      this.rightHandSideColBackgroundColor = Colors.white,
-      this.horizontalScrollController,
-      this.verticalScrollController,
+      Color leftHandSideColBackgroundColor = Colors.white,
+      Color rightHandSideColBackgroundColor = Colors.white,
+      this.onScrollControllerReady,
       this.verticalScrollbarStyle,
       this.horizontalScrollbarStyle,
       this.enablePullToRefresh = false,
       this.refreshIndicatorHeight = 60.0,
-      this.refreshIndicator: const WaterDropHeader(),
-      this.onRefresh: (){},
+      this.htdRefreshController,
+      this.onRefresh,
+      this.refreshIndicator,
+      this.fixedSidePlaceHolderRefreshIndicator,
       this.enablePullToLoadNewData = false,
       this.onLoad,
       this.loadIndicator,
-      this.htdRefreshController: _hdtRefreshController,             
+      this.fixedSidePlaceHolderLoadIndicator,
       this.scrollPhysics,
       this.horizontalScrollPhysics,
       }
@@ -77,7 +95,7 @@ HorizontalDataTable.rtl({...same as the above})
 6. elevation is the shadow between the header row and the left column when scroll start. Default set to 5.0. If want to disable the shadow, please set to 0.0.
 7. elevationColor is for changing shadow color. This should be useful when using dark table background.
 8. added leftHandSideColBackgroundColor and rightHandSideColBackgroundColor for setting the default background of the back of table. Default is set to white following the Material widget.
-9. added horizontalScrollController and verticalScrollController allow maunally jump to certain offset position. Please aware that if you have enabled the pull to refresh function, the jump to action may conflict with the pull to refresh action.
+9. <del>added horizontalScrollController and verticalScrollController allow maunally jump to certain offset position.</del> added onScrollControllerReady returning vertical and horizontal ScrollController for external use. Please aware that if you have enabled the pull to refresh function, the jump to action may conflict with the pull to refresh action.
 10. verticalScrollbarStyle and horizontalScrollbarStyle are a ScrollbarStyle class object which allows customizing isAlwaysShown, thumbColor, thickness and radius. Default is using system style scrollbar.
 11. enablePullToRefresh is to define whether enable the pull-to-refresh function. Default is setting to false. Detail you may reference to the Pull to Refresh/Load section.
 12. enablePullToLoadNewData is to define whether enable the pull-to-load function. Default is setting to false. Detail you may reference to the Pull to Refresh/Load section.
@@ -93,10 +111,12 @@ HorizontalDataTable(
         ...
       this.enablePullToRefresh = true,
       this.refreshIndicator: const WaterDropHeader(),
+      this.fixedSidePlaceHolderRefreshIndicator,
       this.onRefresh: _onRefresh,
       this.enablePullToLoadNewData = true,
       this.onLoad: _onLoad,
       this.loadIndicator: const ClassicFooter(),
+      this.fixedSidePlaceHolderLoadIndicator,
       this.htdRefreshController: _hdtRefreshController,
       }
      )
@@ -108,17 +128,21 @@ HorizontalDataTable(
       2. WaterDropHeader
       3. CustomHeader         
       4. BezierHeader
+      5. PlaceholderHeader
 
     Basically single level header with a certain height while refreshing. For the on-top header is currently not supported.
     Since refreshIndicator is a Widget type field, you may customize yourself on the header, but you must set the height of the header. The detail usage you may reference to the [pull-to-refresh](https://pub.dev/packages/pull_to_refresh) package.
-2. refreshIndicatorHeight is the height of the refreshIndicator. Default is set to 60.
-3. onRefresh is the callback from the refresh action.     
-4. loadIndicator is the header widget when pull to load. 
+2. fixedSidePlaceHolderRefreshIndicator is the fixed column side part refresh indicator. This aims to synchronize the action on both side. Prefer using PlaceholderHeader.
+3. refreshIndicatorHeight is the height of the refreshIndicator. Default is set to 60.
+4. onRefresh is the callback from the refresh action.     
+5. loadIndicator is the header widget when pull to load. 
     Supported refreshIndicator:
       1. ClassicFooter
       2. CustomFooter
-5. onLoad is the callback from the load action.     
-6. htdRefreshController is the wrapper controller for returning the refresh or load result. 
+      3. PlaceholderFooter
+6. fixedSidePlaceHolderLoadIndicator is the fixed column side part load indicator. This aims to synchronize the action on both side. Prefer using PlaceholderFooter.
+7. onLoad is the callback from the load action.     
+8. htdRefreshController is the wrapper controller for returning the refresh or load result. 
     This is the example on how to use onRefresh and htdRefreshController.
     ```
     void _onRefresh() async {
@@ -159,64 +183,38 @@ All of this 4 params are required when enablePullToRefresh is set to true.
 import 'package:flutter/material.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 
-void main() => runApp(MyApp());
+import 'data/user.dart';
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
+class SimpleTablePage extends StatefulWidget {
+  SimpleTablePage({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
+  final User user;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _SimpleTablePageState createState() => _SimpleTablePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  HDTRefreshController _hdtRefreshController = HDTRefreshController();
-
-  static const int sortName = 0;
-  static const int sortStatus = 1;
-  bool isAscending = true;
-  int sortType = sortName;
-
+class _SimpleTablePageState extends State<SimpleTablePage> {
   @override
   void initState() {
-    user.initData(100);
+    widget.user.initData(100);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: _getBodyWidget(),
-    );
-  }
-
-  Widget _getBodyWidget() {
-    return Container(
-      child: HorizontalDataTable(
+      appBar: AppBar(title: Text('Simple Table')),
+      body: HorizontalDataTable(
         leftHandSideColumnWidth: 100,
         rightHandSideColumnWidth: 600,
         isFixedHeader: true,
         headerWidgets: _getTitleWidget(),
         leftSideItemBuilder: _generateFirstColumnRow,
         rightSideItemBuilder: _generateRightHandSideColumnRow,
-        itemCount: user.userInfo.length,
+        itemCount: widget.user.userInfo.length,
         rowSeparatorWidget: const Divider(
           color: Colors.black54,
           height: 1.0,
@@ -224,70 +222,14 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         leftHandSideColBackgroundColor: Color(0xFFFFFFFF),
         rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
-        verticalScrollbarStyle: const ScrollbarStyle(
-          thumbColor: Colors.yellow,
-          isAlwaysShown: true,
-          thickness: 4.0,
-          radius: Radius.circular(5.0),
-        ),
-        horizontalScrollbarStyle: const ScrollbarStyle(
-          thumbColor: Colors.red,
-          isAlwaysShown: true,
-          thickness: 4.0,
-          radius: Radius.circular(5.0),
-        ),
-        enablePullToRefresh: true,
-        refreshIndicator: const WaterDropHeader(),
-        refreshIndicatorHeight: 60,
-        onRefresh: () async {
-          //Do sth
-          await Future.delayed(const Duration(milliseconds: 500));
-          _hdtRefreshController.refreshCompleted();
-        },
-        enablePullToLoadNewData: true,
-        loadIndicator: const ClassicFooter(),
-        onLoad: () async {
-          //Do sth
-          await Future.delayed(const Duration(milliseconds: 500));
-          _hdtRefreshController.loadComplete();
-        },
-        htdRefreshController: _hdtRefreshController,
       ),
-      height: MediaQuery.of(context).size.height,
     );
   }
 
   List<Widget> _getTitleWidget() {
     return [
-      TextButton(
-        style: TextButton.styleFrom(
-          padding: EdgeInsets.zero,
-        ),
-        child: _getTitleItemWidget(
-            'Name' + (sortType == sortName ? (isAscending ? '↓' : '↑') : ''),
-            100),
-        onPressed: () {
-          sortType = sortName;
-          isAscending = !isAscending;
-          user.sortName(isAscending);
-          setState(() {});
-        },
-      ),
-      TextButton(
-        style: TextButton.styleFrom(
-          padding: EdgeInsets.zero,
-        ),
-        child: _getTitleItemWidget(
-            'Status' +
-                (sortType == sortStatus ? (isAscending ? '↓' : '↑') : ''),
-            100),
-        onPressed: () {
-          sortType = sortStatus;
-          isAscending = !isAscending;
-          user.sortStatus(isAscending);
-          setState(() {});
-        },
-      ),
+      _getTitleItemWidget('Name', 100),
+      _getTitleItemWidget('Status', 100),
       _getTitleItemWidget('Phone', 200),
       _getTitleItemWidget('Register', 100),
       _getTitleItemWidget('Termination', 200),
@@ -306,7 +248,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _generateFirstColumnRow(BuildContext context, int index) {
     return Container(
-      child: Text(user.userInfo[index].name),
+      child: Text(widget.user.userInfo[index].name),
       width: 100,
       height: 52,
       padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
@@ -321,12 +263,13 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Row(
             children: <Widget>[
               Icon(
-                  user.userInfo[index].status
+                  widget.user.userInfo[index].status
                       ? Icons.notifications_off
                       : Icons.notifications_active,
-                  color:
-                      user.userInfo[index].status ? Colors.red : Colors.green),
-              Text(user.userInfo[index].status ? 'Disabled' : 'Active')
+                  color: widget.user.userInfo[index].status
+                      ? Colors.red
+                      : Colors.green),
+              Text(widget.user.userInfo[index].status ? 'Disabled' : 'Active')
             ],
           ),
           width: 100,
@@ -335,21 +278,21 @@ class _MyHomePageState extends State<MyHomePage> {
           alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text(user.userInfo[index].phone),
+          child: Text(widget.user.userInfo[index].phone),
           width: 200,
           height: 52,
           padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
           alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text(user.userInfo[index].registerDate),
+          child: Text(widget.user.userInfo[index].registerDate),
           width: 100,
           height: 52,
           padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
           alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text(user.userInfo[index].terminationDate),
+          child: Text(widget.user.userInfo[index].terminationDate),
           width: 200,
           height: 52,
           padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
@@ -359,57 +302,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
-User user = User();
-
-class User {
-  List<UserInfo> userInfo = [];
-
-  void initData(int size) {
-    for (int i = 0; i < size; i++) {
-      userInfo.add(UserInfo(
-          "User_$i", i % 3 == 0, '+001 9999 9999', '2019-01-01', 'N/A'));
-    }
-  }
-
-  ///
-  /// Single sort, sort Name's id
-  void sortName(bool isAscending) {
-    userInfo.sort((a, b) {
-      int aId = int.tryParse(a.name.replaceFirst('User_', '')) ?? 0;
-      int bId = int.tryParse(b.name.replaceFirst('User_', '')) ?? 0;
-      return (aId - bId) * (isAscending ? 1 : -1);
-    });
-  }
-
-  ///
-  /// sort with Status and Name as the 2nd Sort
-  void sortStatus(bool isAscending) {
-    userInfo.sort((a, b) {
-      if (a.status == b.status) {
-        int aId = int.tryParse(a.name.replaceFirst('User_', '')) ?? 0;
-        int bId = int.tryParse(b.name.replaceFirst('User_', '')) ?? 0;
-        return (aId - bId);
-      } else if (a.status) {
-        return isAscending ? 1 : -1;
-      } else {
-        return isAscending ? -1 : 1;
-      }
-    });
-  }
-}
-
-class UserInfo {
-  String name;
-  bool status;
-  String phone;
-  String registerDate;
-  String terminationDate;
-
-  UserInfo(this.name, this.status, this.phone, this.registerDate,
-      this.terminationDate);
-}
-
 ```
 
 ## Issues Report and Feature Request
