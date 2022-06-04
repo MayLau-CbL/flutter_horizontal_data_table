@@ -602,7 +602,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
       int itemCount,
       [List<Widget>? children]) {
     return SmartRefresher(
-      controller: _tableControllers.bidirectionalSideRefreshController!,
+      controller: _tableControllers.bidirectionalSideRefreshController,
       enablePullDown: widget.enablePullToRefresh,
       enablePullUp: widget.enablePullToLoadNewData,
       onRefresh: () async {
@@ -645,7 +645,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
       IndexedWidgetBuilder? indexedWidgetBuilder, int itemCount,
       [List<Widget>? children]) {
     return SmartRefresher(
-      controller: _tableControllers.fixedSideRefreshController!,
+      controller: _tableControllers.fixedSideRefreshController,
       enablePullDown: widget.enablePullToRefresh,
       enablePullUp: widget.enablePullToLoadNewData,
       header: widget.fixedSidePlaceHolderRefreshIndicator ??
