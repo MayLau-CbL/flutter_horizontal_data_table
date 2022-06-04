@@ -2,7 +2,8 @@ import 'package:flutter/material.dart'
     hide RefreshIndicator, RefreshIndicatorState;
 import '../../pull_to_refresh.dart';
 
-///
+/// use at the first fixed column refresh or load part,
+/// mainly fill the action area
 class PlaceholderHeader extends RefreshIndicator {
   final Color backgroundColor;
   const PlaceholderHeader({
@@ -39,11 +40,7 @@ class _PlaceholderHeaderState extends RefreshIndicatorState<PlaceholderHeader> {
   }
 }
 
-///the most common indicator,combine with a text and a icon
-///
-// See also:
-//
-// [ClassicHeader]
+/// same reason as [PlaceholderHeader]
 class PlaceholderFooter extends LoadIndicator {
   final Color backgroundColor;
 
