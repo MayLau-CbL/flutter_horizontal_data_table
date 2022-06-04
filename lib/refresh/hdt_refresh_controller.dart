@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:horizontal_data_table/refresh/pull_to_refresh/src/smart_refresher.dart';
 
@@ -18,6 +20,9 @@ class HDTRefreshController {
 
   void registerRefreshController(RefreshController? refreshController) {
     refreshController?.headerMode?.addListener(_applyUnfollowRefresh);
+
+    ///Since the canLoading status is not always reflecting,
+    ///keep using the existing way to trigger the load function
     // refreshController?.footerMode?.addListener(_applyUnfollowLoad);
   }
 
@@ -29,19 +34,22 @@ class HDTRefreshController {
   }
 
   void _applyUnfollowRefresh() {
-    bool isAllowRefreshArea = _refreshControllers.any(
-        (element) => element.headerMode?.value == RefreshStatus.canRefresh);
-    bool isAllRefreshArea = _refreshControllers.every(
-        (element) => element.headerMode?.value == RefreshStatus.refreshing);
+    ///after 0.0001 is for NestedScrollView of smart refresher
+    Future.delayed(const Duration(milliseconds: 60), () {
+      bool isAllowRefreshArea = _refreshControllers.any(
+          (element) => element.headerMode?.value == RefreshStatus.canRefresh);
+      bool isAllRefreshArea = _refreshControllers.every(
+          (element) => element.headerMode?.value == RefreshStatus.refreshing);
 
-    if (isAllowRefreshArea && !isAllRefreshArea) {
-      if (!_isRequestingRefresh) {
-        _isRequestingRefresh = true;
-        requestRefresh();
+      if (isAllowRefreshArea && !isAllRefreshArea) {
+        if (!_isRequestingRefresh) {
+          _isRequestingRefresh = true;
+          requestRefresh();
+        }
+      } else {
+        _isRequestingRefresh = false;
       }
-    } else {
-      _isRequestingRefresh = false;
-    }
+    });
   }
 
   // void _applyUnfollowLoad() {
