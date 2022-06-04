@@ -65,7 +65,7 @@ class ListViewLayoutDelegate extends MultiChildLayoutDelegate {
 
       positionChild(
         ListViewLayout.Shadow,
-        Offset(0, headerSize.height + dividerSize.height),
+        Offset(0, headerSize.height),
       );
     }
   }

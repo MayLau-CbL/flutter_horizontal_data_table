@@ -17,4 +17,24 @@ class ScrollShadowModel extends ChangeNotifier {
     _horizontalOffset = value;
     notifyListeners();
   }
+
+  static double getElevation(double? offset, double maxElevation) {
+    if (offset != null) {
+      double elevation =
+          (offset * 1) > maxElevation ? maxElevation : (offset * 1);
+      if (elevation >= 0) {
+        debugPrint('elevation: $elevation');
+        return elevation;
+      }
+    }
+    return 0.0;
+  }
+
+  static int getShadowAlpha(
+      double calculatedElevation, double widgetElevation) {
+    if (widgetElevation > 0) {
+      return 10 * calculatedElevation ~/ widgetElevation;
+    }
+    return 0;
+  }
 }
