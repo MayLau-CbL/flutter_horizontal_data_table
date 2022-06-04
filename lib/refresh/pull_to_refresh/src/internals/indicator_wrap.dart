@@ -370,10 +370,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
       if (!mounted) {
         return;
       }
-      /* if (_lastMode == LoadStatus.idle) {
-        mode = LoadStatus.canLoading;
-        _lastMode = LoadStatus.canLoading;
-      } */
       mode = LoadStatus.loading;
     });
   }
