@@ -23,6 +23,9 @@ import 'delegate/base_layout_view_delegate.dart';
 import 'delegate/list_view_layout_delegate.dart';
 import 'scroll/custom_scroll_bar.dart';
 
+typedef void OnScrollControllerReady(
+    ScrollController verticalController, ScrollController horizontalController);
+
 ///
 /// For sorting issue, will based on the header fixed widget for flexible handling, suggest using [Button] to control the data sorting
 ///
@@ -68,15 +71,16 @@ class HorizontalDataTable extends StatefulWidget {
   final Color fixedSideColBackgroundColor;
   final Color bidirectionalSideColBackgroundColor;
 
-  ///Deprecated
+  ///Deprecated, use [onScrollControllerReady] return instead
   ///Vertical scroll controller, expose for allowing manually jump to specific offset position. Please aware this may conflict with the pull to refresh action.
   ///final ScrollController? verticalScrollController;
 
-  ///Returning the vertical controller for external usage
-  final Function(ScrollController, ScrollController)? onScrollControllerReady;
-
+  ///Deprecated, use [onScrollControllerReady] return instead
   ///Horizontal scroll controller, expose for allowing manually jump to specific offset position.
-  final ScrollController? horizontalScrollController;
+  // final ScrollController? horizontalScrollController;
+
+  ///Returning the vertical controller for external usage
+  final OnScrollControllerReady? onScrollControllerReady;
 
   ///Vertical Scrollbar Style. Default the scrollbar is using that platform's system setting.
   final ScrollbarStyle? verticalScrollbarStyle;
@@ -138,8 +142,8 @@ class HorizontalDataTable extends StatefulWidget {
     this.tableHeight,
     this.isFixedHeader = false,
     this.headerWidgets,
-    Widget Function(BuildContext, int)? leftSideItemBuilder,
-    Widget Function(BuildContext, int)? rightSideItemBuilder,
+    IndexedWidgetBuilder? leftSideItemBuilder,
+    IndexedWidgetBuilder? rightSideItemBuilder,
     this.itemCount = 0,
     List<Widget>? leftSideChildren,
     List<Widget>? rightSideChildren,
@@ -152,7 +156,6 @@ class HorizontalDataTable extends StatefulWidget {
     this.elevationColor = Colors.black54,
     Color leftHandSideColBackgroundColor = Colors.white,
     Color rightHandSideColBackgroundColor = Colors.white,
-    this.horizontalScrollController,
     this.onScrollControllerReady,
     this.verticalScrollbarStyle,
     this.horizontalScrollbarStyle,
@@ -237,8 +240,7 @@ class HorizontalDataTable extends StatefulWidget {
     Color elevationColor = Colors.black54,
     Color leftHandSideColBackgroundColor = Colors.white,
     Color rightHandSideColBackgroundColor = Colors.white,
-    ScrollController? horizontalScrollController,
-    Function(ScrollController, ScrollController)? onScrollControllerReady,
+    OnScrollControllerReady? onScrollControllerReady,
     ScrollbarStyle? verticalScrollbarStyle,
     ScrollbarStyle? horizontalScrollbarStyle,
     bool enablePullToRefresh = false,
@@ -269,7 +271,6 @@ class HorizontalDataTable extends StatefulWidget {
           elevationColor: elevationColor,
           leftHandSideColBackgroundColor: rightHandSideColBackgroundColor,
           rightHandSideColBackgroundColor: leftHandSideColBackgroundColor,
-          horizontalScrollController: horizontalScrollController,
           onScrollControllerReady: onScrollControllerReady,
           verticalScrollbarStyle: verticalScrollbarStyle,
           horizontalScrollbarStyle: horizontalScrollbarStyle,
@@ -604,15 +605,29 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
       controller: _tableControllers.bidirectionalSideRefreshController!,
       enablePullDown: widget.enablePullToRefresh,
       enablePullUp: widget.enablePullToLoadNewData,
-      onRefresh: () {
+      onRefresh: () async {
         if (widget.onRefresh != null) {
-          widget.onRefresh!();
+          widget.htdRefreshController?.requestRefresh(
+              _tableControllers.bidirectionalSideRefreshController);
+
+          /// i have no choice, since the status of load and refresh not so reliable
+          /// the 100ms is for
+          /// [1] waiting the 50ms of pull-to-refresh package nestscrollview handling
+          /// [2] ensure 2 refresh controller status is stable
+          await Future.delayed(const Duration(milliseconds: 100), () {
+            widget.onRefresh!();
+          });
         }
       },
-      onLoading: () {
+      onLoading: () async {
         if (widget.onLoad != null) {
-          widget.htdRefreshController?.requestLoading();
-          widget.onLoad!();
+          widget.htdRefreshController?.requestLoading(
+              _tableControllers.bidirectionalSideRefreshController);
+
+          /// same reason as the onRefresh 100ms delay
+          await Future.delayed(const Duration(milliseconds: 100), () {
+            widget.onLoad!();
+          });
         }
       },
       header: widget.refreshIndicator,
@@ -641,10 +656,18 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
           PlaceholderFooter(
             height: widget.loadIndicator?.height ?? 60.0,
           ),
-      onRefresh: () {},
+      onRefresh: () {
+        if (widget.onRefresh != null) {
+          widget.htdRefreshController?.requestRefresh(
+            _tableControllers.fixedSideRefreshController,
+          );
+        }
+      },
       onLoading: () {
         if (widget.onLoad != null) {
-          widget.htdRefreshController?.requestLoading();
+          widget.htdRefreshController?.requestLoading(
+            _tableControllers.fixedSideRefreshController,
+          );
         }
       },
       child: _getListView(

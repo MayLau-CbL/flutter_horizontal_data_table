@@ -1,71 +1,23 @@
-import 'dart:async';
-
-import 'package:flutter/foundation.dart';
 import 'package:horizontal_data_table/refresh/pull_to_refresh/src/smart_refresher.dart';
 
 class HDTRefreshController {
   List<RefreshController> _refreshControllers = [];
   List<RefreshController> get refreshControllers => _refreshControllers;
 
-  /// lock requesting avoid multiple call when internal function is delaying
-  bool _isRequestingRefresh = false;
-
   void setRefreshController(RefreshController? refreshController) {
     if (refreshController != null &&
         !_refreshControllers.contains(refreshController)) {
-      registerRefreshController(refreshController);
       _refreshControllers.add(refreshController);
     }
   }
 
-  void registerRefreshController(RefreshController? refreshController) {
-    refreshController?.headerMode?.addListener(_applyUnfollowRefresh);
-
-    ///Since the canLoading status is not always reflecting,
-    ///keep using the existing way to trigger the load function
-    // refreshController?.footerMode?.addListener(_applyUnfollowLoad);
-  }
-
-  void unregisterRefreshControllerListener() {
+  void requestRefresh([
+    RefreshController? skipThisController,
+  ]) {
     _refreshControllers.forEach((element) {
-      element.headerMode?.removeListener(_applyUnfollowRefresh);
-      // element.footerMode?.removeListener(_applyUnfollowLoad);
-    });
-  }
-
-  void _applyUnfollowRefresh() {
-    ///after 0.0001 is for NestedScrollView of smart refresher
-    Future.delayed(const Duration(milliseconds: 60), () {
-      bool isAllowRefreshArea = _refreshControllers.any(
-          (element) => element.headerMode?.value == RefreshStatus.canRefresh);
-      bool isAllRefreshArea = _refreshControllers.every(
-          (element) => element.headerMode?.value == RefreshStatus.refreshing);
-
-      if (isAllowRefreshArea && !isAllRefreshArea) {
-        if (!_isRequestingRefresh) {
-          _isRequestingRefresh = true;
-          requestRefresh();
-        }
-      } else {
-        _isRequestingRefresh = false;
+      if (element != skipThisController) {
+        element.requestRefresh();
       }
-    });
-  }
-
-  // void _applyUnfollowLoad() {
-  //   bool isAllowLoadArea = _refreshControllers
-  //       .any((element) => element.footerMode?.value == LoadStatus.canLoading);
-  //   bool isAllLoading = _refreshControllers
-  //       .every((element) => element.footerMode?.value == LoadStatus.loading);
-  //   if (isAllowLoadArea && !isAllLoading) {
-  //     requestLoading();
-  //   }
-  // }
-
-  void requestRefresh() {
-    debugPrint('requestRefresh');
-    _refreshControllers.forEach((element) {
-      element.requestRefresh();
     });
   }
 
@@ -81,9 +33,11 @@ class HDTRefreshController {
     });
   }
 
-  void requestLoading() {
+  void requestLoading([RefreshController? skipThisController]) {
     _refreshControllers.forEach((element) {
-      element.requestLoading();
+      if (element != skipThisController) {
+        element.requestLoading();
+      }
     });
   }
 

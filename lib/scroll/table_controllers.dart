@@ -40,7 +40,6 @@ class TableControllers {
     if (isFixedHeader) {
       bidirectionalSideHeaderHorizontalScrollController?.dispose();
     }
-    htdRefreshController?.unregisterRefreshControllerListener();
   }
 
   void _initVerticalControllers() {
