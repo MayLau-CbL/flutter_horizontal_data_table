@@ -1,3 +1,8 @@
+## [4.0.0] - 20220604
+* Update: using LinkedScrollControllerGroup to handle controller synchronization
+* Update: separated scroll related controllers initialization
+* Update: break down exmaple files
+
 ## [3.8.0] - 20220602
 * Update: refactored left right naming to fixed or bidirectional
 * Update: README.md for flutter version and package version 
