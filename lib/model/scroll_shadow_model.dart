@@ -23,7 +23,6 @@ class ScrollShadowModel extends ChangeNotifier {
       double elevation =
           (offset * 1) > maxElevation ? maxElevation : (offset * 1);
       if (elevation >= 0) {
-        debugPrint('elevation: $elevation');
         return elevation;
       }
     }
