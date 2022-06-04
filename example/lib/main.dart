@@ -28,6 +28,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   HDTRefreshController _hdtRefreshController = HDTRefreshController();
 
+  // ignore: unused_field
+  ScrollController _verticalScrollController = ScrollController();
+  // ignore: unused_field
+  ScrollController _horizontalScrollController = ScrollController();
+
   static const int sortName = 0;
   static const int sortStatus = 1;
   bool isAscending = true;
@@ -55,15 +60,20 @@ class _MyHomePageState extends State<MyHomePage> {
     return Container(
       child: Column(
         children: [
-          ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  isLTRmode = !isLTRmode;
-                });
-              },
-              child: Text(isLTRmode
-                  ? 'change to right-to-left'
-                  : 'change to left-to-right')),
+          Wrap(
+            spacing: 4.0,
+            children: [
+              ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      isLTRmode = !isLTRmode;
+                    });
+                  },
+                  child: Text(isLTRmode
+                      ? 'change to right-to-left'
+                      : 'change to left-to-right')),
+            ],
+          ),
 
           /// horizontal data table must declaire a finite height
           /// either fixed height or using expanded
@@ -78,7 +88,6 @@ class _MyHomePageState extends State<MyHomePage> {
   /// left to right table
   /// same setting as the previous version
   Widget _getLTRTable() {
-    ///TODO: example for onVerticalScrollComtrollerReady, load and refresh indicator on fixed side
     return HorizontalDataTable(
       leftHandSideColumnWidth: 100,
       rightHandSideColumnWidth: 600,
@@ -94,6 +103,10 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       leftHandSideColBackgroundColor: Color(0xFFFFFFFF),
       rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
+      onScrollControllerReady: (vertical, horizontal) {
+        _verticalScrollController = vertical;
+        _horizontalScrollController = horizontal;
+      },
       verticalScrollbarStyle: const ScrollbarStyle(
         thumbColor: Colors.yellow,
         isAlwaysShown: true,
@@ -107,7 +120,8 @@ class _MyHomePageState extends State<MyHomePage> {
         radius: Radius.circular(5.0),
       ),
       enablePullToRefresh: true,
-      refreshIndicator: const WaterDropHeader(),
+      fixedSidePlaceHolderRefreshIndicator: PlaceholderHeader(),
+      refreshIndicator: ClassicHeader(),
       refreshIndicatorHeight: 60,
       onRefresh: () async {
         //Do sth
@@ -115,10 +129,11 @@ class _MyHomePageState extends State<MyHomePage> {
         _hdtRefreshController.refreshCompleted();
       },
       enablePullToLoadNewData: true,
+      fixedSidePlaceHolderLoadIndicator: PlaceholderFooter(),
       loadIndicator: const ClassicFooter(),
       onLoad: () async {
         //Do sth
-        await Future.delayed(const Duration(milliseconds: 2000));
+        await Future.delayed(const Duration(milliseconds: 500));
         _hdtRefreshController.loadComplete();
       },
       htdRefreshController: _hdtRefreshController,
@@ -144,6 +159,10 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
       leftHandSideColBackgroundColor: Color(0xFFFFFFFF),
+      onScrollControllerReady: (vertical, horizontal) {
+        _verticalScrollController = vertical;
+        _horizontalScrollController = horizontal;
+      },
       verticalScrollbarStyle: const ScrollbarStyle(
         thumbColor: Colors.yellow,
         isAlwaysShown: true,
@@ -158,6 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       enablePullToRefresh: true,
       refreshIndicator: const WaterDropHeader(),
+      fixedSidePlaceHolderRefreshIndicator: PlaceholderHeader(),
       refreshIndicatorHeight: 60,
       onRefresh: () async {
         //Do sth
@@ -166,6 +186,7 @@ class _MyHomePageState extends State<MyHomePage> {
       },
       enablePullToLoadNewData: true,
       loadIndicator: const ClassicFooter(),
+      fixedSidePlaceHolderLoadIndicator: PlaceholderFooter(),
       onLoad: () async {
         //Do sth
         await Future.delayed(const Duration(milliseconds: 500));
