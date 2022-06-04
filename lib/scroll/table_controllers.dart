@@ -12,8 +12,8 @@ class TableControllers {
   late ScrollController bidirectionalSideHorizontalScrollController;
   ScrollController? bidirectionalSideHeaderHorizontalScrollController;
 
-  RefreshController? bidirectionalSideRefreshController;
-  RefreshController? fixedSideRefreshController;
+  late RefreshController bidirectionalSideRefreshController;
+  late RefreshController fixedSideRefreshController;
 
   final HDTRefreshController? htdRefreshController;
   final bool isFixedHeader;
@@ -62,14 +62,12 @@ class TableControllers {
   }
 
   void _initRefreshController() {
-    if (enablePullToRefresh) {
-      bidirectionalSideRefreshController =
-          RefreshController(initialRefresh: false);
-      fixedSideRefreshController = RefreshController(initialRefresh: false);
-      htdRefreshController
-          ?.setRefreshController(bidirectionalSideRefreshController);
-      htdRefreshController?.setRefreshController(fixedSideRefreshController);
-    }
+    bidirectionalSideRefreshController =
+        RefreshController(initialRefresh: false);
+    fixedSideRefreshController = RefreshController(initialRefresh: false);
+    htdRefreshController
+        ?.setRefreshController(bidirectionalSideRefreshController);
+    htdRefreshController?.setRefreshController(fixedSideRefreshController);
   }
 
   Function()? _horizontalShadowListener;
