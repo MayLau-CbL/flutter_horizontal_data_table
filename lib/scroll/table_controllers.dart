@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:horizontal_data_table/refresh/hdt_refresh_controller.dart';
 import 'package:horizontal_data_table/refresh/pull_to_refresh/src/smart_refresher.dart';
-import 'package:linked_scroll_controller/linked_scroll_controller.dart';
+import 'package:horizontal_data_table/scroll/linked_scroll_controller/linked_scroll_controller.dart';
 
 class TableControllers {
   late LinkedScrollControllerGroup _controllersGroup;

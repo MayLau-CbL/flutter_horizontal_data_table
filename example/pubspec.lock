@@ -34,13 +34,6 @@ packages:
       relative: true
     source: path
     version: "4.0.0"
-  linked_scroll_controller:
-    dependency: transitive
-    description:
-      name: linked_scroll_controller
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.0"
   material_color_utilities:
     dependency: transitive
     description:
