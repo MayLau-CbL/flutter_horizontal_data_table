@@ -48,6 +48,8 @@ HorizontalDataTable(
       this.tableHeight,
       this.isFixedHeader = false,
       this.headerWidgets,
+      this.isFixedFooter = false,
+      this.footerWidgets,
       IndexedWidgetBuilder? leftSideItemBuilder,
       IndexedWidgetBuilder? rightSideItemBuilder,
       this.itemCount = 0,
@@ -88,18 +90,19 @@ HorizontalDataTable.rtl({...same as the above})
 1. Fixed side column(ltr: leftHandSideColumnWidth, rtl: rightHandSideColumnWidth) and horizontal scollable side maximum scrollable area width(ltr: rightHandSideColumnWidth, rtl: leftHandSideColumnWidth) are required to input.
 2. tableHeight is for manually set the table widget's height. The table widget height is using the smaller value of tableHeight and available height. Default is set to null, which is equal to using available height.
 3. isFixedHeader is to define whether use fixed top row header. If true, headerWidgets is required. Default is false.
-4. This widget allow set children in two ways, 
+4. isFixedFooter is to define whether use fixed bottom row footer. If true, footerWidgets is required. Default is false.
+5. This widget allow set children in two ways, 
     a. Directly add list of child widget (leftSideChildren and rightSideChildren)
     b. (Recommended) Using index builder to assign each row's widget. itemCount is required to count the number of row.
-5. rowSeparatorWidget is to add Divider of each Row. Default is turned off.
-6. elevation is the shadow between the header row and the left column when scroll start. Default set to 5.0. If want to disable the shadow, please set to 0.0.
-7. elevationColor is for changing shadow color. This should be useful when using dark table background.
-8. added leftHandSideColBackgroundColor and rightHandSideColBackgroundColor for setting the default background of the back of table. Default is set to white following the Material widget.
-9. <del>added horizontalScrollController and verticalScrollController allow maunally jump to certain offset position.</del> added onScrollControllerReady returning vertical and horizontal ScrollController for external use. Please aware that if you have enabled the pull to refresh function, the jump to action may conflict with the pull to refresh action.
-10. verticalScrollbarStyle and horizontalScrollbarStyle are a ScrollbarStyle class object which allows customizing isAlwaysShown, thumbColor, thickness and radius. Default is using system style scrollbar.
-11. enablePullToRefresh is to define whether enable the pull-to-refresh function. Default is setting to false. Detail you may reference to the Pull to Refresh/Load section.
-12. enablePullToLoadNewData is to define whether enable the pull-to-load function. Default is setting to false. Detail you may reference to the Pull to Refresh/Load section.
-13. scrollPhysics and horizontalScrollPhysics are to set scroll physics of the data table. Please aware scrollPhysics may causing conflict when enabling pull-to-refresh feature.
+6. rowSeparatorWidget is to add Divider of each Row. Default is turned off.
+7. elevation is the shadow between the header row and the left column when scroll start. Default set to 5.0. If want to disable the shadow, please set to 0.0.
+8. elevationColor is for changing shadow color. This should be useful when using dark table background.
+9. added leftHandSideColBackgroundColor and rightHandSideColBackgroundColor for setting the default background of the back of table. Default is set to white following the Material widget.
+10. <del>added horizontalScrollController and verticalScrollController allow maunally jump to certain offset position.</del> added onScrollControllerReady returning vertical and horizontal ScrollController for external use. Please aware that if you have enabled the pull to refresh function, the jump to action may conflict with the pull to refresh action.
+11. verticalScrollbarStyle and horizontalScrollbarStyle are a ScrollbarStyle class object which allows customizing isAlwaysShown, thumbColor, thickness and radius. Default is using system style scrollbar.
+12. enablePullToRefresh is to define whether enable the pull-to-refresh function. Default is setting to false. Detail you may reference to the Pull to Refresh/Load section.
+13. enablePullToLoadNewData is to define whether enable the pull-to-load function. Default is setting to false. Detail you may reference to the Pull to Refresh/Load section.
+14. scrollPhysics and horizontalScrollPhysics are to set scroll physics of the data table. Please aware scrollPhysics may causing conflict when enabling pull-to-refresh feature.
  
 ## Pull to Refresh/Load
 
