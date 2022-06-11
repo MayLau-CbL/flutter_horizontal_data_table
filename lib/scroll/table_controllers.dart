@@ -11,16 +11,19 @@ class TableControllers {
   late LinkedScrollControllerGroup _horizontalControllersGroup;
   late ScrollController bidirectionalSideHorizontalScrollController;
   ScrollController? bidirectionalSideHeaderHorizontalScrollController;
+  ScrollController? bidirectionalSideFooterHorizontalScrollController;
 
   late RefreshController bidirectionalSideRefreshController;
   late RefreshController fixedSideRefreshController;
 
   final HDTRefreshController? htdRefreshController;
   final bool isFixedHeader;
+  final bool isFixedFooter;
   final bool enablePullToRefresh;
 
   TableControllers({
     required this.isFixedHeader,
+    required this.isFixedFooter,
     required this.enablePullToRefresh,
     this.htdRefreshController,
   });
@@ -29,6 +32,7 @@ class TableControllers {
     _initVerticalControllers();
     _initBidirectionalSideHorizontalScrollController();
     _initBidirectionalSideHorizontalHeaderScrollController();
+    _initBidirectionalSideHorizontalFooterScrollController();
     _initRefreshController();
   }
 
@@ -39,6 +43,9 @@ class TableControllers {
     bidirectionalSideHorizontalScrollController.dispose();
     if (isFixedHeader) {
       bidirectionalSideHeaderHorizontalScrollController?.dispose();
+    }
+    if (isFixedFooter) {
+      bidirectionalSideFooterHorizontalScrollController?.dispose();
     }
   }
 
@@ -57,6 +64,13 @@ class TableControllers {
   void _initBidirectionalSideHorizontalHeaderScrollController() {
     if (isFixedHeader) {
       bidirectionalSideHeaderHorizontalScrollController =
+          _horizontalControllersGroup.addAndGet();
+    }
+  }
+
+  void _initBidirectionalSideHorizontalFooterScrollController() {
+    if (isFixedFooter) {
+      bidirectionalSideFooterHorizontalScrollController =
           _horizontalControllersGroup.addAndGet();
     }
   }
