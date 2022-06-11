@@ -11,6 +11,7 @@ class ListViewLayoutDelegate extends MultiChildLayoutDelegate {
   @override
   void performLayout(Size size) {
     Size headerSize = Size.zero;
+    Size footerSize = Size.zero;
     Size dividerSize = Size.zero;
     if (hasChild(ListViewLayout.Header)) {
       headerSize = layoutChild(
@@ -39,11 +40,38 @@ class ListViewLayoutDelegate extends MultiChildLayoutDelegate {
       );
     }
 
+    if (hasChild(ListViewLayout.Footer)) {
+      footerSize = layoutChild(
+        ListViewLayout.Footer,
+        BoxConstraints(
+            maxWidth: this.widgetWidth, maxHeight: this.widgetHeight),
+      );
+
+      positionChild(
+        ListViewLayout.Footer,
+        Offset(0, this.widgetHeight - footerSize.height),
+      );
+    }
+
+    if (hasChild(ListViewLayout.FooterDivider)) {
+      dividerSize = layoutChild(
+        ListViewLayout.FooterDivider,
+        BoxConstraints(
+          maxWidth: this.widgetWidth,
+        ),
+      );
+
+      positionChild(
+        ListViewLayout.FooterDivider,
+        Offset(0, this.widgetHeight - footerSize.height),
+      );
+    }
+
     if (hasChild(ListViewLayout.ListView)) {
       layoutChild(
         ListViewLayout.ListView,
         BoxConstraints(
-          maxHeight: this.widgetHeight - headerSize.height,
+          maxHeight: this.widgetHeight - headerSize.height - footerSize.height,
           maxWidth: this.widgetWidth,
         ),
       );
@@ -68,6 +96,21 @@ class ListViewLayoutDelegate extends MultiChildLayoutDelegate {
         Offset(0, headerSize.height),
       );
     }
+
+    if (hasChild(ListViewLayout.FooterShadow)) {
+      layoutChild(
+        ListViewLayout.FooterShadow,
+        BoxConstraints(
+          maxHeight: this.shadowHeight,
+          maxWidth: this.widgetWidth,
+        ),
+      );
+
+      positionChild(
+        ListViewLayout.FooterShadow,
+        Offset(0, this.widgetHeight - footerSize.height - this.shadowHeight),
+      );
+    }
   }
 
   @override
@@ -76,4 +119,12 @@ class ListViewLayoutDelegate extends MultiChildLayoutDelegate {
   }
 }
 
-enum ListViewLayout { Header, ListView, Shadow, Divider }
+enum ListViewLayout {
+  Header,
+  ListView,
+  Shadow,
+  Divider,
+  Footer,
+  FooterShadow,
+  FooterDivider,
+}

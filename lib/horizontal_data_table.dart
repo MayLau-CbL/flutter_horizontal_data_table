@@ -38,16 +38,24 @@ class HorizontalDataTable extends StatefulWidget {
   ///Default set to null, use up all available space. tableHeight must > 0.
   final double? tableHeight;
 
-  ///if headerWidgets==true,
+  ///if isFixedHeader==true,
   ///HorizontalDataTable.headerWidgets[0] as the fixed side header
   ///
-  /// if headerWidgets==false
+  /// if isFixedHeader==false
   /// header handling will handle by the itembuilder or the first child -> index == 0
   ///
   /// if no header needed, just ignore this, start data from index ==0
   ///
   final bool isFixedHeader;
   final List<Widget>? headerWidgets;
+
+  ///if isFixedFooter==true,
+  ///HorizontalDataTable.footerWidgets[0] as the fixed side footer
+  ///
+  /// if no footer needed, just ignore this
+  ///
+  final bool isFixedFooter;
+  final List<Widget>? footerWidgets;
 
   ///Direct create children
   final List<Widget>? fixedSideChildren;
@@ -142,6 +150,8 @@ class HorizontalDataTable extends StatefulWidget {
     this.tableHeight,
     this.isFixedHeader = false,
     this.headerWidgets,
+    this.isFixedFooter = false,
+    this.footerWidgets,
     IndexedWidgetBuilder? leftSideItemBuilder,
     IndexedWidgetBuilder? rightSideItemBuilder,
     this.itemCount = 0,
@@ -226,6 +236,8 @@ class HorizontalDataTable extends StatefulWidget {
     double? tableHeight,
     bool isFixedHeader = false,
     List<Widget>? headerWidgets,
+    bool isFixedFooter = false,
+    List<Widget>? footerWidgets,
     Widget Function(BuildContext, int)? leftSideItemBuilder,
     Widget Function(BuildContext, int)? rightSideItemBuilder,
     int itemCount = 0,
@@ -261,6 +273,8 @@ class HorizontalDataTable extends StatefulWidget {
           tableHeight: tableHeight,
           isFixedHeader: isFixedHeader,
           headerWidgets: headerWidgets,
+          isFixedFooter: isFixedFooter,
+          footerWidgets: footerWidgets,
           leftSideItemBuilder: rightSideItemBuilder,
           rightSideItemBuilder: leftSideItemBuilder,
           itemCount: itemCount,
@@ -306,6 +320,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
 
     _tableControllers = TableControllers(
       isFixedHeader: widget.isFixedHeader,
+      isFixedFooter: widget.isFixedFooter,
       enablePullToRefresh: widget.enablePullToRefresh,
       htdRefreshController: widget.htdRefreshController,
     );
@@ -376,6 +391,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
               height: height,
               listViewWidth: widget.fixedSideColumnWidth,
               header: widget.headerWidgets?.first,
+              footer: widget.footerWidgets?.first,
               listView: _getPullToRefreshFixedSideListView(
                   _tableControllers.fixedSideListViewScrollController,
                   widget.fixedSideItemBuilder,
@@ -394,6 +410,10 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
               header: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: widget.headerWidgets?.sublist(1).toList() ?? [],
+              ),
+              footer: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: widget.footerWidgets?.sublist(1).toList() ?? [],
               ),
               listView: _getPullToRefreshBidirectionalSideListView(
                   _tableControllers.bidirectionalSideListViewScrollController,
@@ -430,6 +450,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
     required double height,
     required double listViewWidth,
     Widget? header,
+    Widget? footer,
     required Widget listView,
   }) {
     return CustomMultiChildLayout(
@@ -449,10 +470,20 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
             id: ListViewLayout.Divider,
             child: widget.rowSeparatorWidget,
           ),
+        if (widget.isFixedFooter)
+          LayoutId(
+            id: ListViewLayout.FooterDivider,
+            child: widget.rowSeparatorWidget,
+          ),
         LayoutId(
           id: ListViewLayout.ListView,
           child: listView,
         ),
+        if (widget.isFixedFooter)
+          LayoutId(
+            id: ListViewLayout.Footer,
+            child: footer!,
+          ),
         LayoutId(
           id: ListViewLayout.Shadow,
           child: Selector<ScrollShadowModel, double>(
@@ -460,14 +491,38 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
               return scrollShadowModel.verticalOffset;
             },
             builder: (context, verticalOffset, child) {
+              double elevation = ScrollShadowModel.getElevation(
+                  verticalOffset, widget.elevation);
               return Container(
                 color: widget.elevationColor.withAlpha(
                     ScrollShadowModel.getShadowAlpha(
-                        ScrollShadowModel.getElevation(
-                            verticalOffset, widget.elevation),
-                        widget.elevation)),
-                height: ScrollShadowModel.getElevation(
-                    verticalOffset, widget.elevation),
+                        elevation, widget.elevation)),
+                height: elevation,
+              );
+            },
+          ),
+        ),
+        LayoutId(
+          id: ListViewLayout.FooterShadow,
+          child: Selector<ScrollShadowModel, double>(
+            selector: (context, scrollShadowModel) {
+              return scrollShadowModel.verticalOffset;
+            },
+            builder: (context, verticalOffset, child) {
+              double elevation = 0;
+              if (_tableControllers
+                  .fixedSideListViewScrollController.positions.isNotEmpty) {
+                elevation = ScrollShadowModel.getElevation(
+                    _tableControllers.fixedSideListViewScrollController.position
+                            .maxScrollExtent -
+                        verticalOffset,
+                    widget.elevation);
+              }
+              return Container(
+                color: widget.elevationColor.withAlpha(
+                    ScrollShadowModel.getShadowAlpha(
+                        elevation, widget.elevation)),
+                height: elevation,
               );
             },
           ),
@@ -480,6 +535,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
     required double height,
     required double listViewWidth,
     Widget? header,
+    Widget? footer,
     required Widget listView,
   }) {
     return CustomMultiChildLayout(
@@ -503,6 +559,11 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
         if (widget.isFixedHeader)
           LayoutId(
             id: ListViewLayout.Divider,
+            child: widget.rowSeparatorWidget,
+          ),
+        if (widget.isFixedFooter)
+          LayoutId(
+            id: ListViewLayout.FooterDivider,
             child: widget.rowSeparatorWidget,
           ),
         LayoutId(
@@ -548,6 +609,17 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
             ),
           ),
         ),
+        if (widget.isFixedFooter)
+          LayoutId(
+            id: ListViewLayout.Footer,
+            child: SingleChildScrollView(
+              physics: widget.horizontalScrollPhysics,
+              controller: _tableControllers
+                  .bidirectionalSideFooterHorizontalScrollController!,
+              scrollDirection: Axis.horizontal,
+              child: footer!,
+            ),
+          ),
         LayoutId(
           id: ListViewLayout.Shadow,
           child: Selector<ScrollShadowModel, double>(
@@ -555,14 +627,38 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
               return scrollShadowModel.verticalOffset;
             },
             builder: (context, verticalOffset, child) {
+              double elevation = ScrollShadowModel.getElevation(
+                  verticalOffset, widget.elevation);
               return Container(
                 color: widget.elevationColor.withAlpha(
                     ScrollShadowModel.getShadowAlpha(
-                        ScrollShadowModel.getElevation(
-                            verticalOffset, widget.elevation),
-                        widget.elevation)),
-                height: ScrollShadowModel.getElevation(
-                    verticalOffset, widget.elevation),
+                        elevation, widget.elevation)),
+                height: elevation,
+              );
+            },
+          ),
+        ),
+        LayoutId(
+          id: ListViewLayout.FooterShadow,
+          child: Selector<ScrollShadowModel, double>(
+            selector: (context, scrollShadowModel) {
+              return scrollShadowModel.verticalOffset;
+            },
+            builder: (context, verticalOffset, child) {
+              double elevation = 0;
+              if (_tableControllers.bidirectionalSideListViewScrollController
+                  .positions.isNotEmpty) {
+                elevation = ScrollShadowModel.getElevation(
+                    _tableControllers.bidirectionalSideListViewScrollController
+                            .position.maxScrollExtent -
+                        verticalOffset,
+                    widget.elevation);
+              }
+              return Container(
+                color: widget.elevationColor.withAlpha(
+                    ScrollShadowModel.getShadowAlpha(
+                        elevation, widget.elevation)),
+                height: elevation,
               );
             },
           ),

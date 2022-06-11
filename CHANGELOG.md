@@ -1,3 +1,6 @@
+## [4.1.0] - 20220611
+* Add: fixed footer
+
 ## [4.0.0] - 20220604
 * Update: using LinkedScrollControllerGroup to handle controller synchronization
 * Update: separated scroll related controllers initialization
