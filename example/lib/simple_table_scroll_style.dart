@@ -56,13 +56,13 @@ class _SimpleTableScrollStylePageState
         verticalScrollbarStyle: const ScrollbarStyle(
           thumbColor: Colors.yellow,
           isAlwaysShown: true,
-          thickness: 4.0,
+          thickness: 8.0,
           radius: Radius.circular(5.0),
         ),
         horizontalScrollbarStyle: const ScrollbarStyle(
           thumbColor: Colors.red,
           isAlwaysShown: true,
-          thickness: 4.0,
+          thickness: 8.0,
           radius: Radius.circular(5.0),
         ),
       ),
