@@ -1,3 +1,8 @@
+## [4.1.1] - 20220616
+* Update: example desktop support
+* Update: desktop pull-to-refresh and custom scrollbar example
+* Update: example data generation
+
 ## [4.1.0] - 20220611
 * Add: fixed footer
 
