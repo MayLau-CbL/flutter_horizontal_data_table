@@ -1,11 +1,14 @@
+import 'dart:math';
+
 class User {
   List<UserInfo> userInfo = [];
 
   void initData(int size) {
     userInfo.clear();
+    Random random = Random();
     for (int i = 0; i < size; i++) {
       userInfo.add(UserInfo(
-          "User_$i", i % 3 == 0, '+001 9999 9999', '2019-01-01', 'N/A'));
+          "User_$i", random.nextBool(), '+001 9999 9999', '2019-01-01', 'N/A'));
     }
   }
 

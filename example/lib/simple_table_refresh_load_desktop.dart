@@ -1,28 +1,24 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 
 import 'data/user.dart';
 
-class SimpleTableScrollStylePage extends StatefulWidget {
-  SimpleTableScrollStylePage({
+class SimpleTableDesktopRefreshLoadPage extends StatefulWidget {
+  SimpleTableDesktopRefreshLoadPage({
     Key? key,
     required this.user,
   }) : super(key: key);
   final User user;
 
   @override
-  _SimpleTableScrollStylePageState createState() =>
-      _SimpleTableScrollStylePageState();
+  _SimpleTableDesktopRefreshLoadPageState createState() =>
+      _SimpleTableDesktopRefreshLoadPageState();
 }
 
-class _SimpleTableScrollStylePageState
-    extends State<SimpleTableScrollStylePage> {
-  // ignore: unused_field
-  late ScrollController _verticalScrollController;
-  // ignore: unused_field
-  late ScrollController _horizontalScrollController;
-
-  bool isLTRmode = true;
+class _SimpleTableDesktopRefreshLoadPageState
+    extends State<SimpleTableDesktopRefreshLoadPage> {
+  HDTRefreshController _hdtRefreshController = HDTRefreshController();
 
   @override
   void initState() {
@@ -33,37 +29,50 @@ class _SimpleTableScrollStylePageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Customize Scroll Related Table')),
-      body: HorizontalDataTable(
-        leftHandSideColumnWidth: 100,
-        rightHandSideColumnWidth: 600,
-        isFixedHeader: true,
-        headerWidgets: _getTitleWidget(),
-        leftSideItemBuilder: _generateFirstColumnRow,
-        rightSideItemBuilder: _generateRightHandSideColumnRow,
-        itemCount: widget.user.userInfo.length,
-        rowSeparatorWidget: const Divider(
-          color: Colors.black54,
-          height: 1.0,
-          thickness: 0.0,
+      appBar: AppBar(title: Text('Pull-to-refresh Table')),
+      body: ScrollConfiguration(
+        ///since pull to refresh only works on drag action
+        behavior: ScrollConfiguration.of(context).copyWith(
+          dragDevices: {
+            PointerDeviceKind.touch,
+            PointerDeviceKind.mouse,
+          },
         ),
-        leftHandSideColBackgroundColor: Color(0xFFFFFFFF),
-        rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
-        onScrollControllerReady: (vertical, horizontal) {
-          _verticalScrollController = vertical;
-          _horizontalScrollController = horizontal;
-        },
-        verticalScrollbarStyle: const ScrollbarStyle(
-          thumbColor: Colors.yellow,
-          isAlwaysShown: true,
-          thickness: 8.0,
-          radius: Radius.circular(5.0),
-        ),
-        horizontalScrollbarStyle: const ScrollbarStyle(
-          thumbColor: Colors.red,
-          isAlwaysShown: true,
-          thickness: 8.0,
-          radius: Radius.circular(5.0),
+        child: HorizontalDataTable(
+          leftHandSideColumnWidth: 100,
+          rightHandSideColumnWidth: 600,
+          isFixedHeader: true,
+          headerWidgets: _getTitleWidget(),
+          leftSideItemBuilder: _generateFirstColumnRow,
+          rightSideItemBuilder: _generateRightHandSideColumnRow,
+          itemCount: widget.user.userInfo.length,
+          rowSeparatorWidget: const Divider(
+            color: Colors.black54,
+            height: 1.0,
+            thickness: 0.0,
+          ),
+          leftHandSideColBackgroundColor: Color(0xFFFFFFFF),
+          rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
+          enablePullToRefresh: true,
+          refreshIndicator: const ClassicHeader(),
+          fixedSidePlaceHolderRefreshIndicator: PlaceholderHeader(),
+          refreshIndicatorHeight: 60,
+          onRefresh: () async {
+            debugPrint('onRefresh');
+            //Do sth
+            await Future.delayed(const Duration(milliseconds: 500));
+            _hdtRefreshController.refreshCompleted();
+          },
+          enablePullToLoadNewData: true,
+          loadIndicator: const ClassicFooter(),
+          fixedSidePlaceHolderLoadIndicator: PlaceholderFooter(),
+          onLoad: () async {
+            debugPrint('onLoad');
+            //Do sth
+            await Future.delayed(const Duration(milliseconds: 500));
+            _hdtRefreshController.loadComplete();
+          },
+          htdRefreshController: _hdtRefreshController,
         ),
       ),
     );

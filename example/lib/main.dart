@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:example/data/user.dart';
 import 'package:example/simple_rtl_table.dart';
 import 'package:example/simple_table.dart';
 import 'package:example/simple_table_refresh_load.dart';
+import 'package:example/simple_table_refresh_load_desktop.dart';
 import 'package:example/simple_table_scroll_style.dart';
 import 'package:example/simple_table_sort.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +41,9 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
+  bool get isDesktop =>
+      Platform.isLinux || Platform.isMacOS || Platform.isWindows;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,9 +67,13 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             _getRouteButton(
               'Pull-to-refresh Table',
-              SimpleTableRefreshLoadPage(
-                user: _user,
-              ),
+              isDesktop
+                  ? SimpleTableDesktopRefreshLoadPage(
+                      user: _user,
+                    )
+                  : SimpleTableRefreshLoadPage(
+                      user: _user,
+                    ),
             ),
             _getRouteButton(
               'Customize Scroll Related Table',
@@ -84,19 +94,22 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _getRouteButton(String label, Widget page) {
-    return ElevatedButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return page;
-            },
-          ),
-        );
-      },
-      child: Text(
-        label,
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: ElevatedButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return page;
+              },
+            ),
+          );
+        },
+        child: Text(
+          label,
+        ),
       ),
     );
   }
