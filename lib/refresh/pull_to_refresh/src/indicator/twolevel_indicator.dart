@@ -110,7 +110,6 @@ class TwoLevelHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return ClassicHeader(
       refreshStyle: displayAlignment == TwoLevelDisplayAlignment.fromBottom
           ? RefreshStyle.Follow

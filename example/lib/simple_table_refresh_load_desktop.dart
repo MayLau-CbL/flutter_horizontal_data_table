@@ -5,20 +5,20 @@ import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'data/user.dart';
 
 class SimpleTableDesktopRefreshLoadPage extends StatefulWidget {
-  SimpleTableDesktopRefreshLoadPage({
+  const SimpleTableDesktopRefreshLoadPage({
     Key? key,
     required this.user,
   }) : super(key: key);
   final User user;
 
   @override
-  _SimpleTableDesktopRefreshLoadPageState createState() =>
+  State<SimpleTableDesktopRefreshLoadPage> createState() =>
       _SimpleTableDesktopRefreshLoadPageState();
 }
 
 class _SimpleTableDesktopRefreshLoadPageState
     extends State<SimpleTableDesktopRefreshLoadPage> {
-  HDTRefreshController _hdtRefreshController = HDTRefreshController();
+  final HDTRefreshController _hdtRefreshController = HDTRefreshController();
 
   @override
   void initState() {
@@ -29,7 +29,7 @@ class _SimpleTableDesktopRefreshLoadPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Pull-to-refresh Table')),
+      appBar: AppBar(title: const Text('Pull-to-refresh Table')),
       body: ScrollConfiguration(
         ///since pull to refresh only works on drag action
         behavior: ScrollConfiguration.of(context).copyWith(
@@ -51,11 +51,11 @@ class _SimpleTableDesktopRefreshLoadPageState
             height: 1.0,
             thickness: 0.0,
           ),
-          leftHandSideColBackgroundColor: Color(0xFFFFFFFF),
-          rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
+          leftHandSideColBackgroundColor: const Color(0xFFFFFFFF),
+          rightHandSideColBackgroundColor: const Color(0xFFFFFFFF),
           enablePullToRefresh: true,
           refreshIndicator: const ClassicHeader(),
-          fixedSidePlaceHolderRefreshIndicator: PlaceholderHeader(),
+          fixedSidePlaceHolderRefreshIndicator: const PlaceholderHeader(),
           refreshIndicatorHeight: 60,
           onRefresh: () async {
             debugPrint('onRefresh');
@@ -65,7 +65,7 @@ class _SimpleTableDesktopRefreshLoadPageState
           },
           enablePullToLoadNewData: true,
           loadIndicator: const ClassicFooter(),
-          fixedSidePlaceHolderLoadIndicator: PlaceholderFooter(),
+          fixedSidePlaceHolderLoadIndicator: const PlaceholderFooter(),
           onLoad: () async {
             debugPrint('onLoad');
             //Do sth
@@ -90,21 +90,21 @@ class _SimpleTableDesktopRefreshLoadPageState
 
   Widget _getTitleItemWidget(String label, double width) {
     return Container(
-      child: Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
       width: width,
       height: 56,
-      padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+      padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
       alignment: Alignment.centerLeft,
+      child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
     );
   }
 
   Widget _generateFirstColumnRow(BuildContext context, int index) {
     return Container(
-      child: Text(widget.user.userInfo[index].name),
       width: 100,
       height: 52,
-      padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+      padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
       alignment: Alignment.centerLeft,
+      child: Text(widget.user.userInfo[index].name),
     );
   }
 
@@ -112,6 +112,10 @@ class _SimpleTableDesktopRefreshLoadPageState
     return Row(
       children: <Widget>[
         Container(
+          width: 100,
+          height: 52,
+          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+          alignment: Alignment.centerLeft,
           child: Row(
             children: <Widget>[
               Icon(
@@ -124,31 +128,27 @@ class _SimpleTableDesktopRefreshLoadPageState
               Text(widget.user.userInfo[index].status ? 'Disabled' : 'Active')
             ],
           ),
-          width: 100,
-          height: 52,
-          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-          alignment: Alignment.centerLeft,
         ),
         Container(
+          width: 200,
+          height: 52,
+          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+          alignment: Alignment.centerLeft,
           child: Text(widget.user.userInfo[index].phone),
-          width: 200,
-          height: 52,
-          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-          alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text(widget.user.userInfo[index].registerDate),
           width: 100,
           height: 52,
-          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
           alignment: Alignment.centerLeft,
+          child: Text(widget.user.userInfo[index].registerDate),
         ),
         Container(
-          child: Text(widget.user.userInfo[index].terminationDate),
           width: 200,
           height: 52,
-          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
           alignment: Alignment.centerLeft,
+          child: Text(widget.user.userInfo[index].terminationDate),
         ),
       ],
     );

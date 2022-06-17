@@ -4,14 +4,14 @@ import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'data/user.dart';
 
 class SimpleTableSortPage extends StatefulWidget {
-  SimpleTableSortPage({
+  const SimpleTableSortPage({
     Key? key,
     required this.user,
   }) : super(key: key);
   final User user;
 
   @override
-  _SimpleTableSortPageState createState() => _SimpleTableSortPageState();
+  State<SimpleTableSortPage> createState() => _SimpleTableSortPageState();
 }
 
 class _SimpleTableSortPageState extends State<SimpleTableSortPage> {
@@ -29,7 +29,7 @@ class _SimpleTableSortPageState extends State<SimpleTableSortPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Sortable Table')),
+      appBar: AppBar(title: const Text('Sortable Table')),
       body: HorizontalDataTable(
         leftHandSideColumnWidth: 100,
         rightHandSideColumnWidth: 600,
@@ -43,8 +43,8 @@ class _SimpleTableSortPageState extends State<SimpleTableSortPage> {
           height: 1.0,
           thickness: 0.0,
         ),
-        leftHandSideColBackgroundColor: Color(0xFFFFFFFF),
-        rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
+        leftHandSideColBackgroundColor: const Color(0xFFFFFFFF),
+        rightHandSideColBackgroundColor: const Color(0xFFFFFFFF),
       ),
     );
   }
@@ -56,7 +56,7 @@ class _SimpleTableSortPageState extends State<SimpleTableSortPage> {
           padding: EdgeInsets.zero,
         ),
         child: _getTitleItemWidget(
-            'Name' + (sortType == sortName ? (isAscending ? '↓' : '↑') : ''),
+            'Name${sortType == sortName ? (isAscending ? '↓' : '↑') : ''}',
             100),
         onPressed: () {
           sortType = sortName;
@@ -70,8 +70,7 @@ class _SimpleTableSortPageState extends State<SimpleTableSortPage> {
           padding: EdgeInsets.zero,
         ),
         child: _getTitleItemWidget(
-            'Status' +
-                (sortType == sortStatus ? (isAscending ? '↓' : '↑') : ''),
+            'Status${sortType == sortStatus ? (isAscending ? '↓' : '↑') : ''}',
             100),
         onPressed: () {
           sortType = sortStatus;
@@ -88,21 +87,21 @@ class _SimpleTableSortPageState extends State<SimpleTableSortPage> {
 
   Widget _getTitleItemWidget(String label, double width) {
     return Container(
-      child: Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
       width: width,
       height: 56,
-      padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+      padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
       alignment: Alignment.centerLeft,
+      child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
     );
   }
 
   Widget _generateFirstColumnRow(BuildContext context, int index) {
     return Container(
-      child: Text(widget.user.userInfo[index].name),
       width: 100,
       height: 52,
-      padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+      padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
       alignment: Alignment.centerLeft,
+      child: Text(widget.user.userInfo[index].name),
     );
   }
 
@@ -110,6 +109,10 @@ class _SimpleTableSortPageState extends State<SimpleTableSortPage> {
     return Row(
       children: <Widget>[
         Container(
+          width: 100,
+          height: 52,
+          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+          alignment: Alignment.centerLeft,
           child: Row(
             children: <Widget>[
               Icon(
@@ -122,31 +125,27 @@ class _SimpleTableSortPageState extends State<SimpleTableSortPage> {
               Text(widget.user.userInfo[index].status ? 'Disabled' : 'Active')
             ],
           ),
-          width: 100,
-          height: 52,
-          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-          alignment: Alignment.centerLeft,
         ),
         Container(
+          width: 200,
+          height: 52,
+          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+          alignment: Alignment.centerLeft,
           child: Text(widget.user.userInfo[index].phone),
-          width: 200,
-          height: 52,
-          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-          alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text(widget.user.userInfo[index].registerDate),
           width: 100,
           height: 52,
-          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
           alignment: Alignment.centerLeft,
+          child: Text(widget.user.userInfo[index].registerDate),
         ),
         Container(
-          child: Text(widget.user.userInfo[index].terminationDate),
           width: 200,
           height: 52,
-          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
           alignment: Alignment.centerLeft,
+          child: Text(widget.user.userInfo[index].terminationDate),
         ),
       ],
     );
