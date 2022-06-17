@@ -9,13 +9,12 @@ environment:
 
 dependencies:
   flutter:
-    sdk: flutter
+    sdk: flutter  
   provider: ^6.0.3
   
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+  flutter_lints: ^2.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

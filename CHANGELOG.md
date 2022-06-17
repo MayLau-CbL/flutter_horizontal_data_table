@@ -2,6 +2,7 @@
 * Update: example desktop support
 * Update: desktop pull-to-refresh and custom scrollbar example
 * Update: example data generation
+* Update: support lint 2.0
 
 ## [4.1.0] - 20220611
 * Add: fixed footer

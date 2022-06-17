@@ -77,7 +77,7 @@ abstract class LoadIndicator extends StatefulWidget {
 ///
 ///  @override
 ///  void initState() {
-///    // TODO: implement initState
+///
 ///    _scaleAnimation = AnimationController(vsync: this);
 ///    _offsetController = AnimationController(
 ///        vsync: this, duration: Duration(milliseconds: 1000));
@@ -87,7 +87,7 @@ abstract class LoadIndicator extends StatefulWidget {
 ///
 ///  @override
 ///  void onOffsetChange(double offset) {
-///    // TODO: implement onOffsetChange
+///
 ///    if (!floating) {
 ///      _scaleAnimation.value = offset / 80.0;
 ///    }
@@ -96,14 +96,13 @@ abstract class LoadIndicator extends StatefulWidget {
 ///
 ///  @override
 ///  void resetValue() {
-///    // TODO: implement handleModeChange
 ///    _scaleAnimation.value = 0.0;
 ///    _offsetController.value = 0.0;
 ///  }
 ///
 ///  @override
 ///  void dispose() {
-///    // TODO: implement dispose
+///
 ///    _scaleAnimation.dispose();
 ///    _offsetController.dispose();
 ///    super.dispose();
@@ -111,13 +110,13 @@ abstract class LoadIndicator extends StatefulWidget {
 ///
 ///  @override
 ///  Future<void> endRefresh() {
-///    // TODO: implement endRefresh
+///
 ///    return _offsetController.animateTo(1.0).whenComplete(() {});
 ///  }
 ///
 ///  @override
 /// Widget buildContent(BuildContext context, RefreshStatus mode) {
-///    // TODO: implement buildContent
+///
 ///    return SlideTransition(
 ///      child: ScaleTransition(
 ///        child: (mode != RefreshStatus.idle || mode != RefreshStatus.canRefresh)
@@ -150,7 +149,6 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
   @override
   void _handleOffsetChange() {
-    // TODO: implement _handleOffsetChange
     super._handleOffsetChange();
     final double overscrollPast = _calculateScrollOffset();
     onOffsetChange(overscrollPast);
@@ -376,7 +374,6 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 
   @override
   Future endLoading() {
-    // TODO: implement endLoading
     return Future.delayed(Duration(milliseconds: 0));
   }
 
@@ -526,21 +523,18 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _lastMode = mode;
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _position?.isScrollingNotifier.removeListener(_listenScrollEnd);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SliverLoading(
         hideWhenNotFull: configuration!.hideFooterWhenNotFull,
         floating: widget.loadStyle == LoadStyle.ShowAlways
@@ -649,7 +643,6 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
   @override
   void initState() {
-    // TODO: implement initState
     if (V == RefreshStatus) {
       SmartRefresher.of(context)?.controller.headerMode?.value =
           RefreshStatus.idle;
@@ -659,7 +652,6 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     //1.3.7: here need to careful after add asSliver builder
     disposeListener();
     super.dispose();
@@ -667,14 +659,12 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     _updateListener();
     super.didChangeDependencies();
   }
 
   @override
   void didUpdateWidget(T oldWidget) {
-    // TODO: implement didUpdateWidget
     // needn't to update _headerMode,because it's state will never change
     // 1.3.7: here need to careful after add asSliver builder
     _updateListener();

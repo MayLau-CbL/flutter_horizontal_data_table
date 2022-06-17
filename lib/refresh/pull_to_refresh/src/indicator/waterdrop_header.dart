@@ -48,7 +48,6 @@ class WaterDropHeader extends RefreshIndicator {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _WaterDropHeaderState();
   }
 }
@@ -60,7 +59,6 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
 
   @override
   void onOffsetChange(double offset) {
-    // TODO: implement onOffsetChange
     final double realOffset =
         offset - 44.0; //55.0 mean circleHeight(24) + originH (20) in Painter
     // when readyTorefresh
@@ -70,14 +68,12 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
 
   @override
   Future<void> readyToRefresh() {
-    // TODO: implement readyToRefresh
     _dismissCtl.animateTo(0.0);
     return _animationController!.animateTo(0.0);
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     _dismissCtl = AnimationController(
         vsync: this, duration: Duration(milliseconds: 400), value: 1.0);
     _animationController = AnimationController(
@@ -90,13 +86,11 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
 
   @override
   bool needReverseAll() {
-    // TODO: implement needReverseAll
     return false;
   }
 
   @override
   Widget buildContent(BuildContext context, RefreshStatus? mode) {
-    // TODO: implement buildContent
     Widget? child;
     if (mode == RefreshStatus.refreshing) {
       child = widget.refresh ??
@@ -193,14 +187,12 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
 
   @override
   void resetValue() {
-    // TODO: implement resetValue
     _animationController!.reset();
     _dismissCtl.value = 1.0;
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _dismissCtl.dispose();
     _animationController!.dispose();
     super.dispose();
@@ -267,7 +259,6 @@ class _QqPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    // TODO: implement shouldRepaint
     return oldDelegate != this;
   }
 }
