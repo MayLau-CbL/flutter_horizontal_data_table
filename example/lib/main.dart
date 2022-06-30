@@ -7,6 +7,7 @@ import 'package:example/simple_table_refresh_load.dart';
 import 'package:example/simple_table_refresh_load_desktop.dart';
 import 'package:example/simple_table_scroll_style.dart';
 import 'package:example/simple_table_sort.dart';
+import 'package:example/title_reorder_table.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -64,6 +65,12 @@ class _MyHomePageState extends State<MyHomePage> {
             _getRouteButton(
               'RTL Table',
               SimpleTableRTLPage(
+                user: _user,
+              ),
+            ),
+            _getRouteButton(
+              'Reorderable Header/Footer Table',
+              TitleReorderTablePage(
                 user: _user,
               ),
             ),
