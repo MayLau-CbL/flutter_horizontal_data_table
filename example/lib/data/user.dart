@@ -48,4 +48,25 @@ class UserInfo {
 
   UserInfo(this.name, this.status, this.phone, this.registerDate,
       this.terminationDate);
+
+  dynamic get(String fieldName) {
+    if (fieldName == 'Name') {
+      return name;
+    } else if (fieldName == 'Status') {
+      return status;
+    } else if (fieldName == 'Phone') {
+      return phone;
+    } else if (fieldName == 'Register') {
+      return registerDate;
+    } else if (fieldName == 'Termination') {
+      return terminationDate;
+    }
+    throw Exception('Invalid field name');
+  }
+}
+
+class UserColumnInfo {
+  final String name;
+  final double width;
+  const UserColumnInfo(this.name, this.width);
 }
