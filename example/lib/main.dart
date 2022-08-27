@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:example/data/user.dart';
 import 'package:example/simple_rtl_table.dart';
 import 'package:example/simple_table.dart';
+import 'package:example/simple_table_keepalive_image.dart';
 import 'package:example/simple_table_refresh_load.dart';
 import 'package:example/simple_table_refresh_load_desktop.dart';
 import 'package:example/simple_table_scroll_style.dart';
 import 'package:example/simple_table_sort.dart';
 import 'package:example/title_reorder_table.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -44,8 +46,12 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
-  bool get isDesktop =>
-      Platform.isLinux || Platform.isMacOS || Platform.isWindows;
+  bool get isDesktop {
+    if (kIsWeb) {
+      return false;
+    }
+    return Platform.isLinux || Platform.isMacOS || Platform.isWindows;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,6 +99,12 @@ class _MyHomePageState extends State<MyHomePage> {
             _getRouteButton(
               'Sortable Table',
               SimpleTableSortPage(
+                user: _user,
+              ),
+            ),
+            _getRouteButton(
+              'Keep Alive Image Table',
+              SimpleTableKeepAliveImagePage(
                 user: _user,
               ),
             ),
