@@ -1,3 +1,7 @@
+## [4.1.2] - 20220831
+* Fix: pull-to-refresh after flutter 3.3
+* Update: example project ios target to 11
+
 ## [4.1.1+3] - 20220828
 * Update: CHANGELOG.md
 
