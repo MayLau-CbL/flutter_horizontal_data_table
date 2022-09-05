@@ -18,8 +18,8 @@ The following is the guide for installation with different dart sdk and flutter 
 |<2.12.0|<2.0.1|v2.5.1|
 |<2.12.0|=2.0.1|v2.5.2|
 |>=2.12.0 (enabled null-safety)|>=2.0.1 && <3.0.0|3.6.2+1|
-|>=2.12.0|>=3.0.0|latest|
-
+|>=2.12.0|>=3.0.0 && <3.3.0|4.1.1+3|
+|>=2.12.0|>=3.3.0|latest|
 
 Run this command to install latest:
 ```
