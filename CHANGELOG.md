@@ -1,3 +1,9 @@
+## [4.1.2+2] - 20220905
+* Update: CHANGELOG.md
+
+## [4.1.2+1] - 20220905
+* Update: specify package version to flutter version mapping
+
 ## [4.1.2] - 20220831
 * Fix: pull-to-refresh after flutter 3.3
 * Update: example project ios target to 11
