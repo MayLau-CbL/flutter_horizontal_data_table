@@ -1,3 +1,6 @@
+## [4.1.3] - 20221112
+* Update: upgraded dependence
+
 ## [4.1.2+2] - 20220905
 * Update: CHANGELOG.md
 
