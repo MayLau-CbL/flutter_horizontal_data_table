@@ -1,6 +1,6 @@
 name: horizontal_data_table
 description: A horizontal data table with a fixed column on left handside.
-version: 4.1.3
+version: 4.1.4
 author: May Lau<may.lau.dev@gmail.com>
 homepage: https://github.com/MayLau-CbL/flutter_horizontal_data_table
 
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter  
-  provider: ^6.0.4
+  provider: ^6.0.5
   
 
 dev_dependencies:

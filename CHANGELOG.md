@@ -1,3 +1,6 @@
+## [4.1.4] - 20221217
+* Update: upgraded dependence
+
 ## [4.1.3] - 20221112
 * Update: upgraded dependence
 
