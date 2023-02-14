@@ -8,10 +8,10 @@ class PlaceholderHeader extends RefreshIndicator {
   final Color backgroundColor;
   const PlaceholderHeader({
     Key? key,
-    RefreshStyle refreshStyle: RefreshStyle.Follow,
-    double height: 60.0,
-    Duration completeDuration: const Duration(milliseconds: 600),
-    this.backgroundColor: Colors.transparent,
+    RefreshStyle refreshStyle = RefreshStyle.Follow,
+    double height = 60.0,
+    Duration completeDuration = const Duration(milliseconds: 600),
+    this.backgroundColor = Colors.transparent,
   }) : super(
           key: key,
           refreshStyle: refreshStyle,
@@ -50,10 +50,10 @@ class PlaceholderFooter extends LoadIndicator {
   const PlaceholderFooter({
     Key? key,
     VoidCallback? onClick,
-    LoadStyle loadStyle: LoadStyle.ShowAlways,
-    double height: 60.0,
-    this.backgroundColor: Colors.transparent,
-    this.completeDuration: const Duration(milliseconds: 300),
+    LoadStyle loadStyle = LoadStyle.ShowAlways,
+    double height = 60.0,
+    this.backgroundColor = Colors.transparent,
+    this.completeDuration = const Duration(milliseconds: 300),
   }) : super(
           key: key,
           loadStyle: loadStyle,
