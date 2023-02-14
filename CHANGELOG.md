@@ -1,3 +1,6 @@
+## [4.1.4+1] - 20230214
+* Fix: issues for flutter version 3.7+
+
 ## [4.1.4] - 20221217
 * Update: upgraded dependence
 
