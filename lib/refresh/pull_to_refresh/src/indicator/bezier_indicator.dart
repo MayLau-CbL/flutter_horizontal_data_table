@@ -34,15 +34,15 @@ class BezierHeader extends RefreshIndicator {
   final double rectHeight;
 
   BezierHeader(
-      {this.child: const Text(""),
+      {this.child = const Text(""),
       this.onOffsetChange,
       this.onModeChange,
       this.readyRefresh,
-      this.enableChildOverflow: false,
+      this.enableChildOverflow = false,
       this.endRefresh,
       this.onResetValue,
-      this.dismissType: BezierDismissType.RectSpread,
-      this.rectHeight: 70,
+      this.dismissType = BezierDismissType.RectSpread,
+      this.rectHeight = 70,
       this.bezierColor})
       : super(refreshStyle: RefreshStyle.UnFollow, height: rectHeight);
 
@@ -288,12 +288,12 @@ class BezierCircleHeader extends StatefulWidget {
 
   BezierCircleHeader(
       {this.bezierColor,
-      this.rectHeight: 70,
-      this.circleColor: Colors.white,
-      this.enableChildOverflow: false,
-      this.dismissType: BezierDismissType.RectSpread,
-      this.circleType: BezierCircleType.Progress,
-      this.circleRadius: 12});
+      this.rectHeight = 70,
+      this.circleColor = Colors.white,
+      this.enableChildOverflow = false,
+      this.dismissType = BezierDismissType.RectSpread,
+      this.circleType = BezierCircleType.Progress,
+      this.circleRadius = 12});
 
   @override
   State<StatefulWidget> createState() {
