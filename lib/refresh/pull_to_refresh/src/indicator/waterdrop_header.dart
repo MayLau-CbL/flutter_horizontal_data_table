@@ -32,10 +32,10 @@ class WaterDropHeader extends RefreshIndicator {
     Key? key,
     this.refresh,
     this.complete,
-    Duration completeDuration: const Duration(milliseconds: 600),
+    Duration completeDuration = const Duration(milliseconds: 600),
     this.failed,
-    this.waterDropColor: Colors.grey,
-    this.idleIcon: const Icon(
+    this.waterDropColor = Colors.grey,
+    this.idleIcon = const Icon(
       Icons.autorenew,
       size: 15,
       color: Colors.white,
@@ -156,17 +156,17 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
                     ),
                   ),
                   quarterTurns:
-                      Scrollable.of(context)!.axisDirection == AxisDirection.up
+                      Scrollable.of(context).axisDirection == AxisDirection.up
                           ? 10
                           : 0,
                 ),
                 Container(
                   alignment:
-                      Scrollable.of(context)!.axisDirection == AxisDirection.up
+                      Scrollable.of(context).axisDirection == AxisDirection.up
                           ? Alignment.bottomCenter
                           : Alignment.topCenter,
                   margin:
-                      Scrollable.of(context)!.axisDirection == AxisDirection.up
+                      Scrollable.of(context).axisDirection == AxisDirection.up
                           ? EdgeInsets.only(bottom: 12.0)
                           : EdgeInsets.only(top: 12.0),
                   child: widget.idleIcon,
