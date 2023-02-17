@@ -156,17 +156,17 @@ class _WaterDropHeaderState extends RefreshIndicatorState<WaterDropHeader>
                     ),
                   ),
                   quarterTurns:
-                      Scrollable.of(context).axisDirection == AxisDirection.up
+                      Scrollable.of(context)!.axisDirection == AxisDirection.up
                           ? 10
                           : 0,
                 ),
                 Container(
                   alignment:
-                      Scrollable.of(context).axisDirection == AxisDirection.up
+                      Scrollable.of(context)!.axisDirection == AxisDirection.up
                           ? Alignment.bottomCenter
                           : Alignment.topCenter,
                   margin:
-                      Scrollable.of(context).axisDirection == AxisDirection.up
+                      Scrollable.of(context)!.axisDirection == AxisDirection.up
                           ? EdgeInsets.only(bottom: 12.0)
                           : EdgeInsets.only(top: 12.0),
                   child: widget.idleIcon,
