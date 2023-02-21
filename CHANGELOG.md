@@ -1,3 +1,6 @@
+## [4.1.5] - 20230222
+* Fix: limit only allow dart version >= 2.19+
+
 ## [4.1.4+1] - 20230214
 * Fix: issues for flutter version 3.7+
 
