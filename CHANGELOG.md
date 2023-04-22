@@ -1,3 +1,7 @@
+## [4.2.0] - 20230422
+* Add: open ListView itemExtent
+* Update: README.md
+
 ## [4.1.5] - 20230222
 * Fix: limit only allow dart version >= 2.19+
 
