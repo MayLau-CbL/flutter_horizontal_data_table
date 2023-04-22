@@ -87,8 +87,13 @@ class _SimpleTablePageState extends State<SimpleTablePage> {
           alignment: Alignment.centerLeft,
           child: Row(
             children: <Widget>[
-              Icon(widget.user.userInfo[index].status ? Icons.notifications_off : Icons.notifications_active,
-                  color: widget.user.userInfo[index].status ? Colors.red : Colors.green),
+              Icon(
+                  widget.user.userInfo[index].status
+                      ? Icons.notifications_off
+                      : Icons.notifications_active,
+                  color: widget.user.userInfo[index].status
+                      ? Colors.red
+                      : Colors.green),
               Text(widget.user.userInfo[index].status ? 'Disabled' : 'Active')
             ],
           ),
