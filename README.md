@@ -318,7 +318,8 @@ Thank you for the contribution!
 
 <a href="https://github.com/MayLau-CbL/flutter_horizontal_data_table/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=MayLau-CbL/flutter_horizontal_data_table" />
-</a>
+</a><br /><br />
+
 
 ## Issues Report and Feature Request
 
