@@ -15,11 +15,11 @@ The following is the guide for installation with different dart sdk and flutter 
 
 |minium dart sdk|flutter version (stable)|package version|
 |---|---|---|
-|<2.12.0|<2.0.1|v2.5.1|
-|<2.12.0|=2.0.1|v2.5.2|
+|<2.12.0|<2.0.1|2.5.1|
+|<2.12.0|=2.0.1|2.5.2|
 |>=2.12.0 (enabled null-safety)|>=2.0.1 && <3.0.0|3.6.2+1|
 |>=2.12.0|>=3.0.0 && <3.3.0|4.1.1+3|
-|>=2.12.0|>=3.3.0|4.1.4|
+|>=2.12.0 && < 2.18.0|>=3.3.0 && <3.7.0|4.1.4|
 |>=2.19.0|>=3.7.0|latest|
 
 Run this command to install latest:
@@ -80,6 +80,7 @@ HorizontalDataTable(
       this.fixedSidePlaceHolderLoadIndicator,
       this.scrollPhysics,
       this.horizontalScrollPhysics,
+      this.itemExtent,
       }
      )
 
@@ -104,6 +105,7 @@ HorizontalDataTable.rtl({...same as the above})
 12. enablePullToRefresh is to define whether enable the pull-to-refresh function. Default is setting to false. Detail you may reference to the Pull to Refresh/Load section.
 13. enablePullToLoadNewData is to define whether enable the pull-to-load function. Default is setting to false. Detail you may reference to the Pull to Refresh/Load section.
 14. scrollPhysics and horizontalScrollPhysics are to set scroll physics of the data table. Please aware scrollPhysics may causing conflict when enabling pull-to-refresh feature.
+15. itemExtent is ListView's [itemExtent](https://api.flutter.dev/flutter/widgets/ListView/itemExtent.html). To fix the child extent in order to enhance the performance.
  
 ## Pull to Refresh/Load
 
@@ -190,42 +192,45 @@ import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'data/user.dart';
 
 class SimpleTablePage extends StatefulWidget {
-  SimpleTablePage({
+  const SimpleTablePage({
     Key? key,
     required this.user,
   }) : super(key: key);
   final User user;
 
   @override
-  _SimpleTablePageState createState() => _SimpleTablePageState();
+  State<SimpleTablePage> createState() => _SimpleTablePageState();
 }
 
 class _SimpleTablePageState extends State<SimpleTablePage> {
   @override
   void initState() {
-    widget.user.initData(100);
+    widget.user.initData(3000);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Simple Table')),
+      appBar: AppBar(title: const Text('Simple Table')),
       body: HorizontalDataTable(
         leftHandSideColumnWidth: 100,
         rightHandSideColumnWidth: 600,
         isFixedHeader: true,
         headerWidgets: _getTitleWidget(),
+        isFixedFooter: true,
+        footerWidgets: _getTitleWidget(),
         leftSideItemBuilder: _generateFirstColumnRow,
         rightSideItemBuilder: _generateRightHandSideColumnRow,
         itemCount: widget.user.userInfo.length,
         rowSeparatorWidget: const Divider(
-          color: Colors.black54,
+          color: Colors.black38,
           height: 1.0,
           thickness: 0.0,
         ),
-        leftHandSideColBackgroundColor: Color(0xFFFFFFFF),
-        rightHandSideColBackgroundColor: Color(0xFFFFFFFF),
+        leftHandSideColBackgroundColor: const Color(0xFFFFFFFF),
+        rightHandSideColBackgroundColor: const Color(0xFFFFFFFF),
+        itemExtent: 55,
       ),
     );
   }
@@ -242,21 +247,21 @@ class _SimpleTablePageState extends State<SimpleTablePage> {
 
   Widget _getTitleItemWidget(String label, double width) {
     return Container(
-      child: Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
       width: width,
       height: 56,
-      padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+      padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
       alignment: Alignment.centerLeft,
+      child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
     );
   }
 
   Widget _generateFirstColumnRow(BuildContext context, int index) {
     return Container(
-      child: Text(widget.user.userInfo[index].name),
       width: 100,
       height: 52,
-      padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+      padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
       alignment: Alignment.centerLeft,
+      child: Text(widget.user.userInfo[index].name),
     );
   }
 
@@ -264,6 +269,10 @@ class _SimpleTablePageState extends State<SimpleTablePage> {
     return Row(
       children: <Widget>[
         Container(
+          width: 100,
+          height: 52,
+          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+          alignment: Alignment.centerLeft,
           child: Row(
             children: <Widget>[
               Icon(
@@ -276,37 +285,40 @@ class _SimpleTablePageState extends State<SimpleTablePage> {
               Text(widget.user.userInfo[index].status ? 'Disabled' : 'Active')
             ],
           ),
-          width: 100,
-          height: 52,
-          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-          alignment: Alignment.centerLeft,
         ),
         Container(
+          width: 200,
+          height: 52,
+          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+          alignment: Alignment.centerLeft,
           child: Text(widget.user.userInfo[index].phone),
-          width: 200,
-          height: 52,
-          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-          alignment: Alignment.centerLeft,
         ),
         Container(
-          child: Text(widget.user.userInfo[index].registerDate),
           width: 100,
           height: 52,
-          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
           alignment: Alignment.centerLeft,
+          child: Text(widget.user.userInfo[index].registerDate),
         ),
         Container(
-          child: Text(widget.user.userInfo[index].terminationDate),
           width: 200,
           height: 52,
-          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
           alignment: Alignment.centerLeft,
+          child: Text(widget.user.userInfo[index].terminationDate),
         ),
       ],
     );
   }
 }
 ```
+
+## Contribution
+Thank you for the contribution!
+
+<a href="https://github.com/MayLau-CbL/flutter_horizontal_data_table/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=MayLau-CbL/flutter_horizontal_data_table" />
+</a>
 
 ## Issues Report and Feature Request
 
