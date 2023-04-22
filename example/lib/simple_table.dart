@@ -17,7 +17,7 @@ class SimpleTablePage extends StatefulWidget {
 class _SimpleTablePageState extends State<SimpleTablePage> {
   @override
   void initState() {
-    widget.user.initData(100);
+    widget.user.initData(3000);
     super.initState();
   }
 
@@ -42,6 +42,7 @@ class _SimpleTablePageState extends State<SimpleTablePage> {
         ),
         leftHandSideColBackgroundColor: const Color(0xFFFFFFFF),
         rightHandSideColBackgroundColor: const Color(0xFFFFFFFF),
+        itemExtent: 55,
       ),
     );
   }
@@ -86,13 +87,8 @@ class _SimpleTablePageState extends State<SimpleTablePage> {
           alignment: Alignment.centerLeft,
           child: Row(
             children: <Widget>[
-              Icon(
-                  widget.user.userInfo[index].status
-                      ? Icons.notifications_off
-                      : Icons.notifications_active,
-                  color: widget.user.userInfo[index].status
-                      ? Colors.red
-                      : Colors.green),
+              Icon(widget.user.userInfo[index].status ? Icons.notifications_off : Icons.notifications_active,
+                  color: widget.user.userInfo[index].status ? Colors.red : Colors.green),
               Text(widget.user.userInfo[index].status ? 'Disabled' : 'Active')
             ],
           ),

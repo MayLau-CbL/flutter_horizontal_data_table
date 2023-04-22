@@ -23,8 +23,7 @@ import 'delegate/base_layout_view_delegate.dart';
 import 'delegate/list_view_layout_delegate.dart';
 import 'scroll/custom_scroll_bar.dart';
 
-typedef void OnScrollControllerReady(
-    ScrollController verticalController, ScrollController horizontalController);
+typedef void OnScrollControllerReady(ScrollController verticalController, ScrollController horizontalController);
 
 ///
 /// For sorting issue, will based on the header fixed widget for flexible handling, suggest using [Button] to control the data sorting
@@ -144,6 +143,8 @@ class HorizontalDataTable extends StatefulWidget {
 
   final bool enableRTL;
 
+  final double? itemExtent;
+
   const HorizontalDataTable({
     required double leftHandSideColumnWidth,
     required double rightHandSideColumnWidth,
@@ -182,6 +183,7 @@ class HorizontalDataTable extends StatefulWidget {
     this.scrollPhysics,
     this.horizontalScrollPhysics,
     this.enableRTL = false,
+    this.itemExtent,
   })  : this.fixedSideColumnWidth = leftHandSideColumnWidth,
         this.bidirectionalSideColumnWidth = rightHandSideColumnWidth,
         this.fixedSideChildren = leftSideChildren,
@@ -189,46 +191,21 @@ class HorizontalDataTable extends StatefulWidget {
         this.fixedSideItemBuilder = leftSideItemBuilder,
         this.bidirectionalSideItemBuilder = rightSideItemBuilder,
         this.fixedSideColBackgroundColor = leftHandSideColBackgroundColor,
-        this.bidirectionalSideColBackgroundColor =
-            rightHandSideColBackgroundColor,
-        assert(
-            (leftSideChildren == null && leftSideItemBuilder != null) ||
-                (leftSideChildren != null),
-            'Either using itemBuilder or children to assign fixed side widgets'),
-        assert(
-            (rightSideChildren == null && rightSideItemBuilder != null) ||
-                (rightSideChildren != null),
+        this.bidirectionalSideColBackgroundColor = rightHandSideColBackgroundColor,
+        assert((leftSideChildren == null && leftSideItemBuilder != null) || (leftSideChildren != null), 'Either using itemBuilder or children to assign fixed side widgets'),
+        assert((rightSideChildren == null && rightSideItemBuilder != null) || (rightSideChildren != null),
             'Either using itemBuilder or children to assign bi-directional side widgets'),
-        assert((isFixedHeader && headerWidgets != null) || !isFixedHeader,
-            'If use fixed top row header, isFixedHeader==true, headerWidgets must not be null'),
-        assert(tableHeight == null || tableHeight > 0.0,
-            'tableHeight can only be null or > 0.0'),
+        assert((isFixedHeader && headerWidgets != null) || !isFixedHeader, 'If use fixed top row header, isFixedHeader==true, headerWidgets must not be null'),
+        assert(tableHeight == null || tableHeight > 0.0, 'tableHeight can only be null or > 0.0'),
         assert(itemCount >= 0, 'itemCount must >= 0'),
         assert(elevation >= 0.0, 'elevation must >= 0.0'),
-        assert(
-            (enablePullToRefresh && refreshIndicatorHeight >= 0.0) ||
-                !enablePullToRefresh,
-            'refreshIndicator must >= 0 if pull to refresh is enabled'),
-        assert(
-            (enablePullToRefresh && refreshIndicator != null) ||
-                !enablePullToRefresh,
-            'refreshIndicator must not be null if pull to refresh is enabled'),
-        assert(
-            ((enablePullToRefresh || enablePullToLoadNewData) &&
-                    htdRefreshController != null) ||
-                !(enablePullToRefresh || enablePullToLoadNewData),
+        assert((enablePullToRefresh && refreshIndicatorHeight >= 0.0) || !enablePullToRefresh, 'refreshIndicator must >= 0 if pull to refresh is enabled'),
+        assert((enablePullToRefresh && refreshIndicator != null) || !enablePullToRefresh, 'refreshIndicator must not be null if pull to refresh is enabled'),
+        assert(((enablePullToRefresh || enablePullToLoadNewData) && htdRefreshController != null) || !(enablePullToRefresh || enablePullToLoadNewData),
             'htdRefreshController must not be null if pull to refresh or load is enabled'),
-        assert(
-            (enablePullToRefresh && onRefresh != null) || !enablePullToRefresh,
-            'onRefresh must not be null if pull to refresh is enabled'),
-        assert(
-            (enablePullToLoadNewData && onLoad != null) ||
-                !enablePullToLoadNewData,
-            'onLoad must not be null if pull to load is enabled'),
-        assert(
-            (enablePullToLoadNewData && loadIndicator != null) ||
-                !enablePullToLoadNewData,
-            'loadIndicator must not be null if pull to load is enabled');
+        assert((enablePullToRefresh && onRefresh != null) || !enablePullToRefresh, 'onRefresh must not be null if pull to refresh is enabled'),
+        assert((enablePullToLoadNewData && onLoad != null) || !enablePullToLoadNewData, 'onLoad must not be null if pull to load is enabled'),
+        assert((enablePullToLoadNewData && loadIndicator != null) || !enablePullToLoadNewData, 'loadIndicator must not be null if pull to load is enabled');
 
   HorizontalDataTable.rtl({
     required double leftHandSideColumnWidth,
@@ -267,6 +244,7 @@ class HorizontalDataTable extends StatefulWidget {
     LoadIndicator? fixedSidePlaceHolderLoadIndicator,
     ScrollPhysics? scrollPhysics,
     ScrollPhysics? horizontalScrollPhysics,
+    double? itemExtent,
   }) : this(
           leftHandSideColumnWidth: rightHandSideColumnWidth,
           rightHandSideColumnWidth: leftHandSideColumnWidth,
@@ -293,8 +271,7 @@ class HorizontalDataTable extends StatefulWidget {
           htdRefreshController: htdRefreshController,
           onRefresh: onRefresh,
           refreshIndicator: refreshIndicator,
-          fixedSidePlaceHolderRefreshIndicator:
-              fixedSidePlaceHolderRefreshIndicator,
+          fixedSidePlaceHolderRefreshIndicator: fixedSidePlaceHolderRefreshIndicator,
           enablePullToLoadNewData: enablePullToLoadNewData,
           onLoad: onLoad,
           loadIndicator: loadIndicator,
@@ -302,6 +279,7 @@ class HorizontalDataTable extends StatefulWidget {
           scrollPhysics: scrollPhysics,
           horizontalScrollPhysics: horizontalScrollPhysics,
           enableRTL: true,
+          itemExtent: itemExtent,
         );
 
   @override
@@ -328,19 +306,15 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
     _tableControllers.init();
 
     _tableControllers.addHorizontalShadowListener(() {
-      _scrollShadowModel.horizontalOffset =
-          _tableControllers.bidirectionalSideHorizontalScrollController.offset;
+      _scrollShadowModel.horizontalOffset = _tableControllers.bidirectionalSideHorizontalScrollController.offset;
     });
 
     _tableControllers.addVerticalShadowListener(() {
-      _scrollShadowModel.verticalOffset =
-          _tableControllers.bidirectionalSideListViewScrollController.offset;
+      _scrollShadowModel.verticalOffset = _tableControllers.bidirectionalSideListViewScrollController.offset;
     });
 
     if (widget.onScrollControllerReady != null) {
-      widget.onScrollControllerReady!(
-          _tableControllers.bidirectionalSideListViewScrollController,
-          _tableControllers.bidirectionalSideHorizontalScrollController);
+      widget.onScrollControllerReady!(_tableControllers.bidirectionalSideListViewScrollController, _tableControllers.bidirectionalSideHorizontalScrollController);
     }
   }
 
@@ -361,9 +335,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
             builder: (context, boxConstraint) {
               late double maxHeight;
               if (widget.tableHeight != null) {
-                maxHeight = (boxConstraint.maxHeight > widget.tableHeight!
-                    ? widget.tableHeight
-                    : boxConstraint.maxHeight)!;
+                maxHeight = (boxConstraint.maxHeight > widget.tableHeight! ? widget.tableHeight : boxConstraint.maxHeight)!;
               } else {
                 maxHeight = boxConstraint.maxHeight;
               }
@@ -380,8 +352,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
 
   Widget _getParallelListView(double width, double height) {
     return CustomMultiChildLayout(
-      delegate: TableBaseLayoutDelegate(height, width,
-          widget.fixedSideColumnWidth, widget.elevation, widget.enableRTL),
+      delegate: TableBaseLayoutDelegate(height, width, widget.fixedSideColumnWidth, widget.elevation, widget.enableRTL),
       children: [
         LayoutId(
           id: BaseLayoutView.FixedColumnListView,
@@ -392,11 +363,8 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
               listViewWidth: widget.fixedSideColumnWidth,
               header: widget.headerWidgets?.first,
               footer: widget.footerWidgets?.first,
-              listView: _getPullToRefreshFixedSideListView(
-                  _tableControllers.fixedSideListViewScrollController,
-                  widget.fixedSideItemBuilder,
-                  widget.itemCount,
-                  widget.fixedSideChildren),
+              listView:
+                  _getPullToRefreshFixedSideListView(_tableControllers.fixedSideListViewScrollController, widget.fixedSideItemBuilder, widget.itemCount, widget.fixedSideChildren),
             ),
           ),
         ),
@@ -416,28 +384,20 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
                 children: widget.footerWidgets?.sublist(1).toList() ?? [],
               ),
               listView: _getPullToRefreshBidirectionalSideListView(
-                  _tableControllers.bidirectionalSideListViewScrollController,
-                  widget.bidirectionalSideItemBuilder,
-                  widget.itemCount,
-                  widget.bidirectionalSideChildren),
+                  _tableControllers.bidirectionalSideListViewScrollController, widget.bidirectionalSideItemBuilder, widget.itemCount, widget.bidirectionalSideChildren),
             ),
           ),
         ),
         LayoutId(
           id: BaseLayoutView.MiddleShadow,
-          child: Selector<ScrollShadowModel, double>(
-              selector: (context, scrollShadowModel) {
+          child: Selector<ScrollShadowModel, double>(selector: (context, scrollShadowModel) {
             return scrollShadowModel.horizontalOffset;
           }, builder: (context, horizontalOffset, child) {
             return Container(
-              width: ScrollShadowModel.getElevation(
-                  horizontalOffset, widget.elevation),
+              width: ScrollShadowModel.getElevation(horizontalOffset, widget.elevation),
               height: height,
               color: widget.elevationColor.withAlpha(
-                ScrollShadowModel.getShadowAlpha(
-                    ScrollShadowModel.getElevation(
-                        horizontalOffset, widget.elevation),
-                    widget.elevation),
+                ScrollShadowModel.getShadowAlpha(ScrollShadowModel.getElevation(horizontalOffset, widget.elevation), widget.elevation),
               ),
             );
           }),
@@ -491,12 +451,9 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
               return scrollShadowModel.verticalOffset;
             },
             builder: (context, verticalOffset, child) {
-              double elevation = ScrollShadowModel.getElevation(
-                  verticalOffset, widget.elevation);
+              double elevation = ScrollShadowModel.getElevation(verticalOffset, widget.elevation);
               return Container(
-                color: widget.elevationColor.withAlpha(
-                    ScrollShadowModel.getShadowAlpha(
-                        elevation, widget.elevation)),
+                color: widget.elevationColor.withAlpha(ScrollShadowModel.getShadowAlpha(elevation, widget.elevation)),
                 height: elevation,
               );
             },
@@ -510,18 +467,11 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
             },
             builder: (context, verticalOffset, child) {
               double elevation = 0;
-              if (_tableControllers
-                  .fixedSideListViewScrollController.positions.isNotEmpty) {
-                elevation = ScrollShadowModel.getElevation(
-                    _tableControllers.fixedSideListViewScrollController.position
-                            .maxScrollExtent -
-                        verticalOffset,
-                    widget.elevation);
+              if (_tableControllers.fixedSideListViewScrollController.positions.isNotEmpty) {
+                elevation = ScrollShadowModel.getElevation(_tableControllers.fixedSideListViewScrollController.position.maxScrollExtent - verticalOffset, widget.elevation);
               }
               return Container(
-                color: widget.elevationColor.withAlpha(
-                    ScrollShadowModel.getShadowAlpha(
-                        elevation, widget.elevation)),
+                color: widget.elevationColor.withAlpha(ScrollShadowModel.getShadowAlpha(elevation, widget.elevation)),
                 height: elevation,
               );
             },
@@ -550,8 +500,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
             id: ListViewLayout.Header,
             child: SingleChildScrollView(
               physics: widget.horizontalScrollPhysics,
-              controller: _tableControllers
-                  .bidirectionalSideHeaderHorizontalScrollController!,
+              controller: _tableControllers.bidirectionalSideHeaderHorizontalScrollController!,
               scrollDirection: Axis.horizontal,
               child: header!,
             ),
@@ -569,16 +518,13 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
         LayoutId(
           id: ListViewLayout.ListView,
           child: CustomScrollBar(
-            controller:
-                _tableControllers.bidirectionalSideListViewScrollController,
+            controller: _tableControllers.bidirectionalSideListViewScrollController,
             scrollbarStyle: widget.verticalScrollbarStyle,
             notificationPredicate: (ScrollNotification notification) {
               return notification.depth == 1;
             },
             child: CustomScrollBar(
-              controller: this
-                  ._tableControllers
-                  .bidirectionalSideHorizontalScrollController,
+              controller: this._tableControllers.bidirectionalSideHorizontalScrollController,
               scrollbarStyle: widget.horizontalScrollbarStyle,
               notificationPredicate: (notification) {
                 // For some reason, on  _web only_, the scrollbar catches
@@ -589,8 +535,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
                 //
                 // No idea what the source is. As a workaround, we can just
                 // check the axis of the source scrollable.
-                if (notification.depth == 0 &&
-                    notification.metrics.axis == Axis.horizontal) {
+                if (notification.depth == 0 && notification.metrics.axis == Axis.horizontal) {
                   return true;
                 }
 
@@ -598,8 +543,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
               },
               child: SingleChildScrollView(
                 physics: widget.horizontalScrollPhysics,
-                controller: _tableControllers
-                    .bidirectionalSideHorizontalScrollController,
+                controller: _tableControllers.bidirectionalSideHorizontalScrollController,
                 scrollDirection: Axis.horizontal,
                 child: Container(
                   width: widget.bidirectionalSideColumnWidth,
@@ -614,8 +558,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
             id: ListViewLayout.Footer,
             child: SingleChildScrollView(
               physics: widget.horizontalScrollPhysics,
-              controller: _tableControllers
-                  .bidirectionalSideFooterHorizontalScrollController!,
+              controller: _tableControllers.bidirectionalSideFooterHorizontalScrollController!,
               scrollDirection: Axis.horizontal,
               child: footer!,
             ),
@@ -627,12 +570,9 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
               return scrollShadowModel.verticalOffset;
             },
             builder: (context, verticalOffset, child) {
-              double elevation = ScrollShadowModel.getElevation(
-                  verticalOffset, widget.elevation);
+              double elevation = ScrollShadowModel.getElevation(verticalOffset, widget.elevation);
               return Container(
-                color: widget.elevationColor.withAlpha(
-                    ScrollShadowModel.getShadowAlpha(
-                        elevation, widget.elevation)),
+                color: widget.elevationColor.withAlpha(ScrollShadowModel.getShadowAlpha(elevation, widget.elevation)),
                 height: elevation,
               );
             },
@@ -646,18 +586,11 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
             },
             builder: (context, verticalOffset, child) {
               double elevation = 0;
-              if (_tableControllers.bidirectionalSideListViewScrollController
-                  .positions.isNotEmpty) {
-                elevation = ScrollShadowModel.getElevation(
-                    _tableControllers.bidirectionalSideListViewScrollController
-                            .position.maxScrollExtent -
-                        verticalOffset,
-                    widget.elevation);
+              if (_tableControllers.bidirectionalSideListViewScrollController.positions.isNotEmpty) {
+                elevation = ScrollShadowModel.getElevation(_tableControllers.bidirectionalSideListViewScrollController.position.maxScrollExtent - verticalOffset, widget.elevation);
               }
               return Container(
-                color: widget.elevationColor.withAlpha(
-                    ScrollShadowModel.getShadowAlpha(
-                        elevation, widget.elevation)),
+                color: widget.elevationColor.withAlpha(ScrollShadowModel.getShadowAlpha(elevation, widget.elevation)),
                 height: elevation,
               );
             },
@@ -667,18 +600,21 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
     );
   }
 
-  Widget _getListView(ScrollController scrollController,
-      IndexedWidgetBuilder? indexedWidgetBuilder, int itemCount,
-      [List<Widget>? children]) {
+  Widget _getListView(ScrollController scrollController, IndexedWidgetBuilder? indexedWidgetBuilder, int itemCount, [List<Widget>? children]) {
     if (indexedWidgetBuilder != null) {
-      return ListView.separated(
+      return ListView.builder(
         physics: widget.scrollPhysics,
         controller: scrollController,
-        itemBuilder: indexedWidgetBuilder,
-        itemCount: itemCount,
-        separatorBuilder: (context, index) {
-          return widget.rowSeparatorWidget;
+        itemBuilder: (context, index) {
+          return Column(
+            children: [
+              indexedWidgetBuilder(context, index),
+              widget.rowSeparatorWidget,
+            ],
+          );
         },
+        itemCount: itemCount,
+        itemExtent: widget.itemExtent,
       );
     } else {
       return ListView.builder(
@@ -692,19 +628,14 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
     }
   }
 
-  Widget _getPullToRefreshBidirectionalSideListView(
-      ScrollController scrollController,
-      IndexedWidgetBuilder? indexedWidgetBuilder,
-      int itemCount,
-      [List<Widget>? children]) {
+  Widget _getPullToRefreshBidirectionalSideListView(ScrollController scrollController, IndexedWidgetBuilder? indexedWidgetBuilder, int itemCount, [List<Widget>? children]) {
     return SmartRefresher(
       controller: _tableControllers.bidirectionalSideRefreshController,
       enablePullDown: widget.enablePullToRefresh,
       enablePullUp: widget.enablePullToLoadNewData,
       onRefresh: () async {
         if (widget.onRefresh != null) {
-          widget.htdRefreshController?.requestRefresh(
-              _tableControllers.bidirectionalSideRefreshController);
+          widget.htdRefreshController?.requestRefresh(_tableControllers.bidirectionalSideRefreshController);
 
           /// i have no choice, since the status of load and refresh not so reliable
           /// the 100ms is for
@@ -717,8 +648,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
       },
       onLoading: () async {
         if (widget.onLoad != null) {
-          widget.htdRefreshController?.requestLoading(
-              _tableControllers.bidirectionalSideRefreshController);
+          widget.htdRefreshController?.requestLoading(_tableControllers.bidirectionalSideRefreshController);
 
           /// same reason as the onRefresh 100ms delay
           await Future.delayed(const Duration(milliseconds: 100), () {
@@ -737,9 +667,7 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
     );
   }
 
-  Widget _getPullToRefreshFixedSideListView(ScrollController scrollController,
-      IndexedWidgetBuilder? indexedWidgetBuilder, int itemCount,
-      [List<Widget>? children]) {
+  Widget _getPullToRefreshFixedSideListView(ScrollController scrollController, IndexedWidgetBuilder? indexedWidgetBuilder, int itemCount, [List<Widget>? children]) {
     return SmartRefresher(
       controller: _tableControllers.fixedSideRefreshController,
       enablePullDown: widget.enablePullToRefresh,
