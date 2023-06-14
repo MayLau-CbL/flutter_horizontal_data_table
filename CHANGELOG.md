@@ -1,3 +1,7 @@
+## [4.3.0] - 20230614
+* Fix: config for supporting dart version 3.x+
+* Update: README.md
+
 ## [4.2.0] - 20230422
 * Add: open ListView itemExtent
 * Update: README.md
