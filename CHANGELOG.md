@@ -1,3 +1,6 @@
+## [4.3.0+1] - 20230617
+* Fix: web and android example
+
 ## [4.3.0] - 20230614
 * Fix: config for supporting dart version 3.x+
 * Update: README.md

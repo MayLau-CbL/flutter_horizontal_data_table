@@ -46,9 +46,9 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }
 
-  bool get isDesktop {
+  bool get isDesktopOrWeb {
     if (kIsWeb) {
-      return false;
+      return true;
     }
     return Platform.isLinux || Platform.isMacOS || Platform.isWindows;
   }
@@ -82,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             _getRouteButton(
               'Pull-to-refresh Table',
-              isDesktop
+              isDesktopOrWeb
                   ? SimpleTableDesktopRefreshLoadPage(
                       user: _user,
                     )
