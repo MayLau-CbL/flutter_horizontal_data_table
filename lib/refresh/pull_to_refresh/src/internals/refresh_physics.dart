@@ -281,6 +281,9 @@ class RefreshPhysics extends ScrollPhysics {
     if ((position.pixels > 0 &&
             controller!.headerMode!.value == RefreshStatus.twoLeveling) ||
         position.outOfRange) {
+      BuildContext? scrollViewContext =
+          controller!.position?.context.storageContext;
+
       return BouncingScrollSimulation(
         spring: springDescription ?? spring,
         position: position.pixels,
@@ -292,7 +295,18 @@ class RefreshPhysics extends ScrollPhysics {
             controller!.headerMode!.value == RefreshStatus.twoLeveling
                 ? 0.0
                 : position.maxScrollExtent,
-        tolerance: tolerance,
+        tolerance: toleranceFor(
+          FixedScrollMetrics(
+            minScrollExtent: null,
+            maxScrollExtent: null,
+            pixels: null,
+            viewportDimension: null,
+            axisDirection: AxisDirection.down,
+            devicePixelRatio: scrollViewContext == null
+                ? 1.0
+                : View.of(scrollViewContext).devicePixelRatio,
+          ),
+        ),
       );
     }
     return super.createBallisticSimulation(position, velocity);

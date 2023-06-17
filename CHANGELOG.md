@@ -1,3 +1,6 @@
+## [4.3.1] - 20230617
+* Fix: replace deprecated tolerance with toleranceFor
+
 ## [4.3.0+1] - 20230617
 * Fix: web and android example
 
