@@ -23,7 +23,7 @@ import 'delegate/base_layout_view_delegate.dart';
 import 'delegate/list_view_layout_delegate.dart';
 import 'scroll/custom_scroll_bar.dart';
 
-typedef void OnScrollControllerReady(
+typedef OnScrollControllerReady = void Function(
     ScrollController verticalController, ScrollController horizontalController);
 
 ///
