@@ -5,10 +5,7 @@ import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'data/user.dart';
 
 class SimpleTableDesktopRefreshLoadPage extends StatefulWidget {
-  const SimpleTableDesktopRefreshLoadPage({
-    Key? key,
-    required this.user,
-  }) : super(key: key);
+  const SimpleTableDesktopRefreshLoadPage({super.key, required this.user});
   final User user;
 
   @override
@@ -33,10 +30,7 @@ class _SimpleTableDesktopRefreshLoadPageState
       body: ScrollConfiguration(
         ///since pull to refresh only works on drag action
         behavior: ScrollConfiguration.of(context).copyWith(
-          dragDevices: {
-            PointerDeviceKind.touch,
-            PointerDeviceKind.mouse,
-          },
+          dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse},
         ),
         child: HorizontalDataTable(
           leftHandSideColumnWidth: 100,
@@ -119,13 +113,15 @@ class _SimpleTableDesktopRefreshLoadPageState
           child: Row(
             children: <Widget>[
               Icon(
-                  widget.user.userInfo[index].status
-                      ? Icons.notifications_off
-                      : Icons.notifications_active,
-                  color: widget.user.userInfo[index].status
-                      ? Colors.red
-                      : Colors.green),
-              Text(widget.user.userInfo[index].status ? 'Disabled' : 'Active')
+                widget.user.userInfo[index].status
+                    ? Icons.notifications_off
+                    : Icons.notifications_active,
+                color:
+                    widget.user.userInfo[index].status
+                        ? Colors.red
+                        : Colors.green,
+              ),
+              Text(widget.user.userInfo[index].status ? 'Disabled' : 'Active'),
             ],
           ),
         ),

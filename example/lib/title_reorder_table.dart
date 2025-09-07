@@ -4,10 +4,7 @@ import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'data/user.dart';
 
 class TitleReorderTablePage extends StatefulWidget {
-  const TitleReorderTablePage({
-    Key? key,
-    required this.user,
-  }) : super(key: key);
+  const TitleReorderTablePage({super.key, required this.user});
   final User user;
 
   @override
@@ -63,28 +60,31 @@ class _TitleReorderTablePageState extends State<TitleReorderTablePage> {
 
   List<Widget> _getTitleWidget() {
     return _colInfos
-        .map((e) => DragTarget(
-              builder: (context, candidateData, rejectedData) {
-                return Draggable<String>(
-                  data: e.name,
-                  feedback:
-                      Material(child: _getTitleItemWidget(e.name, e.width)),
-                  child: _getTitleItemWidget(e.name, e.width),
-                );
-              },
-              onWillAcceptWithDetails: (value) {
-                return value.data != e.name;
-              },
-              onAcceptWithDetails: (value) {
-                int oldIndex = _colInfos
-                    .indexWhere((element) => element.name == value.data);
-                int newIndex =
-                    _colInfos.indexWhere((element) => element.name == e.name);
-                UserColumnInfo temp = _colInfos.removeAt(oldIndex);
-                _colInfos.insert(newIndex, temp);
-                setState(() {});
-              },
-            ))
+        .map(
+          (e) => DragTarget(
+            builder: (context, candidateData, rejectedData) {
+              return Draggable<String>(
+                data: e.name,
+                feedback: Material(child: _getTitleItemWidget(e.name, e.width)),
+                child: _getTitleItemWidget(e.name, e.width),
+              );
+            },
+            onWillAcceptWithDetails: (value) {
+              return value.data != e.name;
+            },
+            onAcceptWithDetails: (value) {
+              int oldIndex = _colInfos.indexWhere(
+                (element) => element.name == value.data,
+              );
+              int newIndex = _colInfos.indexWhere(
+                (element) => element.name == e.name,
+              );
+              UserColumnInfo temp = _colInfos.removeAt(oldIndex);
+              _colInfos.insert(newIndex, temp);
+              setState(() {});
+            },
+          ),
+        )
         .toList();
   }
 
@@ -99,7 +99,10 @@ class _TitleReorderTablePageState extends State<TitleReorderTablePage> {
   }
 
   Widget _generateGeneralColumnCell(
-      BuildContext context, int rowIndex, int colIndex) {
+    BuildContext context,
+    int rowIndex,
+    int colIndex,
+  ) {
     return Container(
       width: _colInfos[colIndex].width,
       height: 52,
@@ -110,7 +113,10 @@ class _TitleReorderTablePageState extends State<TitleReorderTablePage> {
   }
 
   Widget _generateIconColumnCell(
-      BuildContext context, int rowIndex, int colIndex) {
+    BuildContext context,
+    int rowIndex,
+    int colIndex,
+  ) {
     return Container(
       width: 100,
       height: 52,
@@ -119,13 +125,15 @@ class _TitleReorderTablePageState extends State<TitleReorderTablePage> {
       child: Row(
         children: <Widget>[
           Icon(
-              widget.user.userInfo[rowIndex].status
-                  ? Icons.notifications_off
-                  : Icons.notifications_active,
-              color: widget.user.userInfo[rowIndex].status
-                  ? Colors.red
-                  : Colors.green),
-          Text(widget.user.userInfo[rowIndex].status ? 'Disabled' : 'Active')
+            widget.user.userInfo[rowIndex].status
+                ? Icons.notifications_off
+                : Icons.notifications_active,
+            color:
+                widget.user.userInfo[rowIndex].status
+                    ? Colors.red
+                    : Colors.green,
+          ),
+          Text(widget.user.userInfo[rowIndex].status ? 'Disabled' : 'Active'),
         ],
       ),
     );
@@ -141,15 +149,22 @@ class _TitleReorderTablePageState extends State<TitleReorderTablePage> {
 
   Widget _generateRightHandSideColumnRow(BuildContext context, int rowIndex) {
     return Row(
-      children: _colInfos.sublist(1).map((e) {
-        if (e.name == 'Status') {
-          return _generateIconColumnCell(
-              context, rowIndex, _colInfos.indexOf(e));
-        } else {
-          return _generateGeneralColumnCell(
-              context, rowIndex, _colInfos.indexOf(e));
-        }
-      }).toList(),
+      children:
+          _colInfos.sublist(1).map((e) {
+            if (e.name == 'Status') {
+              return _generateIconColumnCell(
+                context,
+                rowIndex,
+                _colInfos.indexOf(e),
+              );
+            } else {
+              return _generateGeneralColumnCell(
+                context,
+                rowIndex,
+                _colInfos.indexOf(e),
+              );
+            }
+          }).toList(),
     );
   }
 }
