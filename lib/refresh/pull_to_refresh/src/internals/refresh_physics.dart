@@ -233,8 +233,10 @@ class RefreshPhysics extends ScrollPhysics {
     }
     if (maxOverScrollExtent != double.infinity &&
         value < topBoundary &&
-        topBoundary < position.pixels) // hit top edge
+        topBoundary < position.pixels) {
+      // hit top edge
       return value - topBoundary;
+    }
     if (maxUnderScrollExtent != double.infinity &&
         position.pixels < bottomBoundary &&
         bottomBoundary < value) {
@@ -246,12 +248,16 @@ class RefreshPhysics extends ScrollPhysics {
     if (scrollPosition.activity is DragScrollActivity) {
       if (maxOverScrollExtent != double.infinity &&
           value < position.pixels &&
-          position.pixels <= topBoundary) // underscroll
+          position.pixels <= topBoundary) {
+        // underscroll
         return value - position.pixels;
+      }
       if (maxUnderScrollExtent != double.infinity &&
           bottomBoundary <= position.pixels &&
-          position.pixels < value) // overscroll
+          position.pixels < value) {
+        // overscroll
         return value - position.pixels;
+      }
     }
     return 0.0;
   }

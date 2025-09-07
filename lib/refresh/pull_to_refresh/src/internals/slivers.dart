@@ -207,11 +207,12 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
             maxExtent: Math.max(0, overscrolledExtent + layoutExtent)),
         parentUsesSize: true,
       );
-    } else
+    } else {
       child!.layout(
         constraints.asBoxConstraints(),
         parentUsesSize: true,
       );
+    }
     final double boxExtent = (constraints.axisDirection == AxisDirection.up ||
             constraints.axisDirection == AxisDirection.down)
         ? child!.size.height

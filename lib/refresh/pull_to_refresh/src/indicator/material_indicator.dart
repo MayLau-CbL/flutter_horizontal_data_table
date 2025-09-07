@@ -71,8 +71,9 @@ class _MaterialClassicHeaderState
         duration: Duration(milliseconds: 500));
     _valueAni.addListener(() {
       // frequently setState will decline the performance
-      if (mounted && Scrollable.of(context).position.pixels <= 0)
+      if (mounted && Scrollable.of(context).position.pixels <= 0) {
         setState(() {});
+      }
     });
     _positionController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));

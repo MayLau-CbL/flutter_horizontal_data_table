@@ -540,12 +540,12 @@ class SmartRefresherState extends State<SmartRefresher> {
     final RefreshConfiguration? configuration =
         RefreshConfiguration.of(context);
     Widget? body;
-    if (widget.builder != null)
+    if (widget.builder != null) {
       body = widget.builder!(
           context,
           _getScrollPhysics(configuration, AlwaysScrollableScrollPhysics())
               as RefreshPhysics);
-    else {
+    } else {
       List<Widget>? slivers =
           _buildSliversByChild(context, widget.child, configuration);
       body = _buildBodyBySlivers(widget.child, slivers, configuration);
@@ -664,9 +664,10 @@ class RefreshController {
         _findIndicator(position!.context.storageContext, RefreshIndicator);
     if (indicatorElement == null) return null;
     (indicatorElement.state as RefreshIndicatorState).floating = true;
-    if (needMove)
+    if (needMove) {
       SmartRefresher.ofState(position!.context.storageContext)
           ?.setCanDrag(false);
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (needMove) {
         Future.delayed(const Duration(milliseconds: 50)).then((_) async {
@@ -714,9 +715,10 @@ class RefreshController {
         _findIndicator(position!.context.storageContext, LoadIndicator);
     if (indicatorElement == null) return null;
     (indicatorElement.state as LoadIndicatorState).floating = true;
-    if (needMove)
+    if (needMove) {
       SmartRefresher.ofState(position!.context.storageContext)
           ?.setCanDrag(false);
+    }
     if (needMove) {
       return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
         await position

@@ -238,8 +238,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
       resetValue();
 
-      if (mode == RefreshStatus.idle)
+      if (mode == RefreshStatus.idle) {
         SmartRefresher.ofState(context)!.setCanDrag(true);
+      }
     }
     if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
       endRefresh().then((_) {
@@ -505,7 +506,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         if (activity is IdleScrollActivity) {
           if ((configuration!.enableBallisticLoad) ||
               ((!configuration!.enableBallisticLoad) &&
-                  mode == LoadStatus.canLoading)) enterLoading();
+                  mode == LoadStatus.canLoading)) {
+            enterLoading();
+          }
         }
       }
     } else {
