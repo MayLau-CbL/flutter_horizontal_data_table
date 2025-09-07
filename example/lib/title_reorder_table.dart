@@ -72,10 +72,10 @@ class _TitleReorderTablePageState extends State<TitleReorderTablePage> {
                   child: _getTitleItemWidget(e.name, e.width),
                 );
               },
-              onWillAccept: (value) {
+              onWillAcceptWithDetails: (value) {
                 return value != e.name;
               },
-              onAccept: (value) {
+              onAcceptWithDetails: (value) {
                 int oldIndex =
                     _colInfos.indexWhere((element) => element.name == value);
                 int newIndex =
