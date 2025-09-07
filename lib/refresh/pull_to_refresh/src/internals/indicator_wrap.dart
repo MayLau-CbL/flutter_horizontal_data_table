@@ -582,13 +582,13 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
   bool _floating = false;
 
-  set floating(floating) => _floating = floating;
+  set floating(bool floating) => _floating = floating;
 
-  get floating => _floating;
+  bool get floating => _floating;
 
-  set mode(mode) => _mode?.value = mode;
+  set mode(V? mode) => _mode?.value = mode;
 
-  get mode => _mode?.value;
+  V? get mode => _mode?.value;
 
   ValueNotifier<V?>? _mode;
 
@@ -684,7 +684,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
   void _dispatchModeByOffset(double offset);
 
-  Widget buildContent(BuildContext context, V mode);
+  Widget buildContent(BuildContext context, V? mode);
 }
 
 /// head Indicator exposure interface

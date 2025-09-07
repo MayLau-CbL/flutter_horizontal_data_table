@@ -90,7 +90,7 @@ class ClassicHeader extends RefreshIndicator {
 }
 
 class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
-  Widget _buildText(mode) {
+  Widget _buildText(RefreshStatus? mode) {
     RefreshString strings =
         RefreshLocalizations.of(context)?.currentLocalization ??
             EnRefreshString();
@@ -112,7 +112,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
         style: widget.textStyle);
   }
 
-  Widget _buildIcon(mode) {
+  Widget _buildIcon(RefreshStatus? mode) {
     Widget? icon = mode == RefreshStatus.canRefresh
         ? widget.releaseIcon
         : mode == RefreshStatus.idle

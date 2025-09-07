@@ -146,7 +146,7 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
     }
   }
 
-  set updateFlag(u) {
+  set updateFlag(bool u) {
     _updateFlag = u;
     markNeedsLayout();
   }
@@ -364,13 +364,13 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
 
   double? _layoutExtent;
 
-  set layoutExtent(extent) {
+  set layoutExtent(double? extent) {
     if (extent == _layoutExtent) return;
     _layoutExtent = extent;
     markNeedsLayout();
   }
 
-  get layoutExtent => _layoutExtent;
+  double? get layoutExtent => _layoutExtent;
 
   bool get hasLayoutExtent => _hasLayoutExtent!;
   bool? _hasLayoutExtent;
@@ -393,7 +393,8 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
       sliverP = viewport.childAfter(sliverP!);
     }
     // consider about footer layoutExtent,it should be subtracted it's height
-    return totalScrollExtent >= cons.viewportMainAxisExtent - layoutExtent;
+    return totalScrollExtent >=
+        cons.viewportMainAxisExtent - (layoutExtent ?? 0.0);
   }
 
   //  many sitiuation: 1. reverse 2. not reverse
@@ -477,8 +478,8 @@ class RenderSliverLoading extends RenderSliverSingleBoxAdapter {
       // consider reverse loading and HideAlways==loadStyle
       geometry = SliverGeometry(
         scrollExtent: !_hasLayoutExtent! || !_computeIfFull(constraints)
-            ? 0
-            : layoutExtent,
+            ? 0.0
+            : layoutExtent ?? 0.0,
         paintExtent: paintedChildSize,
         // this need to fix later
         paintOrigin: computePaintOrigin(
