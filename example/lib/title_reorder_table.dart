@@ -73,11 +73,11 @@ class _TitleReorderTablePageState extends State<TitleReorderTablePage> {
                 );
               },
               onWillAcceptWithDetails: (value) {
-                return value != e.name;
+                return value.data != e.name;
               },
               onAcceptWithDetails: (value) {
-                int oldIndex =
-                    _colInfos.indexWhere((element) => element.name == value);
+                int oldIndex = _colInfos
+                    .indexWhere((element) => element.name == value.data);
                 int newIndex =
                     _colInfos.indexWhere((element) => element.name == e.name);
                 UserColumnInfo temp = _colInfos.removeAt(oldIndex);
