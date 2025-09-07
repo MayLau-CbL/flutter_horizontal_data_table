@@ -1,15 +1,6 @@
-///Export File
-
-///Scrollbar Style
 export 'package:horizontal_data_table/scroll/scroll_bar_style.dart';
-
-///Wrapper Controller
 export 'package:horizontal_data_table/refresh/hdt_refresh_controller.dart';
-
-///Available Refresh Header
 export 'package:horizontal_data_table/refresh/pull_to_refresh/pull_to_refresh.dart';
-
-///Main File
 import 'package:flutter/material.dart';
 import 'package:horizontal_data_table/model/scroll_shadow_model.dart';
 import 'package:horizontal_data_table/refresh/hdt_refresh_controller.dart';
