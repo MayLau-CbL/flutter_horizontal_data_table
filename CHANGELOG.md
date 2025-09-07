@@ -1,3 +1,6 @@
+## [4.3.2] - 20250907
+* Update: upgraded dependence
+
 ## [4.3.1] - 20230617
 * Fix: replace deprecated tolerance with toleranceFor
 

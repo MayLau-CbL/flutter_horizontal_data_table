@@ -15,23 +15,21 @@ import 'package:flutter/material.dart';
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({super.key, required this.title});
   final String title;
 
   @override
@@ -56,57 +54,30 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: Center(
         child: Column(
           children: [
-            _getRouteButton(
-              'Simple Table',
-              SimpleTablePage(
-                user: _user,
-              ),
-            ),
-            _getRouteButton(
-              'RTL Table',
-              SimpleTableRTLPage(
-                user: _user,
-              ),
-            ),
+            _getRouteButton('Simple Table', SimpleTablePage(user: _user)),
+            _getRouteButton('RTL Table', SimpleTableRTLPage(user: _user)),
             _getRouteButton(
               'Reorderable Header/Footer Table',
-              TitleReorderTablePage(
-                user: _user,
-              ),
+              TitleReorderTablePage(user: _user),
             ),
             _getRouteButton(
               'Pull-to-refresh Table',
               isDesktopOrWeb
-                  ? SimpleTableDesktopRefreshLoadPage(
-                      user: _user,
-                    )
-                  : SimpleTableRefreshLoadPage(
-                      user: _user,
-                    ),
+                  ? SimpleTableDesktopRefreshLoadPage(user: _user)
+                  : SimpleTableRefreshLoadPage(user: _user),
             ),
             _getRouteButton(
               'Customize Scroll Related Table',
-              SimpleTableScrollStylePage(
-                user: _user,
-              ),
+              SimpleTableScrollStylePage(user: _user),
             ),
-            _getRouteButton(
-              'Sortable Table',
-              SimpleTableSortPage(
-                user: _user,
-              ),
-            ),
+            _getRouteButton('Sortable Table', SimpleTableSortPage(user: _user)),
             _getRouteButton(
               'Keep Alive Image Table',
-              SimpleTableKeepAliveImagePage(
-                user: _user,
-              ),
+              SimpleTableKeepAliveImagePage(user: _user),
             ),
           ],
         ),
@@ -128,9 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           );
         },
-        child: Text(
-          label,
-        ),
+        child: Text(label),
       ),
     );
   }

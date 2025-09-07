@@ -4,10 +4,7 @@ import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'data/user.dart';
 
 class SimpleTableRefreshLoadPage extends StatefulWidget {
-  const SimpleTableRefreshLoadPage({
-    Key? key,
-    required this.user,
-  }) : super(key: key);
+  const SimpleTableRefreshLoadPage({super.key, required this.user});
   final User user;
 
   @override
@@ -109,13 +106,15 @@ class _SimpleTableRefreshLoadPageState
           child: Row(
             children: <Widget>[
               Icon(
-                  widget.user.userInfo[index].status
-                      ? Icons.notifications_off
-                      : Icons.notifications_active,
-                  color: widget.user.userInfo[index].status
-                      ? Colors.red
-                      : Colors.green),
-              Text(widget.user.userInfo[index].status ? 'Disabled' : 'Active')
+                widget.user.userInfo[index].status
+                    ? Icons.notifications_off
+                    : Icons.notifications_active,
+                color:
+                    widget.user.userInfo[index].status
+                        ? Colors.red
+                        : Colors.green,
+              ),
+              Text(widget.user.userInfo[index].status ? 'Disabled' : 'Active'),
             ],
           ),
         ),

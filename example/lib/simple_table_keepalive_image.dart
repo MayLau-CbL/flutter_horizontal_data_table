@@ -6,10 +6,7 @@ import 'package:http/http.dart' as http;
 import 'data/user.dart';
 
 class SimpleTableKeepAliveImagePage extends StatefulWidget {
-  const SimpleTableKeepAliveImagePage({
-    Key? key,
-    required this.user,
-  }) : super(key: key);
+  const SimpleTableKeepAliveImagePage({super.key, required this.user});
   final User user;
 
   @override
@@ -117,7 +114,7 @@ class _SimpleTableKeepAliveImagePageState
 }
 
 class ImageKeepAliveWidget extends StatefulWidget {
-  const ImageKeepAliveWidget({Key? key}) : super(key: key);
+  const ImageKeepAliveWidget({super.key});
 
   @override
   State<ImageKeepAliveWidget> createState() => _ImageKeepAliveWidgetState();
@@ -136,8 +133,9 @@ class _ImageKeepAliveWidgetState extends State<ImageKeepAliveWidget>
 
   void _fetchUrl() async {
     try {
-      http.Response res =
-          await http.get(Uri.parse('https://dog.ceo/api/breeds/image/random'));
+      http.Response res = await http.get(
+        Uri.parse('https://dog.ceo/api/breeds/image/random'),
+      );
       _imageUrl = json.decode(res.body)['message'];
       setState(() {});
     } catch (e) {
