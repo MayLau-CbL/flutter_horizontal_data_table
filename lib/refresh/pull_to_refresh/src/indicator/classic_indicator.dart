@@ -14,7 +14,7 @@ import 'package:flutter/foundation.dart';
 enum IconPosition { left, right, top, bottom }
 
 /// wrap child in outside,mostly use in add background color and padding
-typedef Widget OuterBuilder(Widget child);
+typedef OuterBuilder = Widget Function(Widget child);
 
 ///the most common indicator,combine with a text and a icon
 ///
@@ -90,7 +90,7 @@ class ClassicHeader extends RefreshIndicator {
 }
 
 class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
-  Widget _buildText(mode) {
+  Widget _buildText(RefreshStatus? mode) {
     RefreshString strings =
         RefreshLocalizations.of(context)?.currentLocalization ??
             EnRefreshString();
@@ -112,7 +112,7 @@ class _ClassicHeaderState extends RefreshIndicatorState<ClassicHeader> {
         style: widget.textStyle);
   }
 
-  Widget _buildIcon(mode) {
+  Widget _buildIcon(RefreshStatus? mode) {
     Widget? icon = mode == RefreshStatus.canRefresh
         ? widget.releaseIcon
         : mode == RefreshStatus.idle

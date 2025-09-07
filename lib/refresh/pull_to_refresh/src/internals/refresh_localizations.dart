@@ -37,7 +37,7 @@ import 'package:flutter/material.dart';
 /// 1. custom a class XXRefreshString implements  RefreshString ,and then translate them
 /// 2. add it into values
 /// ```dart
-///   Map<String, RefreshString> values = {
+///   `Map<String, RefreshString>` values = {
 ///    'en': EnRefreshString(),
 ///    'zh': ChRefreshString(),
 ///    'fr': FrRefreshString(),

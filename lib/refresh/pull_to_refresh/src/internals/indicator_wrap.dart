@@ -15,9 +15,9 @@ import 'slivers.dart';
 
 typedef VoidFutureCallBack = Future<void> Function();
 
-typedef void OffsetCallBack(double offset);
+typedef OffsetCallBack = void Function(double offset);
 
-typedef void ModeChangeCallBack<T>(T? mode);
+typedef ModeChangeCallBack<T> = void Function(T? mode);
 
 /// a widget  implements ios pull down refresh effect and Android material RefreshIndicator overScroll effect
 abstract class RefreshIndicator extends StatefulWidget {
@@ -238,8 +238,9 @@ abstract class RefreshIndicatorState<T extends RefreshIndicator>
 
       resetValue();
 
-      if (mode == RefreshStatus.idle)
+      if (mode == RefreshStatus.idle) {
         SmartRefresher.ofState(context)!.setCanDrag(true);
+      }
     }
     if (mode == RefreshStatus.completed || mode == RefreshStatus.failed) {
       endRefresh().then((_) {
@@ -505,7 +506,9 @@ abstract class LoadIndicatorState<T extends LoadIndicator> extends State<T>
         if (activity is IdleScrollActivity) {
           if ((configuration!.enableBallisticLoad) ||
               ((!configuration!.enableBallisticLoad) &&
-                  mode == LoadStatus.canLoading)) enterLoading();
+                  mode == LoadStatus.canLoading)) {
+            enterLoading();
+          }
         }
       }
     } else {
@@ -579,13 +582,13 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
   bool _floating = false;
 
-  set floating(floating) => _floating = floating;
+  set floating(bool floating) => _floating = floating;
 
-  get floating => _floating;
+  bool get floating => _floating;
 
-  set mode(mode) => _mode?.value = mode;
+  set mode(V? mode) => _mode?.value = mode;
 
-  get mode => _mode?.value;
+  V? get mode => _mode?.value;
 
   ValueNotifier<V?>? _mode;
 
@@ -681,7 +684,7 @@ mixin IndicatorStateMixin<T extends StatefulWidget, V> on State<T> {
 
   void _dispatchModeByOffset(double offset);
 
-  Widget buildContent(BuildContext context, V mode);
+  Widget buildContent(BuildContext context, V? mode);
 }
 
 /// head Indicator exposure interface

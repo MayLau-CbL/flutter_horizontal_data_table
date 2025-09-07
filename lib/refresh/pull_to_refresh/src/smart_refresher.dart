@@ -17,16 +17,17 @@ import '../src/internals/slivers.dart';
 /// callback when the indicator scroll out of edge
 /// up: indicate header or footer callback
 /// offset: the distance of indicator out of edge
-typedef void OnOffsetChange(bool up, double offset);
+typedef OnOffsetChange = void Function(bool up, double offset);
 
 /// when viewport not full one page, for different state,whether it should follow the content
-typedef bool ShouldFollowContent(LoadStatus? status);
+typedef ShouldFollowContent = bool Function(LoadStatus? status);
 
 /// global default indicator builder
 typedef IndicatorBuilder = Widget Function();
 
 /// a builder for attaching refresh function with the physics
-typedef Widget RefresherBuilder(BuildContext context, RefreshPhysics physics);
+typedef RefresherBuilder = Widget Function(
+    BuildContext context, RefreshPhysics physics);
 
 /// header state
 enum RefreshStatus {
@@ -539,12 +540,12 @@ class SmartRefresherState extends State<SmartRefresher> {
     final RefreshConfiguration? configuration =
         RefreshConfiguration.of(context);
     Widget? body;
-    if (widget.builder != null)
+    if (widget.builder != null) {
       body = widget.builder!(
           context,
           _getScrollPhysics(configuration, AlwaysScrollableScrollPhysics())
               as RefreshPhysics);
-    else {
+    } else {
       List<Widget>? slivers =
           _buildSliversByChild(context, widget.child, configuration);
       body = _buildBodyBySlivers(widget.child, slivers, configuration);
@@ -663,9 +664,10 @@ class RefreshController {
         _findIndicator(position!.context.storageContext, RefreshIndicator);
     if (indicatorElement == null) return null;
     (indicatorElement.state as RefreshIndicatorState).floating = true;
-    if (needMove)
+    if (needMove) {
       SmartRefresher.ofState(position!.context.storageContext)
           ?.setCanDrag(false);
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (needMove) {
         Future.delayed(const Duration(milliseconds: 50)).then((_) async {
@@ -713,9 +715,10 @@ class RefreshController {
         _findIndicator(position!.context.storageContext, LoadIndicator);
     if (indicatorElement == null) return null;
     (indicatorElement.state as LoadIndicatorState).floating = true;
-    if (needMove)
+    if (needMove) {
       SmartRefresher.ofState(position!.context.storageContext)
           ?.setCanDrag(false);
+    }
     if (needMove) {
       return Future.delayed(const Duration(milliseconds: 50)).then((_) async {
         await position
