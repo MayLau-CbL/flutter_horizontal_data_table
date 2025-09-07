@@ -118,11 +118,6 @@ class RenderSliverRefresh extends RenderSliverSingleBoxAdapter {
   double layoutExtentOffsetCompensation = 0.0;
 
   @override
-  void performResize() {
-    super.performResize();
-  }
-
-  @override
   double get centerOffsetAdjustment {
     if (refreshStyle == RefreshStyle.Front) {
       final RenderViewportBase renderViewport =
