@@ -14,7 +14,7 @@ import 'package:flutter/foundation.dart';
 enum IconPosition { left, right, top, bottom }
 
 /// wrap child in outside,mostly use in add background color and padding
-typedef Widget OuterBuilder(Widget child);
+typedef OuterBuilder = Widget Function(Widget child);
 
 ///the most common indicator,combine with a text and a icon
 ///

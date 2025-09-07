@@ -15,9 +15,9 @@ import 'slivers.dart';
 
 typedef VoidFutureCallBack = Future<void> Function();
 
-typedef void OffsetCallBack(double offset);
+typedef OffsetCallBack = void Function(double offset);
 
-typedef void ModeChangeCallBack<T>(T? mode);
+typedef ModeChangeCallBack<T> = void Function(T? mode);
 
 /// a widget  implements ios pull down refresh effect and Android material RefreshIndicator overScroll effect
 abstract class RefreshIndicator extends StatefulWidget {
