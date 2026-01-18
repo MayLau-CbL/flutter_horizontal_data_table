@@ -140,6 +140,12 @@ class HorizontalDataTable extends StatefulWidget {
   ///When it is non-null, SliverFixedExtentList is used in [ListView].
   final double? itemExtent;
 
+  ///SafeArea Intrusion. Default following flutter's default setting, which is all true.
+  final bool leftIntrusion;
+  final bool topIntrusion;
+  final bool rightIntrusion;
+  final bool bottomIntrusion;
+
   const HorizontalDataTable({
     required double leftHandSideColumnWidth,
     required double rightHandSideColumnWidth,
@@ -179,6 +185,10 @@ class HorizontalDataTable extends StatefulWidget {
     this.horizontalScrollPhysics,
     this.enableRTL = false,
     this.itemExtent,
+    this.leftIntrusion = true,
+    this.topIntrusion = true,
+    this.rightIntrusion = true,
+    this.bottomIntrusion = true,
   })  : this.fixedSideColumnWidth = leftHandSideColumnWidth,
         this.bidirectionalSideColumnWidth = rightHandSideColumnWidth,
         this.fixedSideChildren = leftSideChildren,
@@ -265,6 +275,10 @@ class HorizontalDataTable extends StatefulWidget {
     ScrollPhysics? scrollPhysics,
     ScrollPhysics? horizontalScrollPhysics,
     double? itemExtent,
+    bool leftIntrusion = true,
+    bool topIntrusion = true,
+    bool rightIntrusion = true,
+    bool bottomIntrusion = true,
   }) : this(
           leftHandSideColumnWidth: rightHandSideColumnWidth,
           rightHandSideColumnWidth: leftHandSideColumnWidth,
@@ -301,6 +315,10 @@ class HorizontalDataTable extends StatefulWidget {
           horizontalScrollPhysics: horizontalScrollPhysics,
           enableRTL: true,
           itemExtent: itemExtent,
+          leftIntrusion: leftIntrusion,
+          topIntrusion: topIntrusion,
+          rightIntrusion: rightIntrusion,
+          bottomIntrusion: bottomIntrusion,
         );
 
   @override
@@ -356,6 +374,10 @@ class _HorizontalDataTableState extends State<HorizontalDataTable> {
       child: ChangeNotifierProvider<ScrollShadowModel>(
         create: (context) => _scrollShadowModel,
         child: SafeArea(
+          left: widget.leftIntrusion,
+          top: widget.topIntrusion,
+          right: widget.rightIntrusion,
+          bottom: widget.bottomIntrusion,
           child: LayoutBuilder(
             builder: (context, boxConstraint) {
               late double maxHeight;

@@ -1,3 +1,6 @@
+## [4.3.4] - 20260118
+* Add: SafeArea Intrusion control
+
 ## [4.3.3] - 20250907
 * Fix: lint issues
 
