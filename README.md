@@ -82,6 +82,10 @@ HorizontalDataTable(
       this.scrollPhysics,
       this.horizontalScrollPhysics,
       this.itemExtent,
+      this.leftIntrusion = true,
+      this.topIntrusion = true,
+      this.rightIntrusion = true,
+      this.bottomIntrusion = true,
       }
      )
 
@@ -107,6 +111,7 @@ HorizontalDataTable.rtl({...same as the above})
 13. enablePullToLoadNewData is to define whether enable the pull-to-load function. Default is setting to false. Detail you may reference to the Pull to Refresh/Load section.
 14. scrollPhysics and horizontalScrollPhysics are to set scroll physics of the data table. Please aware scrollPhysics may causing conflict when enabling pull-to-refresh feature.
 15. itemExtent is ListView's [itemExtent](https://api.flutter.dev/flutter/widgets/ListView/itemExtent.html). To fix the child extent in order to enhance the performance.
+16. leftIntrusion, topIntrusion, rightIntrusion, bottomIntrusion are for SafeArea Intrusion. Default following flutter's default setting, which is all true.
  
 ## Pull to Refresh/Load
 
